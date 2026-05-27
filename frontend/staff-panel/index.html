@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="VaaniBank AI Staff Panel — Real-time multilingual banking assistant powered by AI for Union Bank of India. Manage customer sessions, view AI suggestions, and track processes." />
+    <meta name="theme-color" content="#003087" />
+    <meta name="author" content="Team Vectora" />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <title>VaaniBank AI - Staff</title>
+
+    <!-- VaaniBank AI Favicon -->
+    <link rel="icon" type="image/png" href="/website_logo.png" />
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Critical loading styles -->
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      #root {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Pre-app loading screen */
+      .app-loader {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #003087 0%, #001a52 100%);
+        color: #ffffff;
+        gap: 24px;
+      }
+
+      .app-loader__logo {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .app-loader__text {
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.8;
+        letter-spacing: 0.5px;
+      }
+
+      .app-loader__spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        border-top-color: #E8231A;
+        border-radius: 50%;
+        animation: loader-spin 0.8s linear infinite;
+      }
+
+      @keyframes loader-spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Loading screen shown while JS bundle loads -->
+      <div class="app-loader">
+        <img src="/website_logo.png" alt="VaaniBank AI" style="height:64px;width:auto;" />
+        <div class="app-loader__spinner"></div>
+        <div class="app-loader__text">Loading Staff Panel…</div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

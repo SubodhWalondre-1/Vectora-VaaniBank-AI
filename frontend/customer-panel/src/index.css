@@ -1,0 +1,89 @@
+/* ============================================
+   VaaniBank AI — Customer Panel Base CSS
+   Brand Colors: Red #E8231A | Blue #003087
+   ============================================ */
+
+:root {
+  /* ── Brand Palette ── */
+  --red:        #E8231A;
+  --red-dark:   #C41810;
+  --red-light:  #FF4D45;
+
+  --blue:       #003087;
+  --blue-dark:  #001a52;
+  --blue-mid:   #1a4db5;
+  --blue-light: #e8eef8;
+
+  /* ── Typography ── */
+  --sans:    'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono:    ui-monospace, Consolas, monospace;
+
+  font: 16px/150% var(--sans);
+  letter-spacing: 0.15px;
+  color-scheme: light dark;
+  color: #1A202C;
+  background: #F4F6F9;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Headings default to brand blue */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading);
+  color: var(--blue);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+/* Links */
+a {
+  color: var(--blue-mid);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--red);
+}
+
+/* Code */
+code {
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 135%;
+  padding: 3px 7px;
+  background: var(--blue-light);
+  color: var(--blue-dark);
+  border-radius: 4px;
+  display: inline-flex;
+}
+
+/* Selection highlight */
+::selection {
+  background-color: rgba(0, 48, 135, 0.18);
+  color: #1A202C;
+}
+
+/* Focus outline using brand blue */
+:focus-visible {
+  outline: 2px solid var(--blue-mid);
+  outline-offset: 2px;
+}
+
+/* ── Utility: brand accent text ── */
+.text-brand-red   { color: var(--red); }
+.text-brand-blue  { color: var(--blue); }
+.bg-brand-red     { background-color: var(--red); }
+.bg-brand-blue    { background-color: var(--blue); }
+.border-brand-red { border-color: var(--red); }
+.border-brand-blue{ border-color: var(--blue); }

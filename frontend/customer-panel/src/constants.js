@@ -1,0 +1,230 @@
+/* ============================================
+   VaaniBank AI — Customer Panel Constants
+   Union Bank of India | Team Vectora
+
+   Shared constants imported from frontend/shared/constants.js
+   Panel-specific constants defined below.
+   ============================================ */
+
+// ── Re-export shared constants ──────────────
+export {
+  BRAND,
+  LANGUAGES,
+  WS_EVENTS,
+  SESSION_STATUS,
+  SENTIMENTS,
+  APP_NAME,
+  APP_DESCRIPTION,
+  BANK_NAME,
+  TEAM_NAME,
+  APP_VERSION,
+} from '../../shared/constants.js';
+
+
+// ── API & WebSocket Base URLs ───────────────
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+export const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
+
+// ── Banking Services (with all language labels) ─
+export const SERVICES = [
+  {
+    id: 'account_opening',
+    icon: 'UserPlus',
+    color: '#2563EB',
+    bgColor: 'rgba(37, 99, 235, 0.1)',
+    labels: {
+      en: 'Account Opening',
+      hi: 'खाता खोलना',
+      mr: 'खाते उघडणे',
+      ta: 'கணக்கு திறப்பு',
+      te: 'ఖాతా ప్రారంభం',
+      bn: 'অ্যাকাউন্ট খোলা',
+      kn: 'ಖಾತೆ ತೆರೆಯುವುದು',
+      or: 'ଆକାଉଣ୍ଟ ଖୋଲିବା',
+      pa: 'ਖਾਤਾ ਖੋਲ੍ਹਣਾ',
+      gu: 'ખાતું ખોલવું',
+      ml: 'അക്കൗണ്ട് തുറക്കൽ',
+    },
+  },
+  {
+    id: 'loan_enquiry',
+    icon: 'Landmark',
+    color: '#7C3AED',
+    bgColor: 'rgba(124, 58, 237, 0.1)',
+    labels: {
+      en: 'Loan Enquiry',
+      hi: 'ऋण पूछताछ',
+      mr: 'कर्ज चौकशी',
+      ta: 'கடன் விசாரணை',
+      te: 'రుణ విచారణ',
+      bn: 'ঋণ অনুসন্ধান',
+      kn: 'ಸಾಲ ವಿಚಾರಣೆ',
+      or: 'ଋଣ ଅନୁସନ୍ଧାନ',
+      pa: 'ਕਰਜ਼ਾ ਪੁੱਛਗਿੱਛ',
+      gu: 'લોન પૂછપરછ',
+      ml: 'ലോൺ അന്വേഷണം',
+    },
+  },
+  {
+    id: 'kyc_update',
+    icon: 'ShieldCheck',
+    color: '#059669',
+    bgColor: 'rgba(5, 150, 105, 0.1)',
+    labels: {
+      en: 'KYC Update',
+      hi: 'KYC अपडेट',
+      mr: 'KYC अपडेट',
+      ta: 'KYC புதுப்பிப்பு',
+      te: 'KYC నవీకరణ',
+      bn: 'KYC আপডেট',
+      kn: 'KYC ನವೀಕರಣ',
+      or: 'KYC ଅପଡେଟ',
+      pa: 'KYC ਅੱਪਡੇਟ',
+      gu: 'KYC અપડેટ',
+      ml: 'KYC അപ്‌ഡേറ്റ്',
+    },
+  },
+  {
+    id: 'card_services',
+    icon: 'CreditCard',
+    color: '#D97706',
+    bgColor: 'rgba(217, 119, 6, 0.1)',
+    labels: {
+      en: 'Card Services',
+      hi: 'कार्ड सेवाएं',
+      mr: 'कार्ड सेवा',
+      ta: 'அட்டை சேவைகள்',
+      te: 'కార్డ్ సేవలు',
+      bn: 'কার্ড সেবা',
+      kn: 'ಕಾರ್ಡ್ ಸೇವೆಗಳು',
+      or: 'କାର୍ଡ ସେବା',
+      pa: 'ਕਾਰਡ ਸੇਵਾਵਾਂ',
+      gu: 'કાર્ડ સેવાઓ',
+      ml: 'കാർഡ് സേവനങ്ങൾ',
+    },
+  },
+  {
+    id: 'balance_enquiry',
+    icon: 'Wallet',
+    color: '#0891B2',
+    bgColor: 'rgba(8, 145, 178, 0.1)',
+    labels: {
+      en: 'Balance Enquiry',
+      hi: 'शेष राशि पूछताछ',
+      mr: 'शिल्लक चौकशी',
+      ta: 'இருப்பு விசாரணை',
+      te: 'బ్యాలెన్స్ విచారణ',
+      bn: 'ব্যালেন্স অনুসন্ধান',
+      kn: 'ಬ್ಯಾಲೆನ್ಸ್ ವಿಚಾರಣೆ',
+      or: 'ବ୍ୟାଲେନ୍ସ ଅନୁସନ୍ଧାନ',
+      pa: 'ਬੈਲੇਂਸ ਪੁੱਛਗਿੱਛ',
+      gu: 'બેલેન્સ પૂછપરછ',
+      ml: 'ബാലൻസ് അന്വേഷണം',
+    },
+  },
+  {
+    id: 'fixed_deposit',
+    icon: 'PiggyBank',
+    color: '#BE185D',
+    bgColor: 'rgba(190, 24, 93, 0.1)',
+    labels: {
+      en: 'Fixed Deposit',
+      hi: 'सावधि जमा',
+      mr: 'मुदत ठेव',
+      ta: 'நிலையான வைப்பு',
+      te: 'ఫిక్స్‌డ్ డిపాజిట్',
+      bn: 'ফিক্সড ডিপোজিট',
+      kn: 'ಸ್ಥಿರ ಠೇವಣಿ',
+      or: 'ସ୍ଥିର ଜମା',
+      pa: 'ਫਿਕਸਡ ਡਿਪਾਜ਼ਿਟ',
+      gu: 'ફિક્સ્ડ ડિપોઝિટ',
+      ml: 'സ്ഥിര നിക്ഷേപം',
+    },
+  },
+];
+
+// ── Token Number Prefix by Language ─────────
+export const TOKEN_PREFIX = {
+  hi: 'HIN',
+  mr: 'MRT',
+  ta: 'TAM',
+  te: 'TEL',
+  bn: 'BEN',
+  kn: 'KAN',
+  or: 'ODI',
+  pa: 'PUN',
+  gu: 'GUJ',
+  ml: 'MAL',
+};
+
+
+
+// ── UI Strings (multilingual) ───────────────
+export const UI_STRINGS = {
+  selectLanguage: {
+    en: 'Select Your Language',
+    hi: 'अपनी भाषा चुनें',
+    mr: 'तुमची भाषा निवडा',
+    ta: 'உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்',
+    te: 'మీ భాషను ఎంచుకోండి',
+    bn: 'আপনার ভাষা নির্বাচন করুন',
+    kn: 'ನಿಮ್ಮ ಭಾಷೆಯನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+    or: 'ଆପଣଙ୍କ ଭାଷା ବାଛନ୍ତୁ',
+    pa: 'ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ',
+    gu: 'તમારી ભાષા પસંદ કરો',
+    ml: 'നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക',
+  },
+  tapToSpeak: {
+    en: 'Tap to Speak',
+    hi: 'बोलने के लिए टैप करें',
+    mr: 'बोलण्यासाठी टॅप करा',
+    ta: 'பேச தட்டவும்',
+    te: 'మాట్లాడటానికి నొక్కండి',
+    bn: 'কথা বলতে ট্যাপ করুন',
+    kn: 'ಮಾತನಾಡಲು ಟ್ಯಾಪ್ ಮಾಡಿ',
+    or: 'କଥା ହେବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ',
+    pa: 'ਬੋਲਣ ਲਈ ਟੈਪ ਕਰੋ',
+    gu: 'બોલવા માટે ટેપ કરો',
+    ml: 'സംസാരിക്കാൻ ടാപ്പ് ചെയ്യുക',
+  },
+  listening: {
+    en: 'Listening...',
+    hi: 'सुन रहे हैं...',
+    mr: 'ऐकत आहे...',
+    ta: 'கேட்கிறது...',
+    te: 'వింటోంది...',
+    bn: 'শুনছি...',
+    kn: 'ಕೇಳುತ್ತಿದೆ...',
+    or: 'ଶୁଣୁଛି...',
+    pa: 'ਸੁਣ ਰਿਹਾ ਹੈ...',
+    gu: 'સાંભળી રહ્યું છે...',
+    ml: 'കേൾക്കുന്നു...',
+  },
+  processing: {
+    en: 'Processing...',
+    hi: 'प्रोसेसिंग...',
+    mr: 'प्रक्रिया करत आहे...',
+    ta: 'செயலாக்குகிறது...',
+    te: 'ప్రాసెస్ చేస్తోంది...',
+    bn: 'প্রক্রিয়াকরণ হচ্ছে...',
+    kn: 'ಪ್ರಕ್ರಿಯೆ ನಡೆಯುತ್ತಿದೆ...',
+    or: 'ପ୍ରକ୍ରିୟାକରଣ ହେଉଛି...',
+    pa: 'ਪ੍ਰੋਸੈਸਿੰਗ...',
+    gu: 'પ્રોસેસિંગ...',
+    ml: 'പ്രോസസ്സ് ചെയ്യുന്നു...',
+  },
+  selectService: {
+    en: 'How can we help you today?',
+    hi: 'आज हम आपकी कैसे मदद कर सकते हैं?',
+    mr: 'आज आम्ही तुम्हाला कशी मदत करू शकतो?',
+    ta: 'இன்று நாங்கள் உங்களுக்கு எவ்வாறு உதவ முடியும்?',
+    te: 'ఈరోజు మేము మీకు ఎలా సహాయం చేయగలం?',
+    bn: 'আজ আমরা আপনাকে কিভাবে সাহায্য করতে পারি?',
+    kn: 'ಇಂದು ನಾವು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?',
+    or: 'ଆଜି ଆମେ ଆପଣଙ୍କୁ କିପରି ସାହାଯ୍ୟ କରିପାରିବା?',
+    pa: 'ਅੱਜ ਅਸੀਂ ਤੁਹਾਡੀ ਕਿਵੇਂ ਮਦਦ ਕਰ ਸਕਦੇ ਹਾਂ?',
+    gu: 'આજે અમે તમારી કેવી રીતે મદદ કરી શકીએ?',
+    ml: 'ഇന്ന് ഞങ്ങൾ നിങ്ങളെ എങ്ങനെ സഹായിക്കാം?',
+  },
+};
+
