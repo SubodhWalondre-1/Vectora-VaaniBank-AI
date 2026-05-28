@@ -190,15 +190,15 @@ All database entries, process guidelines, and knowledge sources are **100% synth
 * **Local Signature Storage** — SaralForm digital signature canvas PNG files are stored locally on disk. Production environments would require Cloudflare R2 or Amazon S3 object storage buckets.
 
 ## Team
-* **[Name 1]** — Full-stack Architecture, AI Pipeline Orchestration, & WebSocket Infrastructure
-* **[Name 2]** — Backend Database Design, PII Anonymization Service, & ReportLab PDF Generator
-* **[Name 3]** — Staff Panel Frontend, Performance Analytics Dashboard, & UI components
-* **[Name 4]** — Customer Panel Frontend, Mobile-First Kiosk UX, SaralForm Canvas, & Domain Research
+* **Subodh Walondre** — Full Stack + Architecture design 
+* **Amogh Samarth** — Customer Panel + Staff Panel Frontend 
+* **Sanskruti Mishra** — AI + Domain Research 
+* **Meksha Tajane** — UI/UX Design + Domain Research 
 
 ## Contact
 For any queries about this submission:
 * **Team Name**: Vectora
-* **Institute**: [Your College Name]
-* **Email**: [team-email@example.com]
+* **Institute**: S. B. Jain Institute of Technology, Management & Research, Nagpur 
+* **Email**: vectora.crew@gmail.com
 
 **iDEA 2.0 Phase 2 Submission — Problem Statement 6**
