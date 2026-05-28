@@ -63,8 +63,16 @@
   --service-card-hover: #e8eef8;
   --lang-card-bg: #FFFFFF;
   --lang-card-border: #E2E8F0;
-  --lang-card-active: #003087;
   --lang-card-active-text: #FFFFFF;
+
+  /* ── Legacy Variable Mapping (for ProcessPanel tabs) ── */
+  --color-background-primary:   var(--card-bg);
+  --color-background-secondary: var(--body-bg);
+  --color-text-primary:         var(--text-primary);
+  --color-text-secondary:       var(--text-secondary);
+  --color-border-primary:       var(--card-border);
+  --color-border-secondary:     var(--divider);
+  --color-border-tertiary:      var(--divider);
 }
 
 /* ──────────────────────────────────────────────

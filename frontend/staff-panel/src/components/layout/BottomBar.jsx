@@ -5,14 +5,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Mic,
-  MicOff,
-  Play,
-  Square,
-  FileDown,
-  MessageSquare,
-} from "lucide-react";
+import { Mic, MicOff, Play, Square, MessageSquare } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useAudio } from "../../hooks/useAudio";
 import { aiAPI } from "../../services/api";
@@ -151,8 +144,6 @@ function detectInputKeyword(text) {
 export default function BottomBar({
   lastAudioUrl,
   sttConfidence,
-  onExportPDF,
-  exportingPDF,
   sendMessage,
 }) {
   const activeSession = useApp((s) => s.activeSession);
@@ -660,13 +651,19 @@ export default function BottomBar({
       <div className="flex items-center gap-3 min-w-[260px]">
         {isActive && (
           <div className="hidden md:flex items-center gap-2 text-[10px] font-mono text-slate-400 select-none opacity-80">
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">Space</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+              Space
+            </kbd>
             <span>Record</span>
             <span className="text-slate-600">|</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">Enter</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+              Enter
+            </kbd>
             <span>Send</span>
             <span className="text-slate-600">|</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">Esc</kbd>
+            <kbd className="px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300">
+              Esc
+            </kbd>
             <span>Stop</span>
           </div>
         )}
@@ -926,18 +923,6 @@ export default function BottomBar({
           disabled={!lastAudioUrl}
         >
           {isPlaying ? "Stop" : "Play Response"}
-        </Button>
-
-        {/* Export PDF */}
-        <Button
-          variant="primary"
-          size="sm"
-          icon={FileDown}
-          onClick={onExportPDF}
-          loading={exportingPDF}
-          disabled={!isActive || exportingPDF}
-        >
-          {exportingPDF ? "Generating…" : "Export PDF"}
         </Button>
       </div>
 

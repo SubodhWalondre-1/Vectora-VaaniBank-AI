@@ -6,16 +6,37 @@
    Panel-specific constants defined below.
    ============================================ */
 
-// ── Re-export shared constants ──────────────
-export {
-  BRAND,
-  LANGUAGES,
-  APP_NAME,
-  APP_DESCRIPTION,
-  BANK_NAME,
-  TEAM_NAME,
-  APP_VERSION,
-} from '../../shared/constants.js';
+// ── Brand Colors ────────────────────────────
+export const BRAND = {
+  red: '#E8231A',
+  redDark: '#C41810',
+  redLight: '#FF4D45',
+  blue: '#003087',
+  blueDark: '#001a52',
+  blueMid: '#1a4db5',
+  blueLight: '#e8eef8',
+};
+
+// ── Supported Languages ─────────────────────
+export const LANGUAGES = [
+  { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳' },
+  { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳' },
+  { code: 'ta', name: 'Tamil', native: 'தமிழ்', flag: '🇮🇳' },
+  { code: 'te', name: 'Telugu', native: 'తెలుగు', flag: '🇮🇳' },
+  { code: 'bn', name: 'Bengali', native: 'বাংলা', flag: '🇮🇳' },
+  { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ', flag: '🇮🇳' },
+  { code: 'or', name: 'Odia', native: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
+  { code: 'pa', name: 'Punjabi', native: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
+  { code: 'gu', name: 'Gujarati', native: 'ગુજરાતી', flag: '🇮🇳' },
+  { code: 'ml', name: 'Malayalam', native: 'മലയാളം', flag: '🇮🇳' },
+];
+
+// ── App Meta ────────────────────────────────
+export const APP_NAME = 'VaaniBank AI';
+export const APP_DESCRIPTION = 'Multilingual Voice-First Banking Assistant';
+export const BANK_NAME = 'Union Bank of India';
+export const TEAM_NAME = 'Team Vectora';
+export const APP_VERSION = '1.0.0';
 
 
 // ── Intent Types ────────────────────────────

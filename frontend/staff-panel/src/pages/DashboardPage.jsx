@@ -226,8 +226,7 @@ function DashboardPageInner() {
         // Customer ended the session — handle here if WS hook didn't catch it
         if (customerEndedRef && !customerEndedRef.current) {
           customerEndedRef.current = true;
-          // Polling band, session reset, navigate
-          if (pollRef.current) clearInterval(pollRef.current);
+          // Reset session state and keep polling active for next customer
           connectedTokenRef.current = null;
           useAppStore.setState({
             activeSession: null,
@@ -408,8 +407,7 @@ function DashboardPageInner() {
   // ── Helper: fetch latest active session and connect WS ──
   const fetchAndConnect = useCallback(
     async (isInitial = false) => {
-      // Customer ended the session — stop polling
-      if (customerEndedRef.current) return;
+      // Always allow polling to find new waiting/active sessions
       const jwtToken = localStorage.getItem("vaanibank_token");
       if (!staff || !jwtToken) {
         if (isInitial) setBooting(false);
@@ -561,11 +559,6 @@ function DashboardPageInner() {
   // Fast polling catches customer-created sessions (QR scan) almost instantly
   useEffect(() => {
     pollRef.current = setInterval(() => {
-      // Avoid network polling overhead if there is already an active session
-      const state = useAppStore.getState();
-      if (state.activeSession && state.sessionStatus === "active") {
-        return;
-      }
       fetchAndConnect(false);
     }, 3000);
 

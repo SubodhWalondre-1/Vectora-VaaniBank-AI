@@ -933,13 +933,13 @@ export default function InfoTab({
               />
               <p
                 className="text-xs font-semibold"
-                style={{ color: "var(--color-text-primary, #0f172a)" }}
+                style={{ color: "var(--text-primary, #0f172a)" }}
               >
                 Analyzing conversation...
               </p>
               <p
                 className="text-[10px]"
-                style={{ color: "var(--color-text-secondary, #64748b)" }}
+                style={{ color: "var(--text-secondary, #64748b)" }}
               >
                 Smart Navigator loads after first AI response
               </p>
@@ -1561,12 +1561,12 @@ export default function InfoTab({
         <div
           key={bi}
           className="rounded-xl p-3"
-          style={{ background: "var(--color-background-secondary, #f8fafc)" }}
+          style={{ background: "var(--body-bg, #f8fafc)" }}
         >
           <div
             className="text-xs font-medium mb-2 uppercase tracking-wide"
             style={{
-              color: "var(--color-text-secondary, #64748b)",
+              color: "var(--text-secondary, #64748b)",
               letterSpacing: "0.4px",
             }}
           >
@@ -1576,13 +1576,13 @@ export default function InfoTab({
             <div key={ri} className="flex justify-between items-center py-1">
               <span
                 className="text-xs"
-                style={{ color: "var(--color-text-secondary, #64748b)" }}
+                style={{ color: "var(--text-secondary, #64748b)" }}
               >
                 {row.key}
               </span>
               <span
                 className="text-xs font-medium"
-                style={{ color: "var(--color-text-primary, #0f172a)" }}
+                style={{ color: "var(--text-primary, #0f172a)" }}
               >
                 {row.value}
               </span>

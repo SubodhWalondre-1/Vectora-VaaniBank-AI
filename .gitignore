@@ -1,0 +1,35 @@
+AGENTS.md
+AI_CONTEXT.md
+CLAUDE.md
+D1_problem_solution.md
+data.md
+feature.md
+HACKATHON_JUDGE_PROMPT.md
+minor_major.md
+project_context.md
+saralform.md
+TECHNICAL_ARCHITECTURE.md
+
+# Redundant Backup Archives
+frontend/staff-panel.rar
+
+# Temporary / Unused Graphics
+customer-panel-scanner.png
+
+# Build / Runtime Directories & Caches
+.pytest_cache/
+**/node_modules/
+**/dist/
+**/*.log
+backend/storage/
+backend/storage/chroma_db/
+backend/venv/
+backend/.env
+
+# IDE & System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+
