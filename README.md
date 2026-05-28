@@ -47,7 +47,7 @@ Ensure **PostgreSQL** and **Redis** are running, then create the database:
 ```sql
 -- Create database role and database for local development ONLY
 -- NOTE: In production, use a strong random password and load via secure env vars.
-CREATE ROLE vaanibank WITH LOGIN PASSWORD 'vaanibank12345';
+CREATE ROLE vaanibank WITH LOGIN PASSWORD 'YourPassword';
 CREATE DATABASE vaanibank_db OWNER vaanibank;
 GRANT ALL PRIVILEGES ON DATABASE vaanibank_db TO vaanibank;
 ```
@@ -67,7 +67,7 @@ cp .env.example .env
 ```
 Open the newly created `.env` file and insert your respective AI service API keys (Sarvam, Groq, Gemini, Reverie):
 ```env
-DATABASE_URL=postgresql://vaanibank:vaanibank12345@localhost:5432/vaanibank_db
+DATABASE_URL=postgresql://vaanibank:YourPassword@localhost:5432/vaanibank_db
 REDIS_URL=redis://localhost:6379/0
 
 # Insert your active API keys:
