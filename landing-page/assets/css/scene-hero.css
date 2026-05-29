@@ -1,0 +1,467 @@
+/* ============================================
+   SCENE 1 — HERO  (React → HTML Parity Build)
+   VaaniBank AI — scene-hero.css
+   ============================================ */
+
+/* ── Hero section — crosshair cursor for ball spawn ─── */
+#scene-hero {
+  background: var(--bg-hero);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+/* ── Animated blobs — ENABLED (Liquid Metal Aurora morphs) ── */
+.hero-mesh,
+.hero-mesh::before,
+.hero-mesh::after,
+.hero-mesh-blue {
+  will-change: transform, border-radius;
+  transform: translate3d(0, 0, 0);
+}
+
+/*
+ * FIX: #bg-canvas was globally hidden with display:none !important.
+ * This was meant to hide particles only on the Hero scene, but since
+ * it's a global selector it hid the canvas on ALL scenes — making
+ * particle effects disappear site-wide.
+ *
+ * Correct approach: hide #bg-canvas ONLY when Hero scene is active.
+ * The scroll engine adds .active-scene to the current scene,
+ * so we scope the hide rule to only fire when Hero is the active scene.
+ *
+ * When Demo/Contact/Voice scenes are active, #bg-canvas is visible again
+ * (though it stays behind scenes via z-index, so it only shows through
+ * transparent-background scenes anyway).
+ */
+#scene-hero.active-scene ~ * #bg-canvas,
+#scene-hero.active-scene #bg-canvas {
+  display: none;
+}
+
+/* Simpler global approach: just hide it always since Hero uses aurora canvas instead */
+#bg-canvas { display: none; }
+
+/* ── Aurora Blobs Canvas — DISABLED (plain white bg) ───── */
+#hero-aurora-canvas {
+  display: none !important;
+}
+
+/* ── Liquid Metal Morphs — Animated Background Blobs ──── */
+.hero-mesh {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Aurora blobs — disabled for pure white background */
+.hero-mesh::before,
+.hero-mesh::after {
+  display: none;
+}
+
+.hero-mesh-blue {
+  display: none;
+}
+
+@keyframes liquidMorphNavy {
+  0%   { border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; transform: translate(0,0) scale(1); }
+  33%  { border-radius: 30% 70% 40% 60% / 60% 30% 70% 40%; transform: translate(-20px, 30px) scale(1.04); }
+  66%  { border-radius: 50% 50% 30% 70% / 70% 40% 60% 30%; transform: translate(15px, -20px) scale(0.97); }
+  100% { border-radius: 40% 60% 60% 40% / 40% 70% 30% 60%; transform: translate(-10px, 15px) scale(1.02); }
+}
+
+@keyframes liquidMorphRed {
+  0%   { border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; transform: translate(0,0) scale(1); }
+  33%  { border-radius: 70% 30% 60% 40% / 40% 60% 30% 70%; transform: translate(25px, -30px) scale(1.06); }
+  66%  { border-radius: 30% 70% 50% 50% / 50% 30% 70% 50%; transform: translate(-15px, 20px) scale(0.95); }
+  100% { border-radius: 60% 40% 40% 60% / 70% 50% 50% 30%; transform: translate(10px, -10px) scale(1.03); }
+}
+
+@keyframes liquidMorphBlue {
+  0%   { border-radius: 70% 30% 50% 50% / 40% 60% 40% 60%; transform: translate(0,0) scale(1); }
+  50%  { border-radius: 40% 60% 70% 30% / 60% 40% 60% 40%; transform: translate(-20px, -25px) scale(1.07); }
+  100% { border-radius: 50% 50% 30% 70% / 30% 70% 50% 50%; transform: translate(18px, 12px) scale(0.95); }
+}
+
+/* ── Subtle grid overlay — hidden on white bg ───────────── */
+.hero-grid {
+  display: none;
+}
+
+/* ── Layout ────────────────────────────────────────────── */
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--container-max, 1280px);
+  margin: 0 auto;
+  padding: 0 var(--container-pad, 5vw);
+  display: grid;
+  grid-template-columns: 1.05fr 1.15fr;
+  align-items: center;
+  gap: 32px;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ── Left ──────────────────────────────────────────────── */
+.hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-top: var(--nav-h, 72px);
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity 0.85s var(--ease-spring), transform 0.85s var(--ease-spring);
+}
+.hero-left.animate-in { opacity: 1; transform: translateX(0); }
+
+/* Eyebrow */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(232,57,42,0.08);
+  border: 1px solid rgba(232,57,42,0.22);
+  border-radius: var(--radius-full, 9999px);
+  padding: 6px 14px;
+  width: fit-content;
+}
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  background: var(--red, #E8392A);
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: eyebrowPulse 2s ease-out infinite;
+}
+@keyframes eyebrowPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(232,57,42,0.6); }
+  70%  { box-shadow: 0 0 0 8px rgba(232,57,42,0); }
+  100% { box-shadow: 0 0 0 0 rgba(232,57,42,0); }
+}
+.hero-eyebrow-text {
+  font-family: var(--font-dm, 'DM Sans', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red, #E8392A);
+}
+
+/* H1 */
+.hero-h1 {
+  font-family: var(--font-sora, 'Sora', sans-serif);
+  font-weight: 900;
+  font-size: clamp(2.8rem, 5.2vw, 4.6rem);
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: var(--navy, #1B2B6B);
+}
+
+.accent-red {
+  background: linear-gradient(135deg, var(--red, #E8392A) 0%, #FF6B4A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Language morph — matches React: .hero-lang-morph + .morphing */
+.hero-lang-morph {
+  display: inline-block;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.hero-lang-morph.morphing {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+}
+
+/* Desc */
+.hero-desc {
+  font-family: var(--font-dm, 'DM Sans', sans-serif);
+  font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+  line-height: 1.8;
+  color: var(--navy, #1B2B6B);
+  opacity: 0.52;
+  max-width: 420px;
+}
+
+/* CTAs */
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+
+
+
+/* ── Right ─────────────────────────────────────────────── */
+.hero-right {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--nav-h, 72px);
+  height: 100%;
+  min-height: 400px;
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 0.9s var(--ease-spring) 0.12s, transform 0.9s var(--ease-spring) 0.12s;
+  margin-right: -2vw;
+}
+.hero-right.animate-in { opacity: 1; transform: translateX(0); }
+
+/* ── Mascot wrap — transparent, waves show through ─────── */
+.hero-video-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  z-index: 5;
+  transform-style: preserve-3d;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+}
+
+/* White shield REMOVED — waves now visible behind video */
+.hero-video-wrap::before {
+  display: none;
+}
+
+/* ── Mascot Rings ──────────────────────────────────────── */
+.mascot-ring {
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(#dce8fb, #cddaf5) padding-box,
+    conic-gradient(from 0deg, #E8392A 0%, #1B2B6B 33%, #C5D1F5 66%, #E8392A 100%) border-box;
+  animation: ringRotate 9s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0.7;
+}
+.mascot-ring-2 {
+  position: absolute;
+  inset: 1%;
+  border-radius: 50%;
+  border: 1px dashed rgba(27,43,107,0.15);
+  animation: ringRotate 20s linear infinite reverse;
+  pointer-events: none;
+  z-index: 4;
+}
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Ground glow shadow */
+.mascot-glow {
+  position: absolute;
+  bottom: 2%; left: 50%;
+  transform: translateX(-50%);
+  width: 65%; height: 35%;
+  background: radial-gradient(ellipse, rgba(27,43,107,0.18) 0%, transparent 70%);
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── Mascot Video — waves visible behind, edges fade cleanly ── */
+.hero-video {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  position: relative;
+  z-index: 5;
+
+  /* multiply: white pixels in video become transparent → waves show through */
+  mix-blend-mode: multiply;
+
+  /* Fade edges smoothly — no hard border */
+  -webkit-mask-image: radial-gradient(
+    ellipse 88% 85% at 50% 50%,
+    black 52%,
+    rgba(0,0,0,0.9) 63%,
+    rgba(0,0,0,0.6) 74%,
+    rgba(0,0,0,0.2) 86%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 88% 85% at 50% 50%,
+    black 52%,
+    rgba(0,0,0,0.9) 63%,
+    rgba(0,0,0,0.6) 74%,
+    rgba(0,0,0,0.2) 86%,
+    transparent 100%
+  );
+
+  filter: brightness(1.02) contrast(1.06) saturate(1.08);
+  transform: scale(1.12);
+  transform-origin: center 50%;
+  /* background transparent so waves bleed through mix-blend-mode */
+  background: transparent;
+}
+
+/* ── Scroll Prompt ─────────────────────────────────────── */
+.scroll-prompt {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 5;
+  opacity: 0.42;
+}
+.scroll-mouse {
+  width: 22px; height: 34px;
+  border: 2px solid var(--navy);
+  border-radius: 11px;
+  display: flex;
+  justify-content: center;
+  padding-top: 5px;
+}
+.scroll-mouse-wheel {
+  width: 3px; height: 6px;
+  background: var(--navy);
+  border-radius: 2px;
+  animation: mouseScroll 1.8s ease-in-out infinite;
+}
+@keyframes mouseScroll {
+  0%   { transform: translateY(0);    opacity: 1; }
+  70%  { transform: translateY(10px); opacity: 0.15; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
+.scroll-prompt-text {
+  font-family: var(--font-dm, 'DM Sans', sans-serif);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0;
+    padding: 0 var(--container-pad);
+    padding-top: var(--nav-h);
+  }
+  .hero-left  { align-items: center; order: 2; padding-top: 12px; }
+  .hero-right { order: 1; padding-top: 20px; height: auto; min-height: 260px; }
+  .hero-desc  { max-width: 90%; }
+  .hero-ctas { justify-content: center; }
+  .hero-eyebrow { margin: 0 auto; }
+  .hero-video-wrap { max-width: 380px; }
+}
+
+@media (max-width: 480px) {
+  .hero-h1 { font-size: clamp(2rem, 8vw, 2.6rem); }
+  .hero-video-wrap { max-width: 260px; }
+}
+
+/* ── Hero Content Wrap — stacks hero-inner + stats vertically ── */
+.hero-content-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Stats Strip ───────────────────────────────────────────────────── */
+.hero-stats-strip {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid rgba(27,43,107,0.10);
+  border-radius: 16px;
+  box-shadow: 0 2px 24px rgba(27,43,107,0.07);
+  padding: 20px 36px;
+  gap: 0;
+  white-space: nowrap;
+  width: max-content;
+  max-width: calc(100% - 48px);
+  margin-bottom: 16px;
+}
+
+.hero-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0 32px;
+}
+
+.hero-stat-value {
+  font-family: var(--font-sora, 'Sora', sans-serif);
+  font-weight: 800;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  color: var(--navy, #1B2B6B);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hero-stat-label {
+  font-family: var(--font-dm, 'DM Sans', sans-serif);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(27,43,107,0.45);
+}
+
+.hero-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(27,43,107,0.12);
+  flex-shrink: 0;
+}
+
+/* push scroll-prompt lower so it clears the strip */
+.scroll-prompt {
+  position: relative;
+  bottom: auto;
+  left: auto;
+  transform: none;
+  margin: 8px auto 20px;
+}
+
+@media (max-width: 900px) {
+  .hero-stats-strip {
+    padding: 16px 20px;
+    bottom: 70px;
+    gap: 0;
+  }
+  .hero-stat-item { padding: 0 16px; }
+  .hero-stat-value { font-size: 1.2rem; }
+  .hero-stat-label { font-size: 0.55rem; }
+}
+
+@media (max-width: 600px) {
+  .hero-stats-strip {
+    flex-wrap: wrap;
+    width: calc(100% - 32px);
+    padding: 14px 12px;
+    gap: 12px 0;
+    bottom: 60px;
+  }
+  .hero-stat-divider { display: none; }
+  .hero-stat-item { padding: 0 12px; width: 33.33%; }
+}
