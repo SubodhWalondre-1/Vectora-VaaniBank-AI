@@ -1,0 +1,261 @@
+# VaniBank NLP Sentiment Lexer - Training Data & Scoring Rules
+# ============================================================
+# This file is loaded dynamically by the contact form sentiment model at runtime.
+# You can add or modify rules here to train/update the model without changing code.
+
+[NEGATIONS]
+not, no, never, dont, don't, arent, aren't, wasnt, wasn't, isnt, isn't, without, cant, can't, neither, nor
+
+[INTENSIFIERS]
+very = 2.0
+extremely = 2.5
+really = 1.8
+so = 1.6
+super = 1.8
+highly = 2.0
+absolutely = 2.2
+incredibly = 2.4
+unbelievably = 2.5
+quite = 1.4
+too = 1.5
+completely = 2.0
+total = 1.5
+totally = 2.0
+dreadfully = 2.0
+exceptionally = 2.2
+excessively = 2.0
+
+[MULTIWORD_RULES]
+"not working" = -3.5
+"doesn't work" = -3.0
+"does not work" = -3.0
+"waste of time" = -3.5
+"worst bank" = -4.0
+"worst service" = -4.0
+"no response" = -2.5
+"poor support" = -3.0
+"bad experience" = -3.5
+"happy to" = 2.0
+"well done" = 3.0
+"highly recommend" = 3.5
+"no issues" = 2.0
+"no complaints" = 2.5
+"so fast" = 2.0
+"too slow" = -3.0
+"keeps loading" = -2.5
+"money deducted" = -3.5
+"lost my money" = -4.0
+"unable to login" = -3.0
+"cant login" = -2.5
+"can't login" = -2.5
+
+[POSITIVE_WORDS]
+excellent = 3.0
+great = 2.0
+awesome = 3.0
+amazing = 2.0
+helpful = 2.0
+loved = 2.0
+love = 2.0
+fantastic = 3.0
+wonderful = 3.0
+perfect = 3.0
+smooth = 2.0
+fast = 2.0
+quick = 2.0
+prompt = 2.0
+pleased = 2.0
+happy = 2.0
+satisfy = 2.0
+satisfied = 2.0
+easy = 2.0
+simple = 2.0
+elegant = 2.0
+premium = 2.0
+wow = 3.0
+thank = 2.0
+thanks = 2.0
+good = 1.0
+best = 2.0
+solved = 2.0
+resolved = 2.0
+resolution = 2.0
+stellar = 3.0
+outstanding = 3.0
+recommend = 2.0
+positive = 1.0
+friendly = 2.0
+efficient = 2.0
+superb = 3.0
+brilliant = 3.0
+useful = 2.0
+convenient = 2.0
+responsive = 2.0
+dhanyawad = 2.5
+shukriya = 2.5
+bahut = 1.5
+accha = 1.5
+achha = 1.5
+badhiya = 2.0
+sahi = 1.5
+suvidha = 2.0
+sundar = 2.0
+approved = 2.5
+credited = 2.0
+disbursed = 2.0
+available = 1.5
+cleared = 2.0
+processed = 1.5
+successful = 2.5
+completed = 2.0
+instant = 2.0
+secure = 2.0
+
+# Hindi Devanagari — banking positive terms
+मंजूर = 2.5
+जमा = 2.0
+सफल = 2.2
+धन्यवाद = 1.5
+उत्कृष्ट = 2.0
+प्राप्त = 1.8
+सक्रिय = 1.8
+
+# Marathi Devanagari — banking positive terms
+मंजूर = 2.5
+यशस्वी = 2.2
+धन्यवाद = 1.5
+उत्कृष्ट = 2.0
+
+
+[NEGATIVE_WORDS]
+bad = -1.5
+worst = -3.0
+terrible = -3.0
+lag = -2.0
+laggy = -2.0
+angry = -2.0
+slow = -2.0
+hate = -2.5
+poor = -2.0
+horrible = -3.0
+error = -2.0
+bug = -2.0
+bugs = -2.0
+crash = -3.0
+crashed = -3.0
+issue = -1.0
+problem = -1.0
+failed = -2.0
+fail = -2.0
+failing = -2.0
+failure = -2.0
+broken = -2.0
+difficult = -2.0
+complex = -2.0
+delays = -2.0
+delayed = -2.0
+delay = -2.0
+disappointing = -2.5
+disappointed = -2.5
+ignore = -2.0
+ignored = -2.0
+useless = -3.0
+frustrated = -2.5
+frustrating = -2.5
+upset = -2.0
+complaint = -2.0
+complain = -2.0
+refund = -2.0
+blocked = -2.0
+locked = -2.0
+charge = -1.5
+charges = -1.5
+wait = -2.0
+waiting = -1.0
+negative = -1.0
+poorly = -2.0
+annoyed = -2.0
+annoying = -2.0
+stuck = -2.0
+slowly = -2.0
+rude = -3.0
+unhelpful = -2.0
+wrong = -2.0
+incorrect = -2.0
+fraud = -3.5
+glitch = -2.0
+timeout = -2.0
+expensive = -2.0
+fees = -2.0
+fee = -2.0
+unhappy = -2.0
+rejected = -3.0
+declined = -3.0
+frozen = -3.0
+unauthorized = -3.0
+cheating = -3.5
+scam = -3.5
+harass = -3.0
+harassment = -3.0
+overcharged = -3.0
+deducted = -2.0
+stolen = -3.5
+missing = -2.0
+disappeared = -2.5
+pending = -1.5
+corrupt = -3.0
+cheat = -3.0
+pareshaan = -2.0
+pareshani = -2.0
+samajh = -1.0
+mushkil = -2.0
+dikkat = -2.0
+kharab = -2.0
+bura = -2.0
+galat = -2.0
+
+# Hindi Devanagari — banking negative terms
+शिकायत = -2.5
+गलत = -2.0
+समस्या = -2.0
+देरी = -1.8
+अवरुद्ध = -2.2
+अस्वीकृत = -2.8
+विफल = -2.5
+रुका = -1.5
+नुकसान = -2.5
+परेशान = -2.0
+चिंता = -1.5
+
+# Marathi Devanagari — banking negative terms
+तक्रार = -2.5
+चूक = -2.0
+अडचण = -2.0
+नाकारले = -2.8
+अयशस्वी = -2.5
+विलंब = -1.8
+
+
+[FRICTION_WORDS]
+otp = -1.5
+login = -1.0
+password = -1.0
+security = -1.0
+unauthorized = -3.0
+deducted = -2.0
+lost = -2.0
+charges = -1.5
+unable = -1.5
+cannot = -1.5
+glitch = -2.0
+rejected = -3.0
+declined = -3.0
+frozen = -3.0
+suspended = -3.0
+hold = -1.5
+overdue = -2.0
+expired = -2.0
+invalid = -2.0
+overdraft = -2.0
+penalty = -2.0
+dispute = -2.0
