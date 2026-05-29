@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VaaniBank AI — Banking in Every Language</title>
+  <link rel="icon" type="image/png" href="assets/images/vaniBankAi-192.png" />
+  <meta name="description" content="VaaniBank AI is India's first voice-first AI banking platform supporting 10 Indian languages with under 300ms response time. Vaani Jo Har Bhasha Jane." />
+  <meta property="og:title" content="VaaniBank AI — Banking in Every Language" />
+  <meta property="og:description" content="Voice-first AI banking for Bharat. 10 languages. Under 300ms." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/images/vaniBankAi.webp" type="image/webp" />
+  <link rel="preload" as="style" href="assets/css/tokens.css" />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="assets/css/reset.css" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/nav.css" />
+  <link rel="stylesheet" href="assets/css/scroll.css" />
+  <link rel="stylesheet" href="assets/css/loading.css" />
+  <link rel="stylesheet" href="assets/css/scene-hero.css" />
+  <link rel="stylesheet" href="assets/css/cursor.css" />
+  <link rel="stylesheet" href="assets/css/scene-voice.css" />
+  <link rel="stylesheet" href="assets/css/scene-features.css" />
+  <link rel="stylesheet" href="assets/css/scene-demo.css" />
+  <link rel="stylesheet" href="assets/css/scene-contact.css" />
+  <link rel="stylesheet" href="assets/css/theme.css" />
+  <link rel="stylesheet" href="assets/css/role-modal.css" />
+  
+  <!-- Open Graph image for social previews -->
+  <meta property="og:image" content="assets/images/vaniBankAi.webp" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://YOUR_DEPLOYED_URL" />
+
+  <!-- PWA manifest for branch kiosk home screen installation -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1B2B6B" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="assets/images/vaniBankAi-192.png" />
+</head>
+<body>
+
+<a class="skip-link" href="#scene-hero">Skip to content</a>
+
+<div id="front-loading-screen">
+  <div class="loading-logo-wrapper">
+    <img src="assets/images/vaniBankAi.webp" alt="VaaniBank AI" class="loading-logo"
+         loading="eager" decoding="sync" width="200" height="60" />
+    <div class="loading-tagline">Vaani Jo Har Bhasha Jane</div>
+    <div class="loading-bar-track">
+      <div class="loading-bar-fill" id="loading-bar-fill"></div>
+    </div>
+  </div>
+</div>
+
+<div id="cursor-dot" aria-hidden="true"></div>
+<div id="cursor-ring" aria-hidden="true"></div>
+
+<!-- ── Fixed Logo — top left, visible only on hero ── -->
+<a href="#" class="hero-nav-logo" id="hero-nav-logo" aria-label="VaaniBank AI Home">
+  <img src="assets/images/vaniBankAi.webp" alt="VaaniBank AI Logo"
+       loading="eager" decoding="async" width="200" height="60" />
+</a>
+
+<!-- ── Fixed Get Started — top right, visible only on hero ── -->
+<div class="hero-nav-cta" id="hero-nav-cta">
+  <button class="hero-nav-cta-btn" id="nav-auth" aria-haspopup="dialog">
+    Get Started <span>→</span>
+  </button>
+</div>
+
+<!-- ── Nav — center pill only, always visible ── -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <ul class="nav-links" role="list">
+    <li><a href="#scene-hero" class="nav-link active" id="nav-landing">Home</a></li>
+    <li><a href="#scene-voice" class="nav-link" id="nav-voice">
+      Voice AI
+    </a></li>
+    <li><a href="#scene-features" class="nav-link" id="nav-features">Features</a></li>
+    <li><a href="#scene-demo" class="nav-link" id="nav-demo">Demo</a></li>
+    <li><a href="#scene-contact" class="nav-link" id="nav-contact">Message Us</a></li>
+  </ul>
+</nav>
+
+<main id="scroller" aria-label="Page sections">
+  <div id="sticky-container">
+
+    <!-- ══════ SCENE 1 — HERO ══════ -->
+    <section class="scene" id="scene-hero" aria-label="Hero">
+      <div class="hero-mesh" aria-hidden="true"></div>
+      <div class="hero-mesh-blue" aria-hidden="true"></div>
+      <div class="hero-grid" aria-hidden="true"></div>
+
+      <div class="hero-content-wrap">
+      <div class="hero-inner">
+        <div class="hero-left" id="hero-left">
+          <div class="hero-eyebrow">
+            <span class="hero-eyebrow-dot"></span>
+            <span class="hero-eyebrow-text">India's #1 Voice Banking AI</span>
+          </div>
+          <h1 class="hero-h1">
+            Banking in<br />
+            <span class="accent-red">Every</span>
+            <span class="hero-lang-morph" id="hero-lang-morph">Language</span>
+          </h1>
+          <p class="hero-desc">
+            VaaniBank AI serves frontline desk support with real-time voice translation across 10 Indian languages — so every customer is heard, in their own tongue.
+          </p>
+          <div class="hero-ctas">
+            <a href="#" class="btn btn-navy" id="cta-get-started">
+              Get Started <span class="btn-icon">→</span>
+            </a>
+            <a href="#scene-voice" class="btn btn-ghost" id="cta-learn">
+              See How It Works
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-right" id="hero-right">
+          <div class="hero-video-wrap" id="hero-video-wrap">
+            <div class="mascot-glow" aria-hidden="true"></div>
+            <img
+              id="main-hero-gif"
+              class="hero-video"
+              src="assets/images/hero-video/ball_spiner.gif"
+              alt="VaaniBank AI Voice Ball"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /.hero-inner -->
+      <!-- ── Stats Strip ── -->
+      <div class="hero-stats-strip" aria-label="Key metrics">
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">10</div>
+          <div class="hero-stat-label">INDIAN LANGUAGES</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">~0.8s</div>
+          <div class="hero-stat-label">LLM RESPONSE</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">93%</div>
+          <div class="hero-stat-label">INTENT ACCURACY</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">8</div>
+          <div class="hero-stat-label">BANKING SERVICES</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-value">~40%</div>
+          <div class="hero-stat-label">TTS CACHE HIT (REDIS)</div>
+        </div>
+      </div>
+
+      </div><!-- /.hero-content-wrap -->
+      <div class="scroll-prompt" aria-hidden="true">
+        <div class="scroll-mouse">
+          <div class="scroll-mouse-wheel"></div>
+        </div>
+        <span class="scroll-prompt-text">Scroll</span>
+      </div>
+    </section>
+
+    <!-- ══════ SCENE 2 — VOICE ASSISTANT ══════ -->
+    <section class="scene" id="scene-voice" aria-label="Voice Assistant">
+
+      <div class="voice-inner container">
+        <div class="voice-left">
+          <div class="section-label">Voice Intelligence</div>
+          <h2 class="section-heading" style="color:var(--navy)">
+            Real-Time AI that speaks<br />
+            <span style="color:var(--red)">Bharat's</span> <span class="voice-lang-morph" id="voice-lang-morph">languages</span>
+          </h2>
+          <p class="section-desc" style="color:var(--navy)">
+            From the mountains of Himachal to the shores of Kerala — our AI recognises
+            every dialect, every accent, instantly.
+          </p>
+          <div class="voice-tabs" role="tablist">
+            <button class="voice-tab active" role="tab" id="tab-voice">
+              <div class="voice-tab-icon">🎙️</div>
+              <div class="voice-tab-text">
+                <span class="voice-tab-title">Voice Recognition</span>
+                <span class="voice-tab-sub">Real-time with pulse visualizer</span>
+              </div>
+            </button>
+            <button class="voice-tab" role="tab" id="tab-langs">
+              <div class="voice-tab-icon">🌐</div>
+              <div class="voice-tab-text">
+                <span class="voice-tab-title">10 Languages</span>
+                <span class="voice-tab-sub">Every major Indian language</span>
+              </div>
+            </button>
+            <button class="voice-tab" role="tab" id="tab-flow">
+              <div class="voice-tab-icon">⚡</div>
+              <div class="voice-tab-text">
+                <span class="voice-tab-title">End-to-End Flow</span>
+                <span class="voice-tab-sub">Live pipeline walkthrough</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="voice-panel" role="tabpanel">
+          <div class="voice-panel-content active" id="panel-voice">
+            <div class="mic-visualizer" aria-hidden="true">
+              <div class="mic-pulse-ring"></div>
+              <div class="mic-pulse-ring"></div>
+              <div class="mic-pulse-ring"></div>
+              <div class="mic-core">🎙️</div>
+            </div>
+            <div class="wave-bars" aria-hidden="true">
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+              <div class="wave-bar"></div><div class="wave-bar"></div>
+            </div>
+            <div class="voice-result">
+              <div class="voice-result-label">Live Transcript</div>
+              <div class="voice-result-text" id="voice-result-text">मेरा बैलेंस चेक करें</div>
+              <div class="voice-result-label" style="margin-top:6px" id="voice-result-lang">Detected: Hindi</div>
+            </div>
+          </div>
+
+          <div class="voice-panel-content" id="panel-langs">
+            <div class="lang-grid">
+              <div class="lang-pill">हिंदी<span class="lang-native">Hindi</span></div>
+              <div class="lang-pill">मराठी<span class="lang-native">Marathi</span></div>
+              <div class="lang-pill">தமிழ்<span class="lang-native">Tamil</span></div>
+              <div class="lang-pill">తెలుగు<span class="lang-native">Telugu</span></div>
+              <div class="lang-pill">বাংলা<span class="lang-native">Bengali</span></div>
+              <div class="lang-pill">ಕನ್ನಡ<span class="lang-native">Kannada</span></div>
+              <div class="lang-pill">ଓଡ଼ିଆ<span class="lang-native">Odia</span></div>
+              <div class="lang-pill">ਪੰਜਾਬੀ<span class="lang-native">Punjabi</span></div>
+              <div class="lang-pill">ગુજરાતી<span class="lang-native">Gujarati</span></div>
+              <div class="lang-pill">മലയാളം<span class="lang-native">Malayalam</span></div>
+            </div>
+          </div>
+
+          <div class="voice-panel-content" id="panel-flow">
+            <div class="flow-cards-wrap" id="flow-steps-list">
+
+              <div class="flow-card" data-step="0">
+                <div class="flow-card-connector"></div>
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 1 OF 7</span>
+                    <span class="flow-card-icon">🧑</span>
+                  </div>
+                  <div class="flow-card-title">Customer Speech</div>
+                  <div class="flow-card-desc">Voice input captured in any Indian language — Hindi, Marathi, Tamil, Telugu &amp; more, in real-time.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">Mic Input</span>
+                    <span class="flow-card-tag">Real-Time</span>
+                    <span class="flow-card-tag">10 Languages</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-card" data-step="1">
+                <div class="flow-card-connector"></div>
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 2 OF 7</span>
+                    <span class="flow-card-icon">🎙️</span>
+                  </div>
+                  <div class="flow-card-title">STT + PII Masking</div>
+                  <div class="flow-card-desc">Speech converted to text via multilingual ASR. Aadhaar, PAN &amp; phone auto-masked before processing.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">Whisper ASR</span>
+                    <span class="flow-card-tag">PII Redaction</span>
+                    <span class="flow-card-tag">GDPR Safe</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-card" data-step="2">
+                <div class="flow-card-connector"></div>
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 3 OF 7</span>
+                    <span class="flow-card-icon">🧠</span>
+                  </div>
+                  <div class="flow-card-title">LLM Processing</div>
+                  <div class="flow-card-desc">Translation to English, intent classification &amp; contextual suggestions generated for the agent.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">Translation</span>
+                    <span class="flow-card-tag">Intent NLP</span>
+                    <span class="flow-card-tag">Suggestions</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-card" data-step="3">
+                <div class="flow-card-connector"></div>
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 4 OF 7</span>
+                    <span class="flow-card-icon">🗄️</span>
+                  </div>
+                  <div class="flow-card-title">DB Save + Broadcast</div>
+                  <div class="flow-card-desc">Session data persisted to PostgreSQL &amp; broadcast live to the staff panel via WebSocket.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">PostgreSQL</span>
+                    <span class="flow-card-tag">WebSocket</span>
+                    <span class="flow-card-tag">Real-Time</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-card" data-step="4">
+                <div class="flow-card-connector"></div>
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 5 OF 7</span>
+                    <span class="flow-card-icon">👩‍💼</span>
+                  </div>
+                  <div class="flow-card-title">Staff Panel</div>
+                  <div class="flow-card-desc">Agent sees translated transcript, detected intent &amp; AI suggestions on their dashboard. Types or selects a response.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">Agent UI</span>
+                    <span class="flow-card-tag">AI Suggestions</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-card" data-step="5">
+                <div class="flow-card-connector"></div>
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 6 OF 7</span>
+                    <span class="flow-card-icon">🔊</span>
+                  </div>
+                  <div class="flow-card-title">TTS + Playback</div>
+                  <div class="flow-card-desc">Agent response converted to speech via Neural TTS in customer's language. Redis caching for ~40% faster repeats.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">Neural TTS</span>
+                    <span class="flow-card-tag">Redis Cache</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flow-card" data-step="6">
+                <div class="flow-card-inner">
+                  <div class="flow-card-header">
+                    <span class="flow-card-badge">STEP 7 OF 7</span>
+                    <span class="flow-card-icon">📄</span>
+                  </div>
+                  <div class="flow-card-title">Session Summary</div>
+                  <div class="flow-card-desc">Full PDF auto-generated — transcript, intent, actions &amp; timestamps. Saved for audit &amp; compliance.</div>
+                  <div class="flow-card-tags">
+                    <span class="flow-card-tag">PDF Report</span>
+                    <span class="flow-card-tag">Audit Trail</span>
+                    <span class="flow-card-tag">Compliance</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="flow-progress-bar">
+              <div class="flow-progress-fill" id="flow-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ SCENE — FEATURES ══════ -->
+    <section class="scene" id="scene-features" aria-label="Core Features">
+      <div class="features-inner">
+        <div class="features-header">
+          <div class="section-label">Enterprise Capabilities</div>
+          <h2 class="section-heading" style="color:var(--navy)">
+            Advanced AI engineered for <span style="color:var(--red)">scale</span>
+          </h2>
+          <p class="section-desc" style="color:var(--navy)">
+            Explore the robust suite of real-time voice, security, and banking intelligence features driving our next-gen platform.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <!-- Card 6: Zero-Friction QR-to-Session Flow -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">📲</div>
+            <h3 class="feature-card-title">Zero-Friction QR-to-Session Flow</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">QR → PWA</span>
+              <span class="tech-pill">10 Indian Languages</span>
+            </div>
+          </div>
+
+          <!-- Card 1: Multilingual STT Fallback -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🎙️</div>
+            <h3 class="feature-card-title">Multilingual STT (3-Level Fallback)</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">Sarvam Saarika v2.5</span>
+              <span class="tech-pill">Groq Whisper LPU</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Staff Co-pilot Suggestions -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🧠</div>
+            <h3 class="feature-card-title">Live Response Suggestion (Co-pilot)</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">Groq Llama-3.3-70B</span>
+              <span class="tech-pill">Sarvam Bulbul TTS</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Smart PII Input Trigger -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">🔒</div>
+            <h3 class="feature-card-title">Smart PII Speech-Triggered Input</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">Keyword NLP</span>
+              <span class="tech-pill">RBI 2024 Masking</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Conversation Stage Intelligence -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">⚡</div>
+            <h3 class="feature-card-title">Conversation Stage Intelligence</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">NLU State Tracker</span>
+              <span class="tech-pill">6 Core Intents</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Bilingual PDF & Form Auto-fill -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">📄</div>
+            <h3 class="feature-card-title">Bilingual PDF Summary &amp; Auto-fill</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">ReportLab Engine</span>
+              <span class="tech-pill">Finacle Sync</span>
+            </div>
+          </div>
+
+          <!-- Card 7: SaralForm Paperless Form & Signature Engine -->
+          <div class="feature-card">
+            <div class="feature-icon-wrapper">✨</div>
+            <h3 class="feature-card-title">SaralForm Form Verification &amp; Sign</h3>
+            <div class="feature-tech-pills">
+              <span class="tech-pill">FastAPI WebSockets</span>
+              <span class="tech-pill">HTML5 Canvas Sign</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ SCENE 3 — DEMO ══════ -->
+    <section class="scene" id="scene-demo" aria-label="Interactive Demo">
+      <div class="demo-orbs" aria-hidden="true">
+        <div class="demo-orb demo-orb-1"></div>
+        <div class="demo-orb demo-orb-2"></div>
+        <div class="demo-orb demo-orb-3"></div>
+      </div>
+
+      <div class="demo-inner">
+        <div class="demo-header">
+          <h2 class="demo-title">Experience <span class="accent-red">VaaniBank</span> AI</h2>
+          <p class="demo-subtitle">Select language · pick a scenario · watch the AI pipeline fire in real-time</p>
+        </div>
+
+        <!-- 3-column stage: Sidebar | Phone | Dashboard -->
+        <div class="demo-stage">
+
+          <!-- COL 1: LEFT SIDEBAR -->
+          <div class="demo-sidebar">
+
+            <!-- Language Card -->
+            <div class="ctrl-card">
+              <div class="ctrl-label"><span class="ctrl-label-dot"></span>Language</div>
+              <div class="lang-selector">
+                <button class="lang-option active" data-lang="Hindi">
+                  <div class="lang-flag">🇮🇳</div>
+                  <div class="lang-meta"><span class="lang-name">Hindi</span><span class="lang-script">हिंदी</span></div>
+                </button>
+                <button class="lang-option" data-lang="Marathi">
+                  <div class="lang-flag">🟠</div>
+                  <div class="lang-meta"><span class="lang-name">Marathi</span><span class="lang-script">मराठी</span></div>
+                </button>
+                <button class="lang-option" data-lang="Tamil">
+                  <div class="lang-flag">🌴</div>
+                  <div class="lang-meta"><span class="lang-name">Tamil</span><span class="lang-script">தமிழ்</span></div>
+                </button>
+                <button class="lang-option" data-lang="Telugu">
+                  <div class="lang-flag">⭐</div>
+                  <div class="lang-meta"><span class="lang-name">Telugu</span><span class="lang-script">తెలుగు</span></div>
+                </button>
+                <button class="lang-option" data-lang="Bengali">
+                  <div class="lang-flag">🌾</div>
+                  <div class="lang-meta"><span class="lang-name">Bengali</span><span class="lang-script">বাংলা</span></div>
+                </button>
+                <button class="lang-option" data-lang="Kannada">
+                  <div class="lang-flag">☕</div>
+                  <div class="lang-meta"><span class="lang-name">Kannada</span><span class="lang-script">ಕನ್ನಡ</span></div>
+                </button>
+                <button class="lang-option" data-lang="Odia">
+                  <div class="lang-flag">🐚</div>
+                  <div class="lang-meta"><span class="lang-name">Odia</span><span class="lang-script">ଓଡ଼ିଆ</span></div>
+                </button>
+                <button class="lang-option" data-lang="Punjabi">
+                  <div class="lang-flag">🥁</div>
+                  <div class="lang-meta"><span class="lang-name">Punjabi</span><span class="lang-script">ਪੰਜਾਬੀ</span></div>
+                </button>
+                <button class="lang-option" data-lang="Gujarati">
+                  <div class="lang-flag">💎</div>
+                  <div class="lang-meta"><span class="lang-name">Gujarati</span><span class="lang-script">ગુજરાતી</span></div>
+                </button>
+                <button class="lang-option" data-lang="Malayalam">
+                  <div class="lang-flag">🥥</div>
+                  <div class="lang-meta"><span class="lang-name">Malayalam</span><span class="lang-script">മലയാളം</span></div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Scenario Card -->
+            <div class="ctrl-card">
+              <div class="ctrl-label"><span class="ctrl-label-dot"></span>Scenario</div>
+              <div class="scenario-selector">
+                <button class="scenario-option active" data-query="balance">
+                  <div class="sc-icon-wrap">💰</div>
+                  <div class="sc-info"><span class="sc-title">Balance</span><span class="sc-badge">Account</span></div>
+                </button>
+                <button class="scenario-option" data-query="transfer">
+                  <div class="sc-icon-wrap">↗️</div>
+                  <div class="sc-info"><span class="sc-title">Transfer</span><span class="sc-badge">Send Money</span></div>
+                </button>
+                <button class="scenario-option" data-query="loan">
+                  <div class="sc-icon-wrap">🏠</div>
+                  <div class="sc-info"><span class="sc-title">Home Loan</span><span class="sc-badge">Credit</span></div>
+                </button>
+                <button class="scenario-option" data-query="fd">
+                  <div class="sc-icon-wrap">📈</div>
+                  <div class="sc-info"><span class="sc-title">Fixed Deposit</span><span class="sc-badge">Investment</span></div>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- COL 2: PHONE (CENTER) -->
+          <div class="demo-center-col">
+            <div class="demo-panel-label">
+              <span class="panel-dot customer-dot"></span>
+              Customer View
+            </div>
+            <div class="demo-phone-wrap">
+              <div class="demo-phone">
+                <div class="demo-notch"></div>
+                <div class="demo-statusbar"><span>9:41</span><span>●●● WiFi</span></div>
+                <div class="demo-app-header">
+                  <div class="app-avatar">V</div>
+                  <div class="app-info">
+                    <div class="app-name">VaaniBank AI</div>
+                    <div class="app-status s-online" id="ai-bridge-status">● Online</div>
+                  </div>
+                  <div class="app-lang-chip" id="customer-lang-label">Hindi</div>
+                </div>
+                <div class="demo-chat" id="demo-chat-customer" role="log" aria-label="Chat messages">
+                  <div class="typing-indicator" id="typing-customer">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                  </div>
+                </div>
+                <div class="demo-voice-bar" id="demo-voice-bar">
+                  <div class="voice-waves" id="voice-waves">
+                    <span></span><span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="voice-bar-label">Speak in your language…</div>
+                </div>
+              </div>
+              <div class="phone-ground-glow"></div>
+            </div>
+          </div>
+
+          <!-- COL 3: AI DASHBOARD (RIGHT) -->
+          <div class="demo-dashboard">
+            <div class="dash-top">
+              <div class="dash-title">AI Intelligence</div>
+              <div class="dash-live"><span class="dash-live-dot"></span>LIVE</div>
+            </div>
+            <div class="dash-metrics">
+              <div class="metric-tile">
+                <div class="metric-val" id="metric-latency">—</div>
+                <div class="metric-lbl">Latency</div>
+              </div>
+              <div class="metric-tile">
+                <div class="metric-val" id="metric-conf">—</div>
+                <div class="metric-lbl">Confidence</div>
+              </div>
+              <div class="metric-tile">
+                <div class="metric-val" id="metric-tokens">—</div>
+                <div class="metric-lbl">Tokens</div>
+              </div>
+              <div class="metric-tile">
+                <div class="metric-val" id="metric-engine-name">—</div>
+                <div class="metric-lbl">ASR Engine</div>
+              </div>
+            </div>
+            <div class="lang-detect-card" id="lang-detect-card">
+              <div class="ld-globe">🌐</div>
+              <div class="ld-body">
+                <div class="ld-micro">Language Detected</div>
+                <div class="ld-name" id="ld-value">Select &amp; Run</div>
+              </div>
+              <div class="ld-conf-badge" id="ld-confidence">—</div>
+            </div>
+            <div class="dash-waveform">
+              <canvas class="waveform-canvas" id="waveform-canvas"></canvas>
+              <div class="waveform-label">Audio Stream</div>
+            </div>
+            <div class="demo-fallback-row">
+              <label class="premium-switch" title="Simulate ASR engine failover to Groq Whisper">
+                <span class="switch-label-text">Simulate ASR Fallback</span>
+                <div class="switch-control-wrap">
+                  <input type="checkbox" id="simulate-fallback" class="switch-checkbox" />
+                  <span class="switch-slider"></span>
+                </div>
+              </label>
+            </div>
+            <div class="demo-actions-group">
+              <div class="actions-row-top">
+                <button class="demo-run-btn" id="demo-start-btn">
+                  <span class="btn-icon-spin" id="demo-start-icon">▶</span>
+                  <span id="demo-btn-text">Run Demo</span>
+                </button>
+              </div>
+              <button class="demo-pdf-btn" id="demo-pdf-btn" aria-label="Download Bilingual PDF Report">
+                <span class="pdf-btn-icon">📄</span> PDF Audit Report
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ SCENE 4 — CONTACT ══════ -->
+    <section class="scene" id="scene-contact" aria-label="Message Us">
+      <div class="contact-bg-glow" aria-hidden="true"></div>
+      <div class="contact-inner">
+        <div class="contact-left">
+          <h2 class="section-heading">Share Your Feedback<br /><span style="color:var(--red)">&amp; Complaints</span></h2>
+          <p class="section-desc">
+            Your voices shape VaaniBank AI. Tell us about your experiences, challenges, or suggestions regarding regional language banking support in branches across India.
+          </p>
+          <div class="contact-info-cards">
+            <div class="contact-info-card">
+              <div class="contact-info-icon">📧</div>
+              <div><div class="contact-info-label">Feedback Email</div><div class="contact-info-value">vectora.crew@gmail.com</div></div>
+            </div>
+            <div class="contact-info-card">
+              <div class="contact-info-icon">📢</div>
+              <div><div class="contact-info-label">Grievance Desk</div><div class="contact-info-value">Reviewed directly by core devs</div></div>
+            </div>
+            <div class="contact-info-card">
+              <div class="contact-info-icon">🕐</div>
+              <div><div class="contact-info-label">SLA Resolution</div><div class="contact-info-value">Review within 24 hours</div></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="contact-form-wrap">
+          <div class="contact-form-card">
+            <div class="contact-form-header">
+              <div class="contact-form-title">Message Us</div>
+            </div>
+            <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST" novalidate>
+              <!-- Web3Forms configuration -->
+              <input type="hidden" name="access_key" value="8e22b011-2d8a-4356-bdfd-087ac7d4a505" id="web3forms-key-input" />
+              <input type="hidden" name="subject" value="New VaaniBank AI Feedback or Complaint!" />
+              <input type="hidden" name="Sentiment" id="f-sentiment" value="Neutral 🟡" />
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="f-name">Your Name</label>
+                  <input class="form-input" id="f-name" name="Name" type="text" placeholder="Rahul Sharma" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-email">Email Address</label>
+                  <input class="form-input" id="f-email" name="Email" type="email" placeholder="rahul.sharma@gmail.com" />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="f-role">I am a…</label>
+                  <div class="role-input-container" id="role-input-container">
+                    <select class="form-input form-select" id="f-role" name="Role">
+                      <option value="">Select your role</option>
+                      <option value="Customer / Account Holder">Customer / Account Holder</option>
+                      <option value="Bank / NBFC Decision Maker">Bank / NBFC Decision Maker</option>
+                      <option value="Product / Technology Head">Product / Technology Head</option>
+                      <option value="Fintech Founder">Fintech Founder</option>
+                      <option value="Investor / Analyst">Investor / Analyst</option>
+                      <option value="Other">Other...</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-org">Occupation <span class="optional-label" style="opacity: 0.6; font-size: 0.6rem; text-transform: none;">(Optional)</span></label>
+                  <input class="form-input" id="f-org" name="Occupation" type="text" placeholder="e.g. Student, Farmer, Banker" />
+                </div>
+              </div>
+
+              <!-- 5-Star Experience Rating System -->
+              <div class="form-group star-rating-group">
+                <label class="form-label">Rate Your Experience</label>
+                <div class="star-rating" id="f-rating" role="radiogroup" aria-label="Rate your experience">
+                  <input type="radio" id="star5" name="Rating" value="5" />
+                  <label for="star5" title="5 Stars">★</label>
+                  <input type="radio" id="star4" name="Rating" value="4" />
+                  <label for="star4" title="4 Stars">★</label>
+                  <input type="radio" id="star3" name="Rating" value="3" />
+                  <label for="star3" title="3 Stars">★</label>
+                  <input type="radio" id="star2" name="Rating" value="2" />
+                  <label for="star2" title="2 Stars">★</label>
+                  <input type="radio" id="star1" name="Rating" value="1" />
+                  <label for="star1" title="1 Star">★</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="message-label-row">
+                  <label class="form-label" for="f-msg">Your Message</label>
+                  <span class="live-sentiment-badge" id="live-sentiment">
+                    <span class="sentiment-indicator-dot"></span>
+                    <span class="sentiment-indicator-text">Neutral 🟡</span>
+                  </span>
+                </div>
+                <textarea class="form-input form-textarea" id="f-msg" name="Message" placeholder="Tell us about your experience, review, or complaint…"></textarea>
+              </div>
+              <button class="form-submit" type="submit" id="form-submit-btn">Send Message →</button>
+              <div class="form-success" id="form-success" style="display:none">
+                ✅ Message received! We'll be in touch within 24 hours.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+
+
+<div id="role-modal" class="role-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="role-modal-heading">
+  <div class="role-modal-overlay"></div>
+  <div class="role-modal-content">
+    <button class="role-modal-close" id="role-modal-close" aria-label="Close modal">&times;</button>
+    <h2 class="role-modal-title" id="role-modal-heading">Choose Your Portal</h2>
+    <p class="role-modal-desc">Select how you want to experience VaaniBank AI.</p>
+    <div class="role-cards">
+      <a href="https://vaanibank-customer.netlify.app/" target="_blank" rel="noopener noreferrer" class="role-card customer-card">
+        <div class="role-card-icon">👤</div>
+        <h3 class="role-card-title">Customer</h3>
+        <p class="role-card-text">Experience the AI-powered voice banking interface.</p>
+      </a>
+      <a href="https://vaanibank-staff.netlify.app/" target="_blank" rel="noopener noreferrer" class="role-card staff-card">
+        <div class="role-card-icon">💼</div>
+        <h3 class="role-card-title">Staff / Agent</h3>
+        <p class="role-card-text">Access the real-time analytics and support dashboard.</p>
+      </a>
+    </div>
+  </div>
+</div>
+<!-- Modern Premium Toast Notification for Form Success -->
+<div id="toast-notification" class="toast-notification" role="alert" aria-live="assertive" aria-hidden="true">
+  <div class="toast-content">
+    <span class="toast-icon">🧠</span>
+    <div class="toast-text">
+      <div class="toast-title">AI NLU Processor</div>
+      <div class="toast-desc">🧠 NLU: Running intent extraction...</div>
+    </div>
+    <button class="toast-close" id="toast-close-btn" aria-label="Close notification">&times;</button>
+  </div>
+</div>
+
+<!-- Modern Interactive Features Detail Modal -->
+<div id="features-modal" class="features-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="features-modal-overlay" id="features-modal-overlay"></div>
+  <div class="features-modal-content">
+    <button class="features-modal-close" id="features-modal-close" aria-label="Close modal">&times;</button>
+    
+    <div class="features-modal-header-section">
+      <div class="features-modal-icon" id="fm-icon">🎙️</div>
+      <div class="features-modal-title-wrap">
+        <div class="features-modal-badge" id="fm-badge">Built &amp; Functional</div>
+        <h2 class="features-modal-title" id="fm-title">Feature Title</h2>
+      </div>
+    </div>
+
+    <div class="features-modal-body">
+      <!-- Left Column: Details & Pipeline Flow -->
+      <div class="features-modal-left">
+        <h3 class="fm-section-heading">How It Works</h3>
+        <p class="fm-section-desc" id="fm-desc">Detailed feature description goes here.</p>
+        
+        <h3 class="fm-section-heading" style="margin-top: 24px;">System Pipeline Flow</h3>
+        <div class="fm-pipeline-flow" id="fm-pipeline">
+          <!-- Flow steps will be dynamically generated -->
+        </div>
+      </div>
+
+      <!-- Right Column: Technical Spec Dashboard -->
+      <div class="features-modal-right">
+        <h3 class="fm-section-heading">Engine Details &amp; Metrics</h3>
+        <div class="fm-metrics-dashboard">
+          <div class="fm-metric-tile">
+            <div class="fm-metric-label">Primary Engine</div>
+            <div class="fm-metric-value" id="fm-metric-engine">-</div>
+          </div>
+          <div class="fm-metric-tile">
+            <div class="fm-metric-label">Avg. Latency</div>
+            <div class="fm-metric-value" id="fm-metric-latency">-</div>
+          </div>
+          <div class="fm-metric-tile">
+            <div class="fm-metric-label">NLU Confidence</div>
+            <div class="fm-metric-value" id="fm-metric-confidence">-</div>
+          </div>
+          <div class="fm-metric-tile">
+            <div class="fm-metric-label">Compliance Target</div>
+            <div class="fm-metric-value" id="fm-metric-compliance">-</div>
+          </div>
+        </div>
+
+        <div class="fm-tech-stack-wrap">
+          <h3 class="fm-section-heading" style="margin-top: 0;">Technologies Integrated</h3>
+          <div class="feature-tech-pills" id="fm-tech-pills" style="margin-top: 8px;">
+            <!-- Tech pills will be dynamically generated -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Universal Translator FAB -->
+<div id="universal-translator" class="translator-container">
+  <button class="translator-fab" id="translator-fab-btn" aria-label="Translate Page" aria-haspopup="true" aria-expanded="false">
+    <span class="translator-icon">🌐</span>
+  </button>
+  <div class="translator-menu" id="translator-menu" aria-label="Select Language">
+    <div class="translator-menu-header">Select Language</div>
+    <div class="translator-options">
+      <button class="translator-option-btn active" data-lang="en">🇬🇧 English</button>
+      <button class="translator-option-btn" data-lang="hi">🇮🇳 Hindi / हिंदी</button>
+      <button class="translator-option-btn" data-lang="mr">🟠 Marathi / मराठी</button>
+      <button class="translator-option-btn" data-lang="ta">🌴 Tamil / தமிழ்</button>
+      <button class="translator-option-btn" data-lang="te">⭐ Telugu / తెలుగు</button>
+      <button class="translator-option-btn" data-lang="bn">🌾 Bengali / বাংলা</button>
+      <button class="translator-option-btn" data-lang="kn">☕ Kannada / ಕನ್ನಡ</button>
+      <button class="translator-option-btn" data-lang="or">🐚 Odia / ଓଡ଼ିଆ</button>
+      <button class="translator-option-btn" data-lang="pa">🥁 Punjabi / ਪੰਜਾਬੀ</button>
+      <button class="translator-option-btn" data-lang="gu">💎 Gujarati / ગુજરાતી</button>
+      <button class="translator-option-btn" data-lang="ml">🥥 Malayalam / മലയാളം</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/loading.js"></script>
+<script defer src="assets/js/role-modal.js"></script>
+<script defer src="assets/js/scroll-engine.js"></script>
+<script defer src="assets/js/cursor.js"></script>
+<script defer src="assets/js/hero.js"></script>
+<script defer src="assets/js/voice.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script defer src="assets/js/demo.js"></script>
+<script defer src="assets/js/contact.js"></script>
+<script defer src="assets/js/features-modal.js"></script>
+<script defer src="assets/js/translation-engine.js"></script>
+
+
+</body>
+</html>

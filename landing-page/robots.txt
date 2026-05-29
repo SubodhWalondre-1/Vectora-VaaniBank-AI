@@ -1,0 +1,7 @@
+# robots.txt — VaaniBank AI
+# https://vaanibank.ai
+
+User-agent: *
+Allow: /
+
+Sitemap: /sitemap.xml
