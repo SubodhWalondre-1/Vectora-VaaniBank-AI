@@ -1,0 +1,3 @@
+/* Custom cursor disabled */
+* { cursor: auto !important; }
+#cursor-dot, #cursor-ring { display: none !important; }

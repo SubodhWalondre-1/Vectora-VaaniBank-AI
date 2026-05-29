@@ -1,0 +1,187 @@
+/* ============================================
+   NAVIGATION — Center Pill Only
+   VaaniBank AI — nav.css
+   ============================================ */
+
+/* Nav is ONLY the center pill — no logo, no CTA */
+#nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: none;
+  pointer-events: none;
+}
+
+/* ── Hide logo & CTA in nav (moved to hero) ── */
+#nav .nav-logo,
+#nav .nav-cta,
+#nav .nav-hamburger {
+  display: none !important;
+}
+
+/* ── Center Pill — always dark ── */
+.nav-links {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  background: rgba(13, 15, 25, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  padding: 5px 6px;
+  gap: 2px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.4);
+  transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+}
+
+/* Dot separators */
+.nav-links li {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links li + li::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── Nav Links — always white text ── */
+.nav-link {
+  font-family: var(--font-dm);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.55);
+  padding: 7px 18px;
+  border-radius: var(--radius-full);
+  transition: color 0.25s ease, background 0.25s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.nav-link.active {
+  background: var(--red);
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.nav-link::after { display: none; }
+
+
+/* ══════════════════════════════════════════
+   HERO OVERLAY — Logo (fixed top-left) +
+   Get Started (fixed top-right)
+   ══════════════════════════════════════════ */
+
+.hero-nav-logo {
+  position: fixed;
+  top: 0;
+  left: var(--container-pad);
+  height: var(--nav-h);
+  z-index: 9001;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.hero-nav-logo img {
+  height: 42px;
+  width: auto;
+  object-fit: contain;
+  filter: none; /* actual colors — blue, red, white */
+  display: block;
+}
+
+.hero-nav-cta {
+  position: fixed;
+  top: 0;
+  right: var(--container-pad);
+  height: var(--nav-h);
+  z-index: 9001;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.hero-nav-cta-btn {
+  background: var(--navy);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: var(--radius-full);
+  font-family: var(--font-dm);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  padding: 9px 22px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.hero-nav-cta-btn:hover {
+  background: var(--navy-light);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(27, 43, 107, 0.5);
+}
+
+.hero-nav-cta-btn:active {
+  transform: scale(0.97);
+}
+
+/* Fade out when hero scrolls away */
+.hero-nav-logo.hero-nav-hidden,
+.hero-nav-cta.hero-nav-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-nav-logo.hero-nav-hidden {
+  transform: translateX(-12px);
+}
+
+.hero-nav-cta.hero-nav-hidden {
+  transform: translateX(12px);
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .hero-nav-logo img { height: 32px; }
+
+  .hero-nav-cta-btn {
+    font-size: 0.75rem;
+    padding: 7px 14px;
+  }
+
+  .nav-links li + li::before { display: none; }
+}
