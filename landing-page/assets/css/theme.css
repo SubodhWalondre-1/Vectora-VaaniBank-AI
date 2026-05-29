@@ -1,0 +1,276 @@
+/* ============================================
+   THEME — Global Texture + Toggle + Dark Mode
+   VaaniBank AI — theme.css
+   ============================================ */
+
+/* ══════════════════════════════════════════════════════════
+   ANIMATED DOTS & LINES BACKGROUND (Canvas)
+   ══════════════════════════════════════════════════════════ */
+#bg-canvas {
+  display: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOGGLE SWITCH — Pill slider
+   ══════════════════════════════════════════════════════════ */
+.theme-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 52px;
+  height: 28px;
+  cursor: pointer;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+.theme-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.theme-slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(27,43,107,0.1);
+  border-radius: 28px;
+  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px;
+}
+.theme-slider::before {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: transform 0.3s var(--ease-spring);
+  z-index: 2;
+}
+.theme-slider-icon { font-size: 0.7rem; z-index: 1; transition: opacity 0.2s; }
+.theme-slider-icon.sun  { opacity: 1; color: #F5A623; }
+.theme-slider-icon.moon { opacity: 0.4; color: #8892B0; }
+.theme-switch input:checked + .theme-slider { background: rgba(255,255,255,0.12); }
+.theme-switch input:checked + .theme-slider::before {
+  transform: translateX(24px);
+  background: #2A3050;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.theme-switch input:checked + .theme-slider .sun  { opacity: 0.3; }
+.theme-switch input:checked + .theme-slider .moon { opacity: 1; color: #F5D680; }
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE
+   ══════════════════════════════════════════════════════════ */
+
+[data-theme="dark"] body {
+  background: #111428;
+  color: #D4D8EC;
+}
+[data-theme="dark"] #front-loading-screen { background: #111428; }
+
+/* ── Navbar ── */
+[data-theme="dark"] #nav,
+[data-theme="dark"] .nav-light,
+[data-theme="dark"] .nav-dark {
+  background: rgba(17,20,40,0.92) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  backdrop-filter: blur(20px);
+}
+[data-theme="dark"] .nav-link { color: #9CA3C4; }
+[data-theme="dark"] .nav-link:hover { color: #E8ECF8; }
+[data-theme="dark"] .nav-link.active { color: #fff; }
+[data-theme="dark"] .nav-logo-name { color: #F0F2FA; }
+[data-theme="dark"] .nav-logo-tag  { color: rgba(255,255,255,0.3); }
+[data-theme="dark"] .nav-cta { background: var(--red) !important; color: #fff !important; }
+
+/* ── Hero ── */
+[data-theme="dark"] #scene-hero {
+  background: linear-gradient(135deg, #111428 0%, #161940 60%, #1C2050 100%);
+}
+[data-theme="dark"] .hero-grid { opacity: 0.4; }
+[data-theme="dark"] .hero-mesh::before {
+  background: var(--navy-light, #2A3F8F);
+  opacity: 0.18;
+  filter: blur(100px);
+}
+[data-theme="dark"] .hero-mesh::after {
+  background: var(--red, #E8392A);
+  opacity: 0.14;
+  filter: blur(90px);
+}
+[data-theme="dark"] .hero-mesh-blue {
+  background: var(--mid-blue, #C5D1F5);
+  opacity: 0.20;
+  filter: blur(80px);
+}
+[data-theme="dark"] .hero-eyebrow {
+  background: rgba(232,57,42,0.12);
+  border-color: rgba(232,57,42,0.28);
+}
+[data-theme="dark"] .hero-h1   { color: #EEF0FA; }
+[data-theme="dark"] .hero-desc { color: #8D94B8; opacity: 1; }
+[data-theme="dark"] .mascot-ring {
+  background:
+    linear-gradient(#111428, #1C2050) padding-box,
+    conic-gradient(from 0deg, var(--red) 0%, #2A3F8F 33%, #F5A623 66%, var(--red) 100%) border-box;
+}
+
+
+
+[data-theme="dark"] .btn-navy {
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(232,57,42,0.25);
+}
+[data-theme="dark"] .btn-navy:hover { box-shadow: 0 10px 36px rgba(232,57,42,0.35); }
+[data-theme="dark"] .btn-ghost {
+  color: #B8BDD6;
+  border-color: rgba(255,255,255,0.12);
+}
+[data-theme="dark"] .btn-ghost:hover {
+  color: #E8ECF8;
+  border-color: rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.04);
+}
+
+/* P1 dark mode — multiply doesn't work on dark bg */
+[data-theme="dark"] .hero-video {
+  mix-blend-mode: screen;
+  filter: brightness(0.95) contrast(1.1);
+  background: transparent;
+}
+
+/* Scroll mouse */
+[data-theme="dark"] .scroll-mouse        { border-color: rgba(255,255,255,0.3); }
+[data-theme="dark"] .scroll-mouse-wheel  { background: rgba(255,255,255,0.3); }
+[data-theme="dark"] .scroll-prompt-text  { color: rgba(255,255,255,0.3); }
+
+/* ── Voice Section ── */
+[data-theme="dark"] #scene-voice { background: #151838; }
+[data-theme="dark"] .voice-inner { color: #D4D8EC; }
+[data-theme="dark"] .section-heading { color: #EEF0FA; }
+[data-theme="dark"] .section-desc    { color: #8D94B8; }
+[data-theme="dark"] .voice-panel-tab { color: #8D94B8; }
+[data-theme="dark"] .voice-panel-tab.active { color: #fff; border-color: var(--red); }
+[data-theme="dark"] .voice-panel-content { color: #B8BDD6; }
+[data-theme="dark"] .bar-track-light { background: rgba(255,255,255,0.06); }
+
+/* ── Demo Section ── */
+/*
+ * FIX: #scene-demo background is intentionally #05080F (near-black) in
+ * BOTH light and dark mode. The demo scene is a self-contained dark UI
+ * (Bloomberg × Apple Pay aesthetic) that does not change with the theme.
+ *
+ * The previous override here set a blue-tinted gradient in dark mode,
+ * which conflicted with scene-demo.css during the slide-in transition —
+ * the browser had to repaint the background mid-animation, contributing
+ * to the white flash bug when scrolling from Contact → Demo.
+ *
+ * Removed: `background: linear-gradient(160deg, #111428 0%, #161940 100%)`
+ * Now: scene-demo.css's `background: #05080F` applies in all themes.
+ */
+[data-theme="dark"] .demo-title { color: #EEF0FA; }
+[data-theme="dark"] .demo-phone {
+  background: #1A1E38;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+}
+[data-theme="dark"] .demo-phone-notch   { background: #0E1020; }
+[data-theme="dark"] .demo-phone-status  { background: #0E1020; color: rgba(255,255,255,0.35); }
+[data-theme="dark"] .demo-phone-header  { background: var(--navy); }
+[data-theme="dark"] .demo-chat          { background: #141730; }
+[data-theme="dark"] .chat-bubble.original   { background: var(--navy); color: #fff; }
+[data-theme="dark"] .chat-bubble.translated {
+  background: #1E2242; color: #D4D8EC;
+  border-color: rgba(255,255,255,0.06); box-shadow: none;
+}
+[data-theme="dark"] .translate-tag      { color: var(--red); }
+[data-theme="dark"] .typing-indicator   { background: #1E2242; border-color: rgba(255,255,255,0.05); }
+[data-theme="dark"] .typing-dot         { background: #6C75A0; }
+[data-theme="dark"] .demo-phone-input   { background: #1A1E38; border-top-color: rgba(255,255,255,0.05); }
+[data-theme="dark"] .demo-phone-placeholder { color: rgba(255,255,255,0.2); }
+[data-theme="dark"] .demo-ctrl-label    { color: #6C75A0; }
+[data-theme="dark"] .lang-pill-btn,
+[data-theme="dark"] .query-btn          { background: #1A1E38; border-color: rgba(255,255,255,0.08); color: #A0A8C8; }
+[data-theme="dark"] .lang-pill-btn:hover,
+[data-theme="dark"] .query-btn:hover    { border-color: rgba(255,255,255,0.18); background: #222648; }
+[data-theme="dark"] .lang-pill-btn.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+[data-theme="dark"] .query-btn.active   { background: #222648; border-color: rgba(255,255,255,0.15); color: #D4D8EC; }
+[data-theme="dark"] .demo-start-btn     { background: var(--red); }
+
+/* ── Contact Section ── */
+[data-theme="dark"] #scene-contact      { background: #111428; }
+[data-theme="dark"] .contact-bg-glow    { opacity: 0.2; }
+[data-theme="dark"] .eyebrow            { color: #8D94B8; }
+[data-theme="dark"] .contact-info-card  { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.06); }
+[data-theme="dark"] .contact-info-label { color: #6C75A0; }
+[data-theme="dark"] .contact-info-value { color: #C4CAE0; }
+[data-theme="dark"] .contact-form-card  { background: #1A1E38; border-color: rgba(255,255,255,0.06); }
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea      { background: #141730; border-color: rgba(255,255,255,0.08); color: #D4D8EC; }
+[data-theme="dark"] .form-input::placeholder,
+[data-theme="dark"] .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
+[data-theme="dark"] .form-label         { color: #6C75A0; }
+[data-theme="dark"] .form-submit        { background: var(--red); color: #fff; }
+
+/* ── Footer ── */
+[data-theme="dark"] #footer {
+  background: rgba(14,17,32,0.85);
+  color: #5C6490;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+[data-theme="dark"] #footer a { color: #8D94B8; }
+
+/* ── Scene Dots ── */
+[data-theme="dark"] .scene-dot        { background: rgba(255,255,255,0.12); }
+[data-theme="dark"] .scene-dot.active { background: var(--red); }
+
+/* ── CSS Character adjustments ── */
+[data-theme="dark"] .css-char { filter: brightness(0.92); }
+
+/* ── Hero Speech Bubbles — Dark Mode ── */
+[data-theme="dark"] #scene-hero {
+  background: linear-gradient(135deg, #0E1120 0%, #111630 60%, #141830 100%);
+}
+[data-theme="dark"] .hero-grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+}
+[data-theme="dark"] .hero-h1       { color: #EEF0FA; }
+[data-theme="dark"] .hero-desc     { color: rgba(220,224,244,0.6); opacity: 1; }
+[data-theme="dark"] .hero-eyebrow  { background: rgba(232,57,42,0.12); border-color: rgba(232,57,42,0.28); }
+
+
+/* scroll prompt in dark mode */
+[data-theme="dark"] .scroll-mouse      { border-color: rgba(255,255,255,0.25); }
+[data-theme="dark"] .scroll-mouse-wheel { background: rgba(255,255,255,0.3); }
+[data-theme="dark"] .scroll-prompt-text { color: rgba(255,255,255,0.3); }
+
+/* Staff Copilot Card Dark Mode Overrides */
+[data-theme="dark"] .staff-copilot-card {
+  background: rgba(26, 30, 56, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+[data-theme="dark"] .copilot-intent {
+  color: #EEF0FA;
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: var(--red);
+}
+[data-theme="dark"] .copilot-suggestion-label,
+[data-theme="dark"] .copilot-process-label {
+  color: rgba(255, 255, 255, 0.35);
+}
+[data-theme="dark"] .copilot-suggestion {
+  color: #EEF0FA;
+}
+[data-theme="dark"] .demo-panel-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+[data-theme="dark"] .demo-panel-divider {
+  color: rgba(255, 255, 255, 0.15);
+}

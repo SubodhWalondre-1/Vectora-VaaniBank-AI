@@ -1,0 +1,78 @@
+/* ============================================
+   DESIGN TOKENS
+   VaaniBank AI — tokens.css
+   ============================================ */
+
+:root {
+  /* Brand Colors */
+  --navy:       #1B2B6B;
+  --navy-light: #2A3F8F;
+  --navy-deep:  #111D4E;
+  --red:        #E8392A;
+  --red-light:  #FF4D3D;
+  --gold:       #F5A623;
+  --gold-light: #FFB84D;
+  --green:      #16a34a;
+  --green-light:#22c55e;
+  --white:      #FFFFFF;
+  --light-blue: #EBF0FF;
+  --mid-blue:   #C5D1F5;
+  --off-white:  #F8F9FC;
+
+  /* Semantic */
+  --bg-hero:      #FFFFFF;
+  --bg-dark:      #1B2B6B;
+  --bg-demo:      #F4F6FB;
+  --text-muted:   rgba(27, 43, 107, 0.55);
+  --text-light:   rgba(255, 255, 255, 0.7);
+
+  /* Typography */
+  --font-sora: 'Sora', sans-serif;
+  --font-dm:   'DM Sans', sans-serif;
+
+  /* Spacing */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+
+  /* Layout */
+  --container-max: 1280px;
+  --container-pad: 5vw;
+  --nav-h: 72px;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(27, 43, 107, 0.08);
+  --shadow-md: 0 8px 32px rgba(27, 43, 107, 0.14);
+  --shadow-lg: 0 20px 60px rgba(27, 43, 107, 0.22);
+  --shadow-xl: 0 40px 100px rgba(27, 43, 107, 0.30);
+  --shadow-red: 0 8px 32px rgba(232, 57, 42, 0.35);
+  --shadow-gold: 0 8px 32px rgba(245, 166, 35, 0.35);
+
+  /* Transitions */
+  --ease-spring: cubic-bezier(.16,1,.3,1);
+  --ease-out:    cubic-bezier(.25,.46,.45,.94);
+  --t-fast: 0.2s;
+  --t-mid:  0.4s;
+  --t-slow: 0.7s;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-backdrop: blur(16px) saturate(180%);
+
+  /* Scroll Engine */
+  --scroll-total: 400vh;
+  --perspective: 1200px;
+}
