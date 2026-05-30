@@ -100,11 +100,10 @@
   border-color: #E60000;
   box-shadow: 0 14px 40px rgba(255, 0, 0, 0.35);
 }
-.btn-youtube img {
-  filter: brightness(0) invert(1);
+.btn-youtube svg {
   transition: transform 0.2s var(--ease-spring);
 }
-.btn-youtube:hover img {
+.btn-youtube:hover svg {
   transform: scale(1.1);
 }
 
@@ -119,11 +118,10 @@
   border-color: #1B1F23;
   box-shadow: 0 14px 40px rgba(36, 41, 47, 0.4);
 }
-.btn-github img {
-  filter: brightness(0) invert(1);
+.btn-github svg {
   transition: transform 0.2s var(--ease-spring);
 }
-.btn-github:hover img {
+.btn-github:hover svg {
   transform: scale(1.1);
 }
 
