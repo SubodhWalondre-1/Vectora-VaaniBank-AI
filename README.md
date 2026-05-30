@@ -110,7 +110,6 @@ The Staff Panel login page includes a built-in **Demo Credentials** helper:
 * **🔑 Manual Login**:
   * **Teller**: Staff ID `UBI-NGP-001` | Username `demo` | Password `demo123`
   * **Manager**: Staff ID `UBI-NGP-002` | Username `manager` | Password `manager123`
-  * **Admin**: Staff ID `UBI-MUM-042` | Username `admin` | Password `admin123`
 
 ## Project Structure & Architecture
 
