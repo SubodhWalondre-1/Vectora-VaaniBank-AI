@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect, useCallback, useRef } from "react";
 import { useApp } from "../../../context/AppContext";
+import { aiAPI } from "../../../services/api";
 
 // Phase → visual config
 const PHASE_CONFIG = {
@@ -442,6 +443,7 @@ export default function InfoTab({
 }) {
   const nav = useApp((s) => s.navigatorState);
   const activeSession = useApp((s) => s.activeSession);
+  const staffLanguage = useApp((s) => s.staffLanguage);
   const sessionId = activeSession?.id ?? activeSession?.session_id ?? null;
 
   const [sentKey, setSentKey] = useState(null); // track which question was just sent
@@ -809,6 +811,55 @@ export default function InfoTab({
     return list;
   }, [filledFields, docReadiness]);
 
+  const [translatedTexts, setTranslatedTexts] = useState({});
+  const translatingRef = useRef(new Set());
+
+  useEffect(() => {
+    if (staffLanguage !== 'en' || !nav) return;
+
+    // Collect all Hindi texts to translate
+    const textsToTranslate = [];
+    if (nav.greeting_script) {
+      textsToTranslate.push(nav.greeting_script);
+    }
+    if (nav.next_question && nav.next_question.question_hi) {
+      textsToTranslate.push(nav.next_question.question_hi);
+    }
+    if (nav.phase === 'close' && nav.farewell_script) {
+      textsToTranslate.push(nav.farewell_script);
+    }
+    if (pendingItems && Array.isArray(pendingItems)) {
+      pendingItems.forEach(item => {
+        if (item.hindi) textsToTranslate.push(item.hindi);
+      });
+    }
+
+    // Filter to only new texts not already translated or in-flight
+    const newTexts = textsToTranslate.filter(txt => !translatedTexts[txt] && !translatingRef.current.has(txt));
+
+    if (newTexts.length === 0) return;
+
+    newTexts.forEach(txt => {
+      translatingRef.current.add(txt);
+      aiAPI.translateToEnglish(txt)
+        .then(eng => {
+          setTranslatedTexts(prev => ({ ...prev, [txt]: eng }));
+        })
+        .catch(() => {
+          setTranslatedTexts(prev => ({ ...prev, [txt]: txt })); // fallback: original
+        })
+        .finally(() => {
+          translatingRef.current.delete(txt);
+        });
+    });
+  }, [staffLanguage, nav, pendingItems, translatedTexts]);
+
+  // Utility to get localized guided scripts
+  const getGuidedText = useCallback((txt) => {
+    if (staffLanguage !== 'en' || !txt) return txt;
+    return translatedTexts[txt] || (translatingRef.current.has(txt) ? 'Translating...' : txt);
+  }, [staffLanguage, translatedTexts]);
+
   if (infoBoard || nav || docReadiness) {
     const phaseKey =
       nav?.phase ||
@@ -1024,7 +1075,7 @@ export default function InfoTab({
                   🎤 Greeting Script
                 </div>
                 <div className="text-xs font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {nav.greeting_script}
+                  {getGuidedText(nav.greeting_script)}
                 </div>
                 {sendStaffApproved && (
                   <button
@@ -1052,7 +1103,7 @@ export default function InfoTab({
                     </span>
                   </div>
                   <div className="text-xs font-medium text-slate-700 dark:text-slate-300 leading-relaxed p-2.5 rounded-lg bg-cyan-100/30 dark:bg-cyan-950/20 border-l-4 border-cyan-500">
-                    {nav.next_question.question_hi}
+                    {getGuidedText(nav.next_question.question_hi)}
                   </div>
                   {/* Post-ask inline edit — shown after "Ask This" so staff can type the captured value */}
                   {postAskEditKey === nav.next_question.key && (
@@ -1225,7 +1276,7 @@ export default function InfoTab({
                   👋 Farewell Script
                 </div>
                 <div className="text-xs font-medium text-slate-700 dark:text-slate-300 leading-relaxed">
-                  {nav.farewell_script}
+                  {getGuidedText(nav.farewell_script)}
                 </div>
                 {sendStaffApproved && (
                   <button
@@ -1340,7 +1391,7 @@ export default function InfoTab({
                                     : "#3b82f6",
                             }}
                             disabled={sentKey === item.key}
-                            title={`Ask: "${item.hindi}"`}
+                            title={`Ask: "${getGuidedText(item.hindi)}"`}
                           >
                             {sentKey === item.key ? (
                               <span className="text-[10px] font-semibold">

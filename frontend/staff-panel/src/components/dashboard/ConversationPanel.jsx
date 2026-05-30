@@ -71,11 +71,11 @@ function StaffSpeakCard({ exchange, exchangeIndex, staffLanguage }) {
   // English translation — lazy load when staffLanguage switches to 'en'
   const [englishText, setEnglishText] = useState(null); // null = not fetched yet
   const [translating, setTranslating] = useState(false);
-  const fetchedRef = useRef(false);
+  const fetchedTextRef = useRef("");
 
   useEffect(() => {
-    if (staffLanguage !== "en" || !textHindi || fetchedRef.current) return;
-    fetchedRef.current = true;
+    if (staffLanguage !== "en" || !textHindi || fetchedTextRef.current === textHindi) return;
+    fetchedTextRef.current = textHindi;
     setTranslating(true);
     aiAPI
       .translateToEnglish(textHindi)
@@ -83,6 +83,12 @@ function StaffSpeakCard({ exchange, exchangeIndex, staffLanguage }) {
       .catch(() => setEnglishText(textHindi)) // fallback: show Hindi
       .finally(() => setTranslating(false));
   }, [staffLanguage, textHindi]);
+
+  const hasHindiChars = (str) => /[^\x00-\x7F]/.test(str);
+  const translationOffline =
+    staffLanguage === "en" &&
+    englishText === textHindi &&
+    hasHindiChars(textHindi);
 
   return (
     <motion.div
@@ -141,12 +147,24 @@ function StaffSpeakCard({ exchange, exchangeIndex, staffLanguage }) {
         }}
       >
         <p
-          className="text-[11.5px] font-bold mb-1"
+          className="text-[11.5px] font-bold mb-1 flex items-center gap-1.5"
           style={{ color: isDark ? "#4ade80" : "#16a34a" }}
         >
-          {staffLanguage === "en"
-            ? "English (Translated)"
-            : `Original (${exchange.staff_lang_name || "Hindi"})`}
+          {staffLanguage === "en" ? (
+            <>
+              <span>English (Translated)</span>
+              {translationOffline && (
+                <span
+                  className="text-[9px] font-bold px-1 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                  title="Translation servers are currently unreachable. Displaying Hindi fallback."
+                >
+                  Offline Fallback
+                </span>
+              )}
+            </>
+          ) : (
+            `Original (${exchange.staff_lang_name || "Hindi"})`
+          )}
         </p>
         <p
           style={{ color: isDark ? "#e2e8f0" : "#1f2937", lineHeight: "1.45" }}
@@ -240,23 +258,21 @@ function CustomerCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
   const textOriginal =
     exchange.customer_text_original ??
     exchange.text_original ??
-    exchange.staff_response_translated ??
     "";
 
   const textHindi =
     exchange.customer_text_translated ??
     exchange.text_translated ??
-    exchange.staff_response_final ??
-    "";
+    textOriginal;
 
   // English translation — lazy load when staffLanguage switches to 'en'
   const [englishText, setEnglishText] = useState(null); // null = not fetched yet
   const [translating, setTranslating] = useState(false);
-  const fetchedRef = useRef(false);
+  const fetchedTextRef = useRef("");
 
   useEffect(() => {
-    if (staffLanguage !== "en" || !textHindi || fetchedRef.current) return;
-    fetchedRef.current = true;
+    if (staffLanguage !== "en" || !textHindi || fetchedTextRef.current === textHindi) return;
+    fetchedTextRef.current = textHindi;
     setTranslating(true);
     aiAPI
       .translateToEnglish(textHindi)
@@ -264,6 +280,12 @@ function CustomerCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
       .catch(() => setEnglishText(textHindi)) // fallback: show Hindi
       .finally(() => setTranslating(false));
   }, [staffLanguage, textHindi]);
+
+  const hasHindiChars = (str) => /[^\x00-\x7F]/.test(str);
+  const translationOffline =
+    staffLanguage === "en" &&
+    englishText === textHindi &&
+    hasHindiChars(textHindi);
 
   const timeRaw =
     exchange.created_at ?? exchange.timestamp ?? exchange.createdAt ?? null;
@@ -366,12 +388,24 @@ function CustomerCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
         }}
       >
         <p
-          className="text-[11.5px] font-bold mb-1"
+          className="text-[11.5px] font-bold mb-1 flex items-center gap-1.5"
           style={{ color: isDark ? "#ff4d45" : "var(--red, #E8231A)" }}
         >
-          {staffLanguage === "en"
-            ? "English (Translated)"
-            : "Hindi (Translated — Staff View)"}
+          {staffLanguage === "en" ? (
+            <>
+              <span>English (Translated)</span>
+              {translationOffline && (
+                <span
+                  className="text-[9px] font-bold px-1 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                  title="Translation servers are currently unreachable. Displaying Hindi fallback."
+                >
+                  Offline Fallback
+                </span>
+              )}
+            </>
+          ) : (
+            "Hindi (Translated — Staff View)"
+          )}
         </p>
         <p
           style={{ color: "var(--text-primary, #1f2937)", lineHeight: "1.45" }}

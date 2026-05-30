@@ -168,7 +168,7 @@ function BalanceEnquiryModal({ isOpen, onClose, profile, loading }) {
 }
 
 // Edit Modal
-function EditModal({ isOpen, suggestion, onSave, onClose }) {
+function EditModal({ isOpen, suggestion, onSave, onClose, staffLanguage }) {
   const [text, setText] = useState(suggestion ?? "");
   useEffect(() => {
     if (isOpen) setText(suggestion ?? "");
@@ -178,7 +178,9 @@ function EditModal({ isOpen, suggestion, onSave, onClose }) {
     <Modal isOpen={isOpen} onClose={onClose} title="Edit AI Response" size="md">
       <div className="flex flex-col gap-4">
         <p className="text-xs" style={{ color: "var(--text-muted, #64748b)" }}>
-          Edit the AI-suggested Hindi response before sending to customer.
+          {staffLanguage === "en"
+            ? "Edit the AI-suggested English response before sending to customer."
+            : "Edit the AI-suggested Hindi response before sending to customer."}
         </p>
 
         <textarea
@@ -199,7 +201,11 @@ function EditModal({ isOpen, suggestion, onSave, onClose }) {
             (e.target.style.border =
               "1.5px solid var(--border-color, rgba(0,48,135,0.15))")
           }
-          placeholder="Type the staff response in Hindi…"
+          placeholder={
+            staffLanguage === "en"
+              ? "Type the staff response in English…"
+              : "Type the staff response in Hindi…"
+          }
         />
 
         <div className="flex items-center justify-between gap-2">
@@ -263,21 +269,42 @@ export default function AISuggestionBox({
   // English translation for suggestion
   const [englishSuggestion, setEnglishSuggestion] = useState(null);
   const [translatingSuggestion, setTranslatingSuggestion] = useState(false);
+  const [translationFailed, setTranslationFailed] = useState(false);
   const suggestionFetchedRef = useRef("");
+
+  const hasHindiChars = (str) => /[^\x00-\x7F]/.test(str);
 
   useEffect(() => {
     if (staffLanguage !== "en" || !suggestedHindi) {
+      setTranslationFailed(false);
       return;
     }
     if (suggestionFetchedRef.current === suggestedHindi) return;
     
     suggestionFetchedRef.current = suggestedHindi;
+    setEnglishSuggestion(null);
     setTranslatingSuggestion(true);
+    setTranslationFailed(false);
     
     aiAPI
       .translateToEnglish(suggestedHindi)
-      .then((eng) => setEnglishSuggestion(eng))
-      .catch(() => setEnglishSuggestion(suggestedHindi)) // fallback: show Hindi
+      .then((eng) => {
+        if (eng && eng.trim() !== suggestedHindi.trim()) {
+          setEnglishSuggestion(eng);
+          setTranslationFailed(false);
+        } else if (eng && hasHindiChars(suggestedHindi)) {
+          // Fell back to Hindi text in backend
+          setEnglishSuggestion(null);
+          setTranslationFailed(true);
+        } else {
+          setEnglishSuggestion(eng);
+          setTranslationFailed(false);
+        }
+      })
+      .catch(() => {
+        setEnglishSuggestion(null);
+        setTranslationFailed(true);
+      })
       .finally(() => setTranslatingSuggestion(false));
   }, [staffLanguage, suggestedHindi]);
 
@@ -605,8 +632,12 @@ export default function AISuggestionBox({
                           <span style={{ color: "var(--text-muted, #94a3b8)", fontStyle: "italic" }}>
                             Translating…
                           </span>
+                        ) : translationFailed ? (
+                          <span style={{ color: "#dc2626", fontStyle: "italic" }}>
+                            ⚠️ Translation failed due to server load. Please try again later.
+                          </span>
                         ) : (
-                          englishSuggestion || suggestedHindi || "—"
+                          englishSuggestion || "—"
                         )
                       ) : (
                         suggestedHindi || "—"
@@ -718,9 +749,14 @@ export default function AISuggestionBox({
           <EditModal
             key="edit-modal"
             isOpen={showEdit}
-            suggestion={suggestedHindi}
+            suggestion={
+              staffLanguage === "en"
+                ? (englishSuggestion || suggestedHindi)
+                : suggestedHindi
+            }
             onSave={handleSaveEdit}
             onClose={() => setShowEdit(false)}
+            staffLanguage={staffLanguage}
           />
         )}
       </AnimatePresence>

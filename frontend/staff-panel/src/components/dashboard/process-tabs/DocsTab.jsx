@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useApp } from "../../../context/AppContext";
 
 export default function DocsTab({ docs = [], intentKey, docReadiness, isExploring, sendStaffApproved }) {
+  const staffLanguage = useApp((s) => s.staffLanguage);
   // collected state — per doc checkbox
   const [collected, setCollected] = useState(() => docs.map(() => false));
   // PII highlighted doc labels (from WS pii_detected event)
@@ -122,7 +124,7 @@ export default function DocsTab({ docs = [], intentKey, docReadiness, isExplorin
                   <button
                     onClick={() => handleAsk(doc.label_en)}
                     className="p-1 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title={`Ask: "क्या आपके पास ${doc.label_en} है?"`}
+                    title={staffLanguage === "en" ? `Ask: "Do you have ${doc.label_en}?"` : `Ask: "क्या आपके पास ${doc.label_en} है?"`}
                   >
                     🎤
                   </button>
@@ -157,7 +159,9 @@ export default function DocsTab({ docs = [], intentKey, docReadiness, isExplorin
       >
         <span style={{ fontSize: 12, fontWeight: 600,
           color: collectedCount === docs.length ? "#3B6D11" : "var(--color-text-secondary, #64748b)" }}>
-          {collectedCount === docs.length && collectedCount > 0 ? "✅ Sab documents collected!" : `Documents collected`}
+          {collectedCount === docs.length && collectedCount > 0 
+            ? (staffLanguage === "en" ? "✅ All documents collected!" : "✅ Sab documents collected!") 
+            : `Documents collected`}
         </span>
         <span style={{ fontSize: 12, fontWeight: 700,
           color: collectedCount === docs.length ? "#3B6D11" : "#0C447C" }}>

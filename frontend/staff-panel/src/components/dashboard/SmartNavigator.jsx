@@ -10,6 +10,7 @@
 
 import React, { useState, useCallback, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
+import { aiAPI } from '../../services/api';
 
 // Phase → visual config
 const PHASE_CONFIG = {
@@ -24,7 +25,57 @@ const PHASE_CONFIG = {
 export default function SmartNavigator({ sendStaffApproved, sendMessage, sendForceNext, sendEditField, sendUndoNext }) {
   const nav = useApp((s) => s.navigatorState);
   const activeSession = useApp((s) => s.activeSession);
+  const staffLanguage = useApp((s) => s.staffLanguage);
   const sessionId = activeSession?.id ?? activeSession?.session_id ?? null;
+
+  const [translatedTexts, setTranslatedTexts] = useState({});
+  const translatingRef = useRef(new Set());
+
+  React.useEffect(() => {
+    if (staffLanguage !== 'en' || !nav) return;
+
+    // Collect all Hindi texts to translate
+    const textsToTranslate = [];
+    if (nav.phase === 'greet' && nav.greeting_script) {
+      textsToTranslate.push(nav.greeting_script);
+    }
+    if (nav.next_question && nav.next_question.question_hi) {
+      textsToTranslate.push(nav.next_question.question_hi);
+    }
+    if (nav.phase === 'close' && nav.farewell_script) {
+      textsToTranslate.push(nav.farewell_script);
+    }
+    if (nav.missing && Array.isArray(nav.missing)) {
+      nav.missing.forEach(f => {
+        if (f.question_hi) textsToTranslate.push(f.question_hi);
+      });
+    }
+
+    // Filter to only new texts not already translated or in-flight
+    const newTexts = textsToTranslate.filter(txt => !translatedTexts[txt] && !translatingRef.current.has(txt));
+
+    if (newTexts.length === 0) return;
+
+    newTexts.forEach(txt => {
+      translatingRef.current.add(txt);
+      aiAPI.translateToEnglish(txt)
+        .then(eng => {
+          setTranslatedTexts(prev => ({ ...prev, [txt]: eng }));
+        })
+        .catch(() => {
+          setTranslatedTexts(prev => ({ ...prev, [txt]: txt })); // fallback: original
+        })
+        .finally(() => {
+          translatingRef.current.delete(txt);
+        });
+    });
+  }, [staffLanguage, nav, translatedTexts]);
+
+  // Utility to get localized guided scripts
+  const getGuidedText = useCallback((txt) => {
+    if (staffLanguage !== 'en' || !txt) return txt;
+    return translatedTexts[txt] || (translatingRef.current.has(txt) ? 'Translating...' : txt);
+  }, [staffLanguage, translatedTexts]);
 
   const [sentKey, setSentKey] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -172,7 +223,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
       {nav.phase === 'greet' && (
         <div style={styles.scriptCard}>
           <div style={styles.scriptLabel}>🎤 Greeting Script</div>
-          <div style={styles.scriptText}>{nav.greeting_script}</div>
+          <div style={styles.scriptText}>{getGuidedText(nav.greeting_script)}</div>
           {sendStaffApproved && (
             <button
               style={styles.askBtn}
@@ -190,7 +241,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
           <div style={styles.nextLabel}>⏭️ Ask Next</div>
           <div style={styles.nextBody}>
             <div style={styles.nextFieldLabel}>{nav.next_question.label}</div>
-            <div style={styles.nextQuestionText}>{nav.next_question.question_hi}</div>
+            <div style={styles.nextQuestionText}>{getGuidedText(nav.next_question.question_hi)}</div>
             {/* Post-ask inline edit box */}
             {postAskEditKey === nav.next_question.key && (
               <div style={{
@@ -392,7 +443,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
                         ...(sentKey === f.key ? { background: '#16a34a', color: '#fff' } : {}),
                       }}
                       onClick={() => handleAsk(f.question_hi, f.key)}
-                      title={f.question_hi}
+                      title={getGuidedText(f.question_hi)}
                       disabled={sentKey === f.key}
                     >
                       {sentKey === f.key ? '✓' : '🎤'}
@@ -470,7 +521,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
       {nav.phase === 'close' && (
         <div style={{ ...styles.scriptCard, borderColor: 'rgba(100,116,139,0.2)' }}>
           <div style={styles.scriptLabel}>👋 Farewell Script</div>
-          <div style={styles.scriptText}>{nav.farewell_script}</div>
+          <div style={styles.scriptText}>{getGuidedText(nav.farewell_script)}</div>
           {sendStaffApproved && (
             <button
               style={styles.askBtn}

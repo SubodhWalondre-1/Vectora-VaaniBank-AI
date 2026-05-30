@@ -834,7 +834,7 @@ export function useWebSocket() {
           staff_translated_text: translated_text ?? null,
           customer_lang_code: custLangCode,
           customer_lang_name: custLangName,
-          staff_lang_name: "Hindi",
+          staff_lang_name: /[^\x00-\x7F]/.test(response_text) ? "Hindi" : "English",
           staff_used_suggestion: use_suggestion,
           timestamp: new Date().toISOString(),
         });
@@ -884,7 +884,7 @@ export function useWebSocket() {
           staff_translated_text: null,
           customer_lang_code: custLangCode,
           customer_lang_name: custLangName,
-          staff_lang_name: "Hindi",
+          staff_lang_name: /[^\x00-\x7F]/.test(response_text) ? "Hindi" : "English",
           staff_used_suggestion: false,
           timestamp: new Date().toISOString(),
         });
