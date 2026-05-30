@@ -120,8 +120,8 @@ export const createSession = async (branch_code, customer_language, customer_lan
 
 //  SUMMARY APIs
 
-export const getSessionSummary = async (session_id) => {
-  const response = await api.get(`/summary/session/${session_id}`);
+export const getSessionSummary = async (session_id, config = {}) => {
+  const response = await api.get(`/summary/session/${session_id}`, config);
   return response.data;
 };
 

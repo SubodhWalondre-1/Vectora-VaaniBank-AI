@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { useApp } from "../../context/AppContext";
-import { sessionAPI } from "../../services/api";
+import { sessionAPI, aiAPI } from "../../services/api";
 import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 import Spinner from "../ui/Spinner";
@@ -236,6 +236,7 @@ export default function AISuggestionBox({
   const activeSession = useApp((s) => s.activeSession);
   const aiSuggestion = useApp((s) => s.aiSuggestion);
   const clearSuggestion = useApp((s) => s.clearSuggestion);
+  const staffLanguage = useApp((s) => s.staffLanguage);
 
   const [showEdit, setShowEdit] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(null); // "use" | "edit" | "regen"
@@ -258,6 +259,27 @@ export default function AISuggestionBox({
     aiSuggestion?.suggested_customer_lang ??
     aiSuggestion?.suggested_response_customer_lang ??
     "";
+
+  // English translation for suggestion
+  const [englishSuggestion, setEnglishSuggestion] = useState(null);
+  const [translatingSuggestion, setTranslatingSuggestion] = useState(false);
+  const suggestionFetchedRef = useRef("");
+
+  useEffect(() => {
+    if (staffLanguage !== "en" || !suggestedHindi) {
+      return;
+    }
+    if (suggestionFetchedRef.current === suggestedHindi) return;
+    
+    suggestionFetchedRef.current = suggestedHindi;
+    setTranslatingSuggestion(true);
+    
+    aiAPI
+      .translateToEnglish(suggestedHindi)
+      .then((eng) => setEnglishSuggestion(eng))
+      .catch(() => setEnglishSuggestion(suggestedHindi)) // fallback: show Hindi
+      .finally(() => setTranslatingSuggestion(false));
+  }, [staffLanguage, suggestedHindi]);
 
   const intentConfidenceRaw =
     aiSuggestion?.intent_confidence ?? aiSuggestion?.intentConfidence ?? 0;
@@ -563,7 +585,7 @@ export default function AISuggestionBox({
                 style={{ overflow: "hidden" }}
               >
                 <div className="px-4 pb-4 flex flex-col gap-3">
-                  {/* Hindi suggestion */}
+                  {/* Hindi/English suggestion based on staffLanguage */}
                   <div
                     className="rounded-xl px-4 py-3 text-sm leading-relaxed"
                     style={{
@@ -575,10 +597,20 @@ export default function AISuggestionBox({
                       className="text-xs font-semibold mb-1.5"
                       style={{ color: "var(--blue, #003087)" }}
                     >
-                      Suggestion (Hindi)
+                      {staffLanguage === "en" ? "Suggestion (English)" : "Suggestion (Hindi)"}
                     </p>
                     <p style={{ color: "var(--text-primary)" }}>
-                      {suggestedHindi || "—"}
+                      {staffLanguage === "en" ? (
+                        translatingSuggestion ? (
+                          <span style={{ color: "var(--text-muted, #94a3b8)", fontStyle: "italic" }}>
+                            Translating…
+                          </span>
+                        ) : (
+                          englishSuggestion || suggestedHindi || "—"
+                        )
+                      ) : (
+                        suggestedHindi || "—"
+                      )}
                     </p>
                   </div>
 

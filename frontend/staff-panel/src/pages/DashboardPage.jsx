@@ -331,7 +331,7 @@ function DashboardPageInner() {
 
   const initFromActiveSession = useCallback((sessionObj) => {
     const rawStatus = sessionObj?.status;
-    const isCurrentlyActive = rawStatus === "active" || rawStatus === "waiting";
+    const isCurrentlyActive = rawStatus === "active";
 
     useAppStore.setState({
       activeSession: sessionObj,
@@ -430,20 +430,7 @@ function DashboardPageInner() {
 
         const chosen =
           sorted.find((s) => s?.status === "active") ||
-          sorted.find((s) => s?.status === "waiting") ||
-          sorted[0] ||
           null;
-
-        if (!chosen) {
-          if (isInitial) {
-            resetSession();
-            setBooting(false);
-          }
-          return;
-        }
-
-        const shouldConnect =
-          chosen?.status === "active" && chosen?.token_number; // ← ONLY active sessions auto-connect
 
         // Waiting sessions → show notification instead of auto-connecting
         const waitingSessions = list.filter((s) => {
@@ -490,6 +477,17 @@ function DashboardPageInner() {
             });
           }
         });
+
+        if (!chosen) {
+          if (isInitial) {
+            resetSession();
+            setBooting(false);
+          }
+          return;
+        }
+
+        const shouldConnect =
+          chosen?.status === "active" && chosen?.token_number; // ← ONLY active sessions auto-connect
 
         // Always reset session state on initial load to prevent stale data
         // The auto-reconnect useEffect may have already set connectedTokenRef

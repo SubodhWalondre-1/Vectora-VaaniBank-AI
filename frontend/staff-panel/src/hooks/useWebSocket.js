@@ -410,7 +410,7 @@ export function useWebSocket() {
 
           case "session_ended": {
             // Customer has exited the session — reset staff panel
-            toast.success("Customer ne session khatam kar diya", {
+            toast.success("Customer has ended the session", {
               icon: "🔔",
               duration: 3000,
             });

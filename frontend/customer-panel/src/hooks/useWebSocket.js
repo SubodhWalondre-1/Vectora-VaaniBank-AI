@@ -89,48 +89,24 @@ export function useWebSocket() {
         }
 
         case "audio_ready": {
-          // Cancel the TTS-fail fallback timer — audio arrived in time
-          if (staffMsgFallbackRef.current) {
-            clearTimeout(staffMsgFallbackRef.current);
-            staffMsgFallbackRef.current = null;
-          }
-          pendingStaffTextRef.current = null;
           useCustomerStore.getState().setStaffTyping(false);
 
           if (data?.staff_response || data?.text) {
-            const textContent = data.staff_response || data.text;
-            if (isFallbackFiredRef.current) {
-              // Fallback timer already fired and created the bubble, so just update its audio URL
-              useCustomerStore.getState().updateLastMessageAudio(data.audio_url || null);
-              isFallbackFiredRef.current = false;
-            } else {
-              // setStaffMessage called ONCE here — with text + audio URL
-              setStaffMessage(
-                textContent,
-                data.audio_url || null,
-              );
-            }
+            // Update the last message audio URL in state
+            useCustomerStore.getState().updateLastMessageAudio(data.audio_url || null);
+
+            // Dispatch custom event to play audio
+            window.dispatchEvent(
+              new CustomEvent("vaani_audio_ready", { detail: data })
+            );
           }
           break;
         }
 
         case "staff_message": {
-          // Store text but do NOT call setStaffMessage yet.
-          // audio_ready will call it with the audio URL (avoids double staffMessageSeq increment).
-          // If TTS fails and audio_ready never arrives, the fallback timer shows text-only.
           if (data?.text) {
-            pendingStaffTextRef.current = data.text;
-            isFallbackFiredRef.current = false; // Reset fallback fired state
-            if (staffMsgFallbackRef.current)
-              clearTimeout(staffMsgFallbackRef.current);
-            staffMsgFallbackRef.current = setTimeout(() => {
-              if (pendingStaffTextRef.current) {
-                isFallbackFiredRef.current = true;
-                setStaffMessage(pendingStaffTextRef.current, null);
-                pendingStaffTextRef.current = null;
-              }
-              staffMsgFallbackRef.current = null;
-            }, 15000); // Extended timeout to 15 seconds to give plenty of time for slower regional TTS
+            // Show text instantly in the chat UI
+            setStaffMessage(data.text, null);
           }
           break;
         }

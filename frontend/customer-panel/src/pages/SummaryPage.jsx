@@ -120,7 +120,7 @@ export default function SummaryPage() {
 
     const tryFetch = async () => {
       try {
-        const data = await getSessionSummary(session_id);
+        const data = await getSessionSummary(session_id, { skipGlobalToast: true });
         if (cancelled) return;
         setSummary(data);
         setPdfReady(data.pdf_generated === true);
@@ -159,7 +159,7 @@ export default function SummaryPage() {
 
     pollingRef.current = setInterval(async () => {
       try {
-        const data = await getSessionSummary(session_id);
+        const data = await getSessionSummary(session_id, { skipGlobalToast: true });
         setSummary(data);
         if (data.pdf_generated) {
           setPdfReady(true);

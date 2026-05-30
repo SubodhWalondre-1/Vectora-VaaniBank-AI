@@ -259,6 +259,30 @@ export default function LiveSessionPage() {
     }
   }, [staffMessageSeq, isAudioUnlocked]);
 
+  // Listen for audio ready to play TTS audio
+  useEffect(() => {
+    const handleAudioReady = (e) => {
+      const { audio_url } = e.detail;
+      const fullAudioUrl = audio_url
+        ? audio_url.startsWith("http")
+          ? audio_url
+          : `${API_BASE_URL}${audio_url}`
+        : null;
+
+      if (fullAudioUrl && isAudioUnlocked) {
+        setIsPlayingAudio(true);
+        playAudio(fullAudioUrl)
+          .catch(() => {})
+          .finally(() => setIsPlayingAudio(false));
+      }
+    };
+
+    window.addEventListener("vaani_audio_ready", handleAudioReady);
+    return () => {
+      window.removeEventListener("vaani_audio_ready", handleAudioReady);
+    };
+  }, [isAudioUnlocked, playAudio]);
+
   // Listen for transcription ready (from useWebSocket)
   useEffect(() => {
     const handleTranscription = (e) => {
@@ -323,7 +347,7 @@ export default function LiveSessionPage() {
         service_id: service.id,
         service_name: service.labels?.en || service.id,
       });
-      setTimeout(() => setShowConversation(true), 400);
+      setTimeout(() => setShowConversation(true), 50);
     },
     [sendMessage, unlockAudio, setSelectedServiceStore],
   );

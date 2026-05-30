@@ -49,7 +49,7 @@ const SENTIMENT_CONFIG = {
 };
 
 // Staff-to-Customer Card
-function StaffSpeakCard({ exchange, exchangeIndex }) {
+function StaffSpeakCard({ exchange, exchangeIndex, staffLanguage }) {
   const theme = useApp((s) => s.theme);
   const isDark = theme === "dark";
   const exchangeNumber =
@@ -61,6 +61,28 @@ function StaffSpeakCard({ exchange, exchangeIndex }) {
         minute: "2-digit",
       })
     : null;
+
+  const textHindi =
+    exchange.staff_original_text ||
+    exchange.staff_response_final ||
+    exchange.staff_response_suggested ||
+    "";
+
+  // English translation — lazy load when staffLanguage switches to 'en'
+  const [englishText, setEnglishText] = useState(null); // null = not fetched yet
+  const [translating, setTranslating] = useState(false);
+  const fetchedRef = useRef(false);
+
+  useEffect(() => {
+    if (staffLanguage !== "en" || !textHindi || fetchedRef.current) return;
+    fetchedRef.current = true;
+    setTranslating(true);
+    aiAPI
+      .translateToEnglish(textHindi)
+      .then((eng) => setEnglishText(eng))
+      .catch(() => setEnglishText(textHindi)) // fallback: show Hindi
+      .finally(() => setTranslating(false));
+  }, [staffLanguage, textHindi]);
 
   return (
     <motion.div
@@ -106,7 +128,7 @@ function StaffSpeakCard({ exchange, exchangeIndex }) {
         </span>
       </div>
 
-      {/* Staff original (Hindi) */}
+      {/* Staff original (Hindi or English translation) */}
       <div
         className="text-sm p-3 rounded-xl border transition-all duration-150"
         style={{
@@ -122,15 +144,24 @@ function StaffSpeakCard({ exchange, exchangeIndex }) {
           className="text-[11.5px] font-bold mb-1"
           style={{ color: isDark ? "#4ade80" : "#16a34a" }}
         >
-          Original ({exchange.staff_lang_name || "Hindi"})
+          {staffLanguage === "en"
+            ? "English (Translated)"
+            : `Original (${exchange.staff_lang_name || "Hindi"})`}
         </p>
         <p
           style={{ color: isDark ? "#e2e8f0" : "#1f2937", lineHeight: "1.45" }}
         >
-          {exchange.staff_original_text ||
-            exchange.staff_response_final ||
-            exchange.staff_response_suggested ||
-            "—"}
+          {staffLanguage === "en" ? (
+            translating ? (
+              <span style={{ color: "var(--text-muted, #94a3b8)", fontStyle: "italic" }}>
+                Translating…
+              </span>
+            ) : (
+              englishText || textHindi || "—"
+            )
+          ) : (
+            textHindi || "—"
+          )}
         </p>
       </div>
 
@@ -382,7 +413,13 @@ function CustomerCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
 // Exchange Card Router
 function ExchangeCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
   if (exchange.direction === "staff_to_customer") {
-    return <StaffSpeakCard exchange={exchange} exchangeIndex={exchangeIndex} />;
+    return (
+      <StaffSpeakCard
+        exchange={exchange}
+        exchangeIndex={exchangeIndex}
+        staffLanguage={staffLanguage}
+      />
+    );
   }
   return (
     <CustomerCard

@@ -153,6 +153,8 @@ export default function WaitingPage() {
 
   const customerLanguage = useCustomerApp((s) => s.customerLanguage);
   const langCode         = useCustomerApp((s) => s.customerLanguageCode);
+  const branchCode       = useCustomerApp((s) => s.branchCode);
+  const resetSession     = useCustomerApp((s) => s.resetSession);
   const t                = getT(langCode);
 
   const [remainingMs, setRemainingMs] = useState(WAIT_TIMEOUT_MS);
@@ -177,13 +179,17 @@ export default function WaitingPage() {
     } else if (status === 'rejected') {
       hasNavigated.current = true;
       stopAll();
-      setTimeout(() => navigate('/'), 2500);
+      const cachedBranch = branchCode;
+      resetSession();
+      setTimeout(() => navigate(cachedBranch ? `/?branch=${cachedBranch}` : '/'), 2500);
     } else if (status === 'timeout') {
       hasNavigated.current = true;
       stopAll();
-      setTimeout(() => navigate('/'), 2500);
+      const cachedBranch = branchCode;
+      resetSession();
+      setTimeout(() => navigate(cachedBranch ? `/?branch=${cachedBranch}` : '/'), 2500);
     }
-  }, [status, navigate, token, stopAll]);
+  }, [status, navigate, token, stopAll, branchCode, resetSession]);
 
   useEffect(() => {
     if (!token) return;
@@ -336,7 +342,11 @@ export default function WaitingPage() {
         {isTerminal && status !== 'accepted' && (
           <motion.button
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
-            onClick={() => navigate('/')}
+            onClick={() => {
+              const cachedBranch = branchCode;
+              resetSession();
+              navigate(cachedBranch ? `/?branch=${cachedBranch}` : '/');
+            }}
             style={S.retryBtn}
           >
             {t.retry}
