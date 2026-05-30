@@ -1015,9 +1015,51 @@ function generateBilingualPdf() {
 
 
 
+  /* ══════════════════════════════════════════
+     CUSTOM ANIMATED DROPDOWNS
+  ══════════════════════════════════════════ */
+  const langDropdown = document.getElementById('lang-dropdown');
+  const scenarioDropdown = document.getElementById('scenario-dropdown');
+
+  function closeAllDropdowns() {
+    langDropdown?.classList.remove('open');
+    scenarioDropdown?.classList.remove('open');
+  }
+
+  // Toggle Language Dropdown
+  langDropdown?.querySelector('.dropdown-trigger')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isRunning || isRecording) return;
+    const isOpen = langDropdown.classList.contains('open');
+    closeAllDropdowns();
+    if (!isOpen) langDropdown.classList.add('open');
+  });
+
+  // Toggle Scenario Dropdown
+  scenarioDropdown?.querySelector('.dropdown-trigger')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (isRunning || isRecording) return;
+    const isOpen = scenarioDropdown.classList.contains('open');
+    closeAllDropdowns();
+    if (!isOpen) scenarioDropdown.classList.add('open');
+  });
+
+  // Close when clicking outside
+  document.addEventListener('click', () => {
+    closeAllDropdowns();
+  });
+
+  // Prevent closing when clicking inside the dropdown menu container itself
+  document.querySelectorAll('.dropdown-menu').forEach(menu => {
+    menu.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  });
+
   // Language selection options
   document.querySelectorAll('.lang-option').forEach(opt => {
-    opt.addEventListener('click', () => {
+    opt.addEventListener('click', (e) => {
+      e.stopPropagation();
       if (isRunning || isRecording) return;
       currentLang = opt.dataset.lang;
       document.querySelectorAll('.lang-option').forEach(o => o.classList.remove('active'));
@@ -1026,6 +1068,13 @@ function generateBilingualPdf() {
       if (ldValue)   ldValue.textContent   = 'Select & Run';
       if (ldConf)    ldConf.textContent    = '—';
       
+      // Update trigger visual content
+      const triggerContent = langDropdown?.querySelector('.trigger-content');
+      if (triggerContent) {
+        triggerContent.innerHTML = opt.innerHTML;
+      }
+      closeAllDropdowns();
+
       // Stop speech
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.cancel();
@@ -1035,11 +1084,19 @@ function generateBilingualPdf() {
 
   // Scenario selection options
   document.querySelectorAll('.scenario-option').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
       if (isRunning || isRecording) return;
       currentQuery = btn.dataset.query;
       document.querySelectorAll('.scenario-option').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+
+      // Update trigger visual content
+      const triggerContent = scenarioDropdown?.querySelector('.trigger-content');
+      if (triggerContent) {
+        triggerContent.innerHTML = btn.innerHTML;
+      }
+      closeAllDropdowns();
     });
   });
 
