@@ -130,3 +130,23 @@ html {
   .sr-zoom-out { transform: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ============================================================
+   RESPONSIVE SCENE HEIGHTS & VIEWPORT CLIPPING FIXES
+   ============================================================ */
+@media (max-width: 900px) {
+  .scene {
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+    padding-top: 90px;
+    padding-bottom: 70px;
+  }
+
+  .voice-inner,
+  .demo-inner,
+  .contact-inner {
+    height: auto !important;
+    padding-bottom: 30px !important;
+  }
+}
