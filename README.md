@@ -70,16 +70,24 @@ python ingest_kb.py
 ```bash
 cp .env.example .env
 ```
-Open `.env` and insert your AI service API keys:
+Open `.env` and insert your AI service API keys and admin credentials:
 ```env
+# ── Database & Cache ──
 DATABASE_URL=postgresql+asyncpg://vaanibank:YourPassword@localhost:5432/vaanibank_db
 REDIS_URL=redis://localhost:6379/0
 
+# ── AI Service API Keys ──
 SARVAM_API_KEY=your_sarvam_api_key
 GROQ_API_KEY=your_groq_api_key
 GEMINI_API_KEY=your_gemini_api_key
 REVERIE_APP_ID=your_reverie_app_id
 REVERIE_API_KEY=your_reverie_api_key
+
+# ── Admin Panel Credentials ──
+ADMIN_USERNAME=your_real_username
+ADMIN_PASSWORD=your_real_password
+ADMIN_STAFF_ID=your_real_staff_id
+ADMIN_FULL_NAME=your_real_full_name
 ```
 
 ### 5. Launch Backend Server
@@ -104,12 +112,26 @@ npm install
 npm run dev
 ```
 
-### 7. Demo Credentials (Staff Login)
+### 7. Configure Admin Credentials
+Admin panel credentials are configured via environment variables — **never hardcoded**.
+Set the following in your `.env` file before starting the backend:
+
+| Variable | Description | Example |
+|---|---|---|
+| `ADMIN_USERNAME` | Admin login username | `admin_vaani` |
+| `ADMIN_PASSWORD` | Admin login password | `S3cur3P@ss!` |
+| `ADMIN_STAFF_ID` | Unique staff ID for admin | `UBI-HQ-ADMIN-01` |
+| `ADMIN_FULL_NAME` | Display name on admin panel | `Vaani Admin` |
+
+> ⚠️ The admin account is auto-seeded on first backend startup using these variables. Changing them requires restarting the backend to re-seed.
+
+### 8. Demo Credentials (Staff Login)
 The Staff Panel login page includes a built-in **Demo Credentials** helper:
 * **⚡ One-Click Login**: Click **"Demo Credentials"** → **"Generate & Fill Unique Staff ⚡"** — the backend dynamically spawns a unique staff record and auto-fills all fields.
 * **🔑 Manual Login**:
   * **Teller**: Staff ID `UBI-NGP-001` | Username `demo` | Password `demo123`
   * **Manager**: Staff ID `UBI-NGP-002` | Username `manager` | Password `manager123`
+  * **Admin**: Uses the unique credentials you configured in your `.env` file (refer to **Step 7: Configure Admin Credentials** above)
 
 ## Project Structure & Architecture
 
@@ -331,7 +353,6 @@ All database entries, process guidelines, and knowledge sources are **100% synth
 * **Synthetic Testing Limits** — Models evaluated on clean synthetic bank audio. Noisy real-world branch environments would require front-end noise suppression and STT fine-tuning.
 * **WebSocket In-Memory Registry** — Active connections tracked in-memory inside FastAPI state. Horizontal scaling across multiple nodes would require a Redis Pub/Sub backplane.
 * **Single TTS Provider** — Currently relies entirely on Sarvam Bulbul v3 with no native TTS fallback engine if Sarvam API goes down.
-* **Local Signature Storage** — SaralForm digital signature PNGs stored on local disk. Production would require Cloudflare R2 or S3 object storage.
 * **No Real CBS Integration** — Core Banking System integration is mocked via `cbs_service.py`. Real deployment would require integration with Union Bank's Finacle/T24.
 * **Single-Node Rate Limiting** — The sliding-window rate limiter uses in-process state; distributed deployments would need Redis-backed rate limiting.
 
