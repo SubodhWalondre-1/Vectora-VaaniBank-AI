@@ -278,7 +278,7 @@ function AnalyticsSection({ branchId }) {
     })), [data]);
 
   const completionRate = data?.completion_rate ?? 0;
-  const avgDurMin = data ? Math.round((data.avg_duration_seconds || 0) / 60) : 0;
+  const avgDuration = data?.avg_duration_seconds ? fmtDuration(data.avg_duration_seconds) : '—';
 
   return (
     <div>
@@ -323,7 +323,7 @@ function AnalyticsSection({ branchId }) {
             <StatCard label="Total Sessions"    value={data?.total_sessions ?? 0}     icon={Activity}  color="#003087" />
             <StatCard label="Completion Rate"   value={`${completionRate}%`}           icon={TrendingUp} color="#16A34A"
               sub={`${data?.completed_sessions ?? 0} completed`} />
-            <StatCard label="Avg Duration"      value={`${avgDurMin}m`}               icon={Clock}     color="#D97706" />
+            <StatCard label="Avg Duration"      value={avgDuration}                   icon={Clock}     color="#D97706" />
             <StatCard label="PII Detections"    value={data?.pii_detected_count ?? 0} icon={ShieldAlert} color="#DC2626" />
           </div>
 

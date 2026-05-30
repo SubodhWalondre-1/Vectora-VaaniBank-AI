@@ -15,6 +15,7 @@ import Sidebar from '../components/layout/Sidebar';
 import TopBar from '../components/layout/TopBar';
 import { useApp } from '../context/AppContext';
 import { fetchAnalytics } from '../services/api';
+import { fmtDuration } from '../utils/managerUtils.jsx';
 
 function StatCard({ label, value, sub }) {
   return (
@@ -151,7 +152,7 @@ export default function AnalyticsPage() {
               <StatCard label="Abandoned" value={loading ? '—' : data?.abandoned_sessions ?? 0} />
               <StatCard
                 label="Avg duration"
-                value={loading ? '—' : `${Math.round((data?.avg_duration_seconds || 0) / 60)} min`}
+                value={loading ? '—' : (data?.avg_duration_seconds ? fmtDuration(data.avg_duration_seconds) : '0s')}
               />
             </div>
 

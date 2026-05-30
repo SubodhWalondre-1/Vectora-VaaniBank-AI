@@ -8,6 +8,7 @@ import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 import Spinner from "../ui/Spinner";
 import { LANGUAGES } from "../../constants";
+import { fmtDuration } from "../../utils/managerUtils.jsx";
 
 // PII Alert Banner
 function PIIAlert({ onHide }) {
@@ -528,9 +529,9 @@ function IdleState({ analytics, onWalkIn }) {
 
   const sessions = analytics?.total_sessions ?? 0;
   const completed = analytics?.completed_sessions ?? 0;
-  const avgMin = analytics?.avg_duration_seconds
-    ? Math.round(analytics.avg_duration_seconds / 60)
-    : 0;
+  const avgDuration = analytics?.avg_duration_seconds
+    ? fmtDuration(analytics.avg_duration_seconds)
+    : "—";
   const langs = analytics?.languages_used ?? {};
 
   const firstName = staff?.full_name?.split(" ")[0] || "there";
@@ -644,7 +645,7 @@ function IdleState({ analytics, onWalkIn }) {
             />
             <StatsCard
               label="Avg Duration"
-              value={avgMin ? `${avgMin}m` : "0m"}
+              value={avgDuration}
               icon={Clock}
               color="#d97706"
               sub="Time"
