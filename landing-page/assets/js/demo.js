@@ -678,7 +678,7 @@ const BASE_URL = ''; // Set to your deployed backend URL before submission
       'Kannada': ' ಸಮನಾಗಿದೆ ',
       'Odia': ' ସମାନ ',
       'Punjabi': ' ਬਰਾਬਰ ',
-      'Gujarati': ' બਰਾબર ',
+      'Gujarati': ' બરાબર ',
       'Malayalam': ' തുല്യം '
     };
     const equalsWord = equalsWords[lang] || ' equals ';
@@ -832,13 +832,14 @@ const BASE_URL = ''; // Set to your deployed backend URL before submission
 
 
 function generateBilingualPdf() {
-    const { jsPDF } = window.jspdf;
-    if (!jsPDF) {
-      console.error("jsPDF library not loaded from CDN.");
-      return;
-    }
-    
-    const doc = new jsPDF();
+    const link = document.createElement('a');
+    link.href = 'assets/VaaniBank_Summary_ZKL-8077.pdf';
+    link.download = 'VaaniBank_Summary_ZKL-8077.pdf';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    return;
     
     // Primary Header Block
     doc.setFillColor(27, 43, 107); // Navy #1B2B6B
