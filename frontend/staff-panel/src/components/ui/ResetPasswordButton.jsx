@@ -1,10 +1,10 @@
-/* ============================================
+/*
    VaaniBank AI — Reset Password Button
    Phase 5 | Union Bank of India | Team Vectora
 
    Drop-in button for the staff table row.
    Calls reset-password API and shows CredentialsModal.
-   ============================================ */
+   */
 
 import { useState } from 'react';
 import { KeyRound, Loader2 } from 'lucide-react';

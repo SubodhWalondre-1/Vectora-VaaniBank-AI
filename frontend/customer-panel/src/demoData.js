@@ -1,10 +1,10 @@
-/* ============================================
+/*
    VaaniBank AI — Demo Script Data
    Union Bank of India | Team Vectora
    Pre-scripted conversation for account_opening demo
-   ============================================ */
+   */
 
-// ── Demo Customer Utterances ────────────────
+// Demo Customer Utterances
 export const DEMO_SCRIPT = [
   {
     id: 1,
@@ -53,7 +53,7 @@ export const DEMO_SCRIPT = [
   },
 ];
 
-// ── Demo AI Suggested Responses ─────────────
+// Demo AI Suggested Responses
 export const DEMO_AI_RESPONSES = [
   {
     id: 1,

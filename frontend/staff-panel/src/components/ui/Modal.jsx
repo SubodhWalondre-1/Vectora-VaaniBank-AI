@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Modal Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';

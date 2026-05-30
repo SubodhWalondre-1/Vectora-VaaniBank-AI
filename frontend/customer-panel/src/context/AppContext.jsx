@@ -1,22 +1,18 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel State (Zustand)
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist } from "zustand/middleware";
 
-// ═══════════════════════════════════════════════
 //  CUSTOMER APP STORE
-// ═══════════════════════════════════════════════
 
 const useCustomerStore = create(
   persist(
     immer((set, get) => ({
-      // ─────────────────────────────────────────
       //  SESSION STATE
-      // ─────────────────────────────────────────
       tokenNumber: null,
       sessionId: null,
       branchCode: null,
@@ -183,9 +179,7 @@ const useCustomerStore = create(
         });
       },
 
-      // ─────────────────────────────────────────
       //  THEME STATE
-      // ─────────────────────────────────────────
       theme: "light",
 
       toggleTheme: () => {
@@ -232,13 +226,11 @@ const useCustomerStore = create(
   ),
 );
 
-// ═══════════════════════════════════════════════
 //  HOOK EXPORTS
-// ═══════════════════════════════════════════════
 
 export const useCustomerApp = useCustomerStore;
 
-// ── Selectors for performance ───────────────
+// Selectors for performance
 export const useSessionState = () =>
   useCustomerStore((state) => ({
     tokenNumber: state.tokenNumber,

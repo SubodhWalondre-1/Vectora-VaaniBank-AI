@@ -1,10 +1,10 @@
-/* ============================================
+/*
    VaaniBank AI — Summary Page
    Union Bank of India | Team Vectora
    URL: /summary/:session_id
    Final customer screen — bilingual summary +
-   PDF download + WhatsApp + Rating
-   ============================================ */
+   PDF download + Rating
+   */
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -27,7 +27,7 @@ import { BRAND, APP_NAME, BANK_NAME } from "../constants";
 import { useCustomerApp } from "../context/AppContext";
 import { getSessionSummary, getPDFUrl, downloadPDFBlob } from "../services/api";
 
-// ── Animation Variants ──────────────────────
+// Animation Variants
 const pageVariants = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 0.5, staggerChildren: 0.12 } },
@@ -47,7 +47,7 @@ const starBounce = {
   transition: { duration: 0.3, ease: "easeInOut" },
 };
 
-// ── Checkmark draw animation path ───────────
+// Checkmark draw animation path
 const checkVariants = {
   hidden: { pathLength: 0, opacity: 0 },
   visible: {
@@ -66,7 +66,7 @@ const circleVariants = {
   },
 };
 
-// ── Inline Keyframes ────────────────────────
+// Inline Keyframes
 const inlineKeyframes = `
   @keyframes loader-spin {
     to { transform: rotate(360deg); }
@@ -77,15 +77,13 @@ const inlineKeyframes = `
   }
 `;
 
-// ═══════════════════════════════════════════════
 //  SUMMARY PAGE
-// ═══════════════════════════════════════════════
 
 export default function SummaryPage() {
   const { session_id } = useParams();
   const navigate = useNavigate();
 
-  // ── Store ─────────────────────────────────
+  // Store
   const tokenNumber = useCustomerApp((s) => s.tokenNumber);
   const customerLanguage = useCustomerApp((s) => s.customerLanguage);
   const customerLanguageCode = useCustomerApp((s) => s.customerLanguageCode);
@@ -94,7 +92,7 @@ export default function SummaryPage() {
   const resetSession = useCustomerApp((s) => s.resetSession);
   const branchCode = useCustomerApp((s) => s.branchCode);
 
-  // ── Local State ───────────────────────────
+  // Local State
   const [summary, setSummary] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
@@ -105,11 +103,12 @@ export default function SummaryPage() {
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   const pollingRef = useRef(null);
   const retryTimerRef = useRef(null);
 
-  // ── Fetch summary on mount — retry until ready ──
+  // Fetch summary on mount — retry until ready
   useEffect(() => {
     if (!session_id) return;
 
@@ -126,6 +125,8 @@ export default function SummaryPage() {
         setPdfReady(data.pdf_generated === true);
         setIsLoading(false);
         if (!data.pdf_generated) setIsPdfPolling(true);
+
+
       } catch (err) {
         if (cancelled) return;
         attempts += 1;
@@ -151,7 +152,7 @@ export default function SummaryPage() {
     };
   }, [session_id]);
 
-  // ── Poll for PDF readiness ────────────────
+  // Poll for PDF readiness
   useEffect(() => {
     if (!isPdfPolling || !session_id || pdfReady) return;
 
@@ -177,7 +178,7 @@ export default function SummaryPage() {
     };
   }, [isPdfPolling, session_id, pdfReady]);
 
-  // ── Cleanup polling + retry on unmount ────────────
+  // Cleanup polling + retry on unmount
   useEffect(() => {
     return () => {
       if (pollingRef.current) clearInterval(pollingRef.current);
@@ -185,7 +186,7 @@ export default function SummaryPage() {
     };
   }, []);
 
-  // ── Download PDF ──────────────────────────
+  // Download PDF
   const handleDownloadPDF = useCallback(async () => {
     if (!summary?.id || !session_id) return;
 
@@ -214,29 +215,114 @@ export default function SummaryPage() {
     }
   }, [summary, session_id, tokenNumber]);
 
-  // ── Submit Rating ─────────────────────────
-  const handleSubmitRating = useCallback(() => {
+
+
+  // Submit Rating
+  const handleSubmitRating = useCallback(async () => {
     if (rating === 0) {
       toast.error("Please select a rating");
       return;
     }
-    setRatingSubmitted(true);
-    toast.success("Thank you for your feedback!", {
-      icon: "⭐",
-      duration: 2000,
-    });
-    const currentBranch = branchCode;
-    setTimeout(() => {
-      resetSession();
-      if (currentBranch) {
-        navigate(`/?branch=${currentBranch}`, { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
-    }, 2000);
-  }, [rating, navigate, resetSession, branchCode]);
 
-  // ── Format date ───────────────────────────
+    const FORMSPREE_ID = import.meta.env.VITE_FORMSPREE_ID;
+    const toastId = toast.loading("Sending feedback...");
+    setIsSubmittingFeedback(true);
+
+    if (!FORMSPREE_ID) {
+      console.warn("[SummaryPage] VITE_FORMSPREE_ID is not configured. Simulating feedback success.");
+      setTimeout(() => {
+        toast.success("Thank you for your feedback!", {
+          id: toastId,
+          icon: "⭐",
+          duration: 3000,
+        });
+        setRatingSubmitted(true);
+        setIsSubmittingFeedback(false);
+        const currentBranch = branchCode;
+        setTimeout(() => {
+          resetSession();
+          if (currentBranch) {
+            navigate(`/?branch=${currentBranch}`, { replace: true });
+          } else {
+            navigate("/", { replace: true });
+          }
+        }, 2500);
+      }, 800);
+      return;
+    }
+
+    try {
+      const displayLang = summary?.customer_language || customerLanguage || "Customer Language";
+      const payload = {
+        rating: rating,
+        comment: comment,
+        tokenNumber: tokenNumber || `Session #${session_id}`,
+        sessionId: session_id,
+        branchCode: branchCode || "N/A",
+        customerLanguage: displayLang,
+        submittedAt: new Date().toISOString(),
+      };
+
+      const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        toast.success("Thank you for your feedback!", {
+          id: toastId,
+          icon: "⭐",
+          duration: 3000,
+        });
+      } else {
+        console.error("[SummaryPage] Formspree error:", response.statusText);
+        // Fallback: still show thank you and proceed
+        toast.success("Thank you for your feedback!", {
+          id: toastId,
+          icon: "⭐",
+          duration: 3000,
+        });
+      }
+      setRatingSubmitted(true);
+    } catch (error) {
+      console.error("[SummaryPage] Formspree submission failed:", error);
+      // Fallback: still show thank you and proceed
+      toast.success("Thank you for your feedback!", {
+        id: toastId,
+        icon: "⭐",
+        duration: 3000,
+      });
+      setRatingSubmitted(true);
+    } finally {
+      setIsSubmittingFeedback(false);
+
+      const currentBranch = branchCode;
+      setTimeout(() => {
+        resetSession();
+        if (currentBranch) {
+          navigate(`/?branch=${currentBranch}`, { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+      }, 2500);
+    }
+  }, [
+    rating,
+    comment,
+    tokenNumber,
+    session_id,
+    branchCode,
+    summary,
+    customerLanguage,
+    navigate,
+    resetSession,
+  ]);
+
+  // Format date
   const formatDate = (dateStr) => {
     if (!dateStr) return "N/A";
     try {
@@ -264,9 +350,7 @@ export default function SummaryPage() {
     }
   };
 
-  // ────────────────────────────────────────────
   //  LOADING STATE
-  // ────────────────────────────────────────────
   if (isLoading) {
     return (
       <div style={styles.loadingContainer}>
@@ -280,16 +364,16 @@ export default function SummaryPage() {
         <p style={styles.loadingSubtext}>
           सारांश तैयार हो रहा है, कृपया प्रतीक्षा करें...
         </p>
-        <p style={{ fontSize: 12, color: "var(--text-muted)", margin: 0 }}>
+        <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "0 0 8px 0" }}>
           This may take up to 30 seconds
         </p>
+
+
       </div>
     );
   }
 
-  // ────────────────────────────────────────────
   //  ERROR STATE
-  // ────────────────────────────────────────────
   if (loadError && !summary) {
     return (
       <div style={styles.loadingContainer}>
@@ -322,7 +406,7 @@ export default function SummaryPage() {
     );
   }
 
-  // ── Extract summary data ──────────────────
+  // Extract summary data
   const summaryHindi = summary?.summary_hindi || [];
   const summaryCustomer = summary?.summary_customer_lang || [];
   const keyPointsHindi = summary?.key_points_hindi || [];
@@ -333,9 +417,7 @@ export default function SummaryPage() {
     summary?.customer_language || customerLanguage || "Customer Language";
   const displayToken = tokenNumber || `Session #${session_id}`;
 
-  // ────────────────────────────────────────────
   //  MAIN RENDER
-  // ────────────────────────────────────────────
   return (
     <motion.div
       variants={pageVariants}
@@ -572,6 +654,8 @@ export default function SummaryPage() {
               </>
             )}
           </motion.div>
+
+
         </motion.div>
 
         {/* ═══════════════════════════════════════
@@ -590,11 +674,14 @@ export default function SummaryPage() {
                   return (
                     <motion.div
                       key={starVal}
-                      whileTap={starBounce}
-                      onClick={() => setRating(starVal)}
-                      onMouseEnter={() => setHoverRating(starVal)}
-                      onMouseLeave={() => setHoverRating(0)}
-                      style={styles.starWrap}
+                      whileTap={!isSubmittingFeedback ? starBounce : {}}
+                      onClick={!isSubmittingFeedback ? () => setRating(starVal) : undefined}
+                      onMouseEnter={!isSubmittingFeedback ? () => setHoverRating(starVal) : undefined}
+                      onMouseLeave={!isSubmittingFeedback ? () => setHoverRating(0) : undefined}
+                      style={{
+                        ...styles.starWrap,
+                        cursor: isSubmittingFeedback ? "not-allowed" : "pointer",
+                      }}
                     >
                       <Star
                         size={36}
@@ -614,18 +701,21 @@ export default function SummaryPage() {
                 onChange={(e) => setComment(e.target.value)}
                 rows={3}
                 style={styles.commentInput}
+                disabled={isSubmittingFeedback}
               />
 
               {/* Submit */}
               <motion.div
                 style={{
                   ...styles.submitRatingBtn,
-                  ...(rating > 0 ? {} : styles.submitRatingBtnDisabled),
+                  ...(rating > 0 && !isSubmittingFeedback ? {} : styles.submitRatingBtnDisabled),
                 }}
-                whileTap={rating > 0 ? { scale: 0.97 } : {}}
-                onClick={rating > 0 ? handleSubmitRating : undefined}
+                whileTap={rating > 0 && !isSubmittingFeedback ? { scale: 0.97 } : {}}
+                onClick={rating > 0 && !isSubmittingFeedback ? handleSubmitRating : undefined}
               >
-                <span style={styles.submitRatingText}>Submit Rating</span>
+                <span style={styles.submitRatingText}>
+                  {isSubmittingFeedback ? "Submitting..." : "Submit Rating"}
+                </span>
               </motion.div>
             </>
           ) : (
@@ -690,12 +780,10 @@ export default function SummaryPage() {
   );
 }
 
-// ═══════════════════════════════════════════════
 //  STYLES (Inline JS — mobile-first)
-// ═══════════════════════════════════════════════
 
 const styles = {
-  // ── Page ──────────────────────────────────
+  // Page
   page: {
     width: "100%",
     height: "100dvh",
@@ -719,7 +807,7 @@ const styles = {
     position: "relative",
   },
 
-  // ── Theme Toggle ─────────────────────────
+  // Theme Toggle
   themeToggle: {
     position: "absolute",
     top: 0,
@@ -737,7 +825,7 @@ const styles = {
     boxShadow: "var(--card-shadow)",
   },
 
-  // ── Loading / Error ──────────────────────
+  // Loading / Error
   loadingContainer: {
     width: "100%",
     height: "100dvh",
@@ -749,6 +837,7 @@ const styles = {
     backgroundColor: "var(--body-bg)",
     padding: 24,
   },
+
   loadingText: {
     fontSize: 16,
     fontWeight: 600,
@@ -800,7 +889,7 @@ const styles = {
     color: "#fff",
   },
 
-  // ── Success Header ───────────────────────
+  // Success Header
   successHeader: {
     textAlign: "center",
     paddingTop: 8,
@@ -832,7 +921,7 @@ const styles = {
     fontFamily: "'Inter', monospace",
   },
 
-  // ── Summary Card ─────────────────────────
+  // Summary Card
   summaryCard: {
     borderRadius: 16,
     backgroundColor: "var(--card-bg)",
@@ -854,7 +943,7 @@ const styles = {
     color: "var(--text-primary)",
   },
 
-  // ── Bilingual Layout ─────────────────────
+  // Bilingual Layout
   bilingualSection: {
     padding: "14px 16px",
     borderBottom: "1px solid var(--divider)",
@@ -959,7 +1048,7 @@ const styles = {
     color: "var(--text-muted)",
   },
 
-  // ── Action Buttons ───────────────────────
+  // Action Buttons
   actionsSection: {
     display: "flex",
     flexDirection: "column",
@@ -990,7 +1079,7 @@ const styles = {
     color: "#fff",
   },
 
-  // ── Rating Section ───────────────────────
+  // Rating Section
   ratingSection: {
     padding: "20px",
     borderRadius: 16,
@@ -1086,7 +1175,7 @@ const styles = {
     marginTop: 4,
   },
 
-  // ── Footer ───────────────────────────────
+  // Footer
   footer: {
     textAlign: "center",
     display: "flex",
@@ -1160,4 +1249,6 @@ const styles = {
     height: 12,
     backgroundColor: "var(--divider)",
   },
+
 };
+

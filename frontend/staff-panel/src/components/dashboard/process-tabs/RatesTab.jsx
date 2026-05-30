@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
-// ─── Tab: Rates & EMI Calculator ────────────────────────────────────────────
+// Tab: Rates & EMI Calculator
 export default function RatesTab({ intentKey, keyEntities }) {
-  // ── EMI Calculator state ──
+  // EMI Calculator state
   const [amount,  setAmount]  = useState("");
   const [tenure,  setTenure]  = useState("");
   const [rate,    setRate]    = useState("");

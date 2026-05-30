@@ -6,9 +6,7 @@
 
 export const BANKING_KNOWLEDGE = {
 
-  // ─────────────────────────────────────────────
   // 1. ACCOUNT OPENING
-  // ─────────────────────────────────────────────
   account_opening: {
     label: 'Account Opening',
     steps: [
@@ -67,9 +65,7 @@ export const BANKING_KNOWLEDGE = {
     ],
   },
 
-  // ─────────────────────────────────────────────
   // 2. LOAN ENQUIRY
-  // ─────────────────────────────────────────────
   loan_enquiry: {
     label: 'Loan Enquiry',
     steps: [
@@ -131,9 +127,7 @@ export const BANKING_KNOWLEDGE = {
     ],
   },
 
-  // ─────────────────────────────────────────────
   // 3. KYC UPDATE
-  // ─────────────────────────────────────────────
   kyc_update: {
     label: 'KYC Update',
     steps: [
@@ -191,9 +185,7 @@ export const BANKING_KNOWLEDGE = {
     ],
   },
 
-  // ─────────────────────────────────────────────
   // 4. CARD SERVICES
-  // ─────────────────────────────────────────────
   card_services: {
     label: 'Card Services',
     steps: [
@@ -258,9 +250,7 @@ export const BANKING_KNOWLEDGE = {
     ],
   },
 
-  // ─────────────────────────────────────────────
   // 5. BALANCE ENQUIRY
-  // ─────────────────────────────────────────────
   balance_enquiry: {
     label: 'Balance Enquiry',
     steps: [
@@ -314,9 +304,7 @@ export const BANKING_KNOWLEDGE = {
     ],
   },
 
-  // ─────────────────────────────────────────────
   // 6. FIXED DEPOSIT
-  // ─────────────────────────────────────────────
   fixed_deposit: {
     label: 'Fixed Deposit',
     steps: [
@@ -376,9 +364,7 @@ export const BANKING_KNOWLEDGE = {
     ],
   },
 
-  // ─────────────────────────────────────────────
   // 7. GENERAL
-  // ─────────────────────────────────────────────
   general: {
     label: 'General Query',
     steps: [

@@ -1,9 +1,9 @@
-/* ============================================================
+/*
    VaaniBank AI — Account Opening Form Configuration
    Union Bank of India | Team Vectora
-   ============================================================ */
+   */
 
-// ── Account Opening Field Labels ─────────────────────────────────────────────
+// Account Opening Field Labels
 export const ACCOUNT_FIELD_LABELS = {
   // Part 1: Applicant & KYC Details
   title: { en: "Title", hi: "शीर्षक" },
@@ -167,7 +167,7 @@ export const ACCOUNT_FIELD_LABELS = {
   photo_provided: { en: "Photograph Attached", hi: "फोटो संलग्न" },
 };
 
-// ── Account Field Options ───────────────────────────────────────────────────
+// Account Field Options
 export const ACCOUNT_FIELD_OPTIONS = {
   title: [
     { value: "mr", label: "Mr.", label_hi: "श्री" },
@@ -221,7 +221,7 @@ export const ACCOUNT_FIELD_OPTIONS = {
   ],
 };
 
-// ── Account Field Groups ─────────────────────────────────────────────────────
+// Account Field Groups
 export const ACCOUNT_INTENT_FIELDS = [
   // Part 1
   "title",
@@ -302,7 +302,7 @@ export const ACCOUNT_CHECKBOX_FIELDS = [
   "photo_provided",
 ];
 
-// ── Field Requirement Status (Dots) ──────────────────────────────────────────
+// Field Requirement Status (Dots)
 export const ACCOUNT_FIELD_STATUS = {
   // 🟢 Mandatory (Green Dot)
   mandatory: [

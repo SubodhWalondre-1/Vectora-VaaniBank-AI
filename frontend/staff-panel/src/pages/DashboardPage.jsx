@@ -1,9 +1,10 @@
-/* ============================================
+/*
    VaaniBank AI — Dashboard Page (Full Layout)
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import useAppStore, { useApp } from "../context/AppContext";
 import {
@@ -26,7 +27,7 @@ import AISuggestionBox from "../components/dashboard/AISuggestionBox";
 import ProcessPanel from "../components/dashboard/ProcessPanel";
 import BilingualSummary from "../components/dashboard/BilingualSummary";
 
-// ── Error Boundary ─────────────────────────────
+// Error Boundary
 // Prevents white-screen crashes — shows recovery UI instead
 class DashboardErrorBoundary extends React.Component {
   constructor(props) {
@@ -117,6 +118,7 @@ function DashboardPageInner() {
   const sessionStatus = useApp((s) => s.sessionStatus);
   const endSession = useApp((s) => s.endSession);
   const resetSession = useApp((s) => s.resetSession);
+  const navigate = useNavigate();
 
   const {
     connect,
@@ -203,7 +205,7 @@ function DashboardPageInner() {
     }
   }, [activeSession]);
 
-  // ── Safety net: catch session_ended via ws_event broadcast too ────
+  // Safety net: catch session_ended via ws_event broadcast too
   // (in case useWebSocket handler fails)
   useEffect(() => {
     const handleWsEvent = (e) => {
@@ -251,7 +253,7 @@ function DashboardPageInner() {
     return () => window.removeEventListener("ws_event", handleWsEvent);
   }, [customerEndedRef]);
 
-  // ── Helper: connect WS safely — single source of truth ──
+  // Helper: connect WS safely — single source of truth
   // All connect calls go through this so we never double-connect
   const connectWS = useCallback(
     (tokenNumber, jwtToken) => {
@@ -348,7 +350,7 @@ function DashboardPageInner() {
     });
   }, []);
 
-  // ── Helper: restore full exchange history from DB after page reload ──
+  // Helper: restore full exchange history from DB after page reload
   const restoreExchanges = useCallback(async (sessionId) => {
     if (!sessionId) return;
     try {
@@ -362,7 +364,7 @@ function DashboardPageInner() {
     }
   }, []);
 
-  // ── Helper: restore InfoBoard from persisted collected_data ──
+  // Helper: restore InfoBoard from persisted collected_data
   const restoreInfoBoard = useCallback(async (sessionId) => {
     if (!sessionId) return;
     try {
@@ -404,7 +406,7 @@ function DashboardPageInner() {
     }
   }, []);
 
-  // ── Helper: fetch latest active session and connect WS ──
+  // Helper: fetch latest active session and connect WS
   const fetchAndConnect = useCallback(
     async (isInitial = false) => {
       // Always allow polling to find new waiting/active sessions
@@ -489,7 +491,7 @@ function DashboardPageInner() {
           }
         });
 
-        // ── Always reset session state on initial load to prevent stale data ──
+        // Always reset session state on initial load to prevent stale data
         // The auto-reconnect useEffect may have already set connectedTokenRef
         // from rehydrated activeSession. We still need initFromActiveSession
         // to clear exchanges and guarantee a clean slate.
@@ -555,7 +557,7 @@ function DashboardPageInner() {
     };
   }, [fetchAndConnect]);
 
-  // ── Poll for new sessions every 3 seconds ──
+  // Poll for new sessions every 3 seconds
   // Fast polling catches customer-created sessions (QR scan) almost instantly
   useEffect(() => {
     pollRef.current = setInterval(() => {
@@ -567,7 +569,7 @@ function DashboardPageInner() {
     };
   }, [fetchAndConnect]);
 
-  // ── Auto-reconnect WS when activeSession.token_number changes ──
+  // Auto-reconnect WS when activeSession.token_number changes
   // connectWS guard ensures no duplicate connection
   useEffect(() => {
     const token = activeSession?.token_number;
@@ -596,7 +598,7 @@ function DashboardPageInner() {
     return () => window.removeEventListener("vaani_form_signed", onFormSigned);
   }, []);
 
-  // ── Accept: staff connects WS → session activates ──────
+  // Accept: staff connects WS → session activates
   const handleApprove = useCallback(
     (approval) => {
       const { token_number, session_id } = approval;
@@ -636,7 +638,7 @@ function DashboardPageInner() {
     [connectWS],
   );
 
-  // ── Reject: end session via API ────────────────────
+  // Reject: end session via API
   const handleReject = useCallback(async (approval) => {
     const { session_id, token_number } = approval;
     try {
@@ -674,8 +676,9 @@ function DashboardPageInner() {
       }
       connectedTokenRef.current = null;
       resetSession();
+      navigate("/");
     }
-  }, [disconnect, endSession, resetSession]);
+  }, [disconnect, endSession, resetSession, navigate]);
 
   // Keyboard shortcuts:
   // - Space: toggle recording
@@ -916,7 +919,7 @@ function DashboardPageInner() {
   );
 }
 
-// ── Default export: wrapped in ErrorBoundary ────
+// Default export: wrapped in ErrorBoundary
 export default function DashboardPage() {
   return (
     <DashboardErrorBoundary>

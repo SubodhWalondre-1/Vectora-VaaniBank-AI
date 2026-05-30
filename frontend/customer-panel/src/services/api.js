@@ -1,12 +1,12 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel API Service
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import axios from 'axios';
 import { API_BASE_URL } from '../constants';
 
-// ── Axios Instance ──────────────────────────
+// Axios Instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -15,7 +15,7 @@ const api = axios.create({
   },
 });
 
-// ── Request Interceptor ─────────────────────
+// Request Interceptor
 api.interceptors.request.use(
   (config) => {
     if (import.meta.env.DEV) {
@@ -32,7 +32,7 @@ api.interceptors.request.use(
   }
 );
 
-// ── Response Interceptor ────────────────────
+// Response Interceptor
 api.interceptors.response.use(
   (response) => {
     if (import.meta.env.DEV) {
@@ -56,12 +56,15 @@ api.interceptors.response.use(
   }
 );
 
-// ═══════════════════════════════════════════════
 //  SESSION APIs
-// ═══════════════════════════════════════════════
 
 export const getSession = async (token_number) => {
   const response = await api.get(`/sessions/${token_number}`);
+  return response.data;
+};
+
+export const getPublicSettings = async () => {
+  const response = await api.get('/sessions/settings/public');
   return response.data;
 };
 
@@ -83,9 +86,7 @@ export const createSession = async (branch_code, customer_language, customer_lan
   return response.data;
 };
 
-// ═══════════════════════════════════════════════
 //  SUMMARY APIs
-// ═══════════════════════════════════════════════
 
 export const getSessionSummary = async (session_id) => {
   const response = await api.get(`/summary/session/${session_id}`);
@@ -110,16 +111,7 @@ export const downloadPDFBlob = async (sessionId) => {
   return response.data;
 };
 
-export const sendWhatsApp = async (summary_id, phone_number) => {
-  const response = await api.post(`/summary/${summary_id}/whatsapp`, {
-    phone_number,
-  });
-  return response.data;
-};
-
-// ═══════════════════════════════════════════════
 //  AI PIPELINE APIs
-// ═══════════════════════════════════════════════
 
 export const transcribeAudio = async (audioBlob, languageCode, sessionId, tokenNumber) => {
   const formData = new FormData()
@@ -149,5 +141,5 @@ export const getAudioUrl = (filename) => {
   return `${API_BASE_URL}/tts/audio/${filename}`;
 };
 
-// ── Default Export ───────────────────────────
+// Default Export
 export default api;

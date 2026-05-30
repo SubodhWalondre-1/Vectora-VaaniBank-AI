@@ -29,14 +29,14 @@ export default function StepsTab({ steps, completedCount, stepLabel, langCode, s
 
         // Text to display — respects staffLanguage toggle (Hindi / English)
         const displayTitle = isEnglish
-          // ── English mode: prefer English fields ──
+          // English mode: prefer English fields
           ? (step.textEnglish ||
              step.step_text_english ||
              step.step_text_customer ||
              step.step_text ||
              step.title ||
              `Step ${index + 1}`)
-          // ── Hindi mode: prefer Hindi fields ──
+          // Hindi mode: prefer Hindi fields
           : (step.step_text_customer ||
              (langCode && step[`step_text_${langCode}`]) ||
              step.step_text_hindi ||

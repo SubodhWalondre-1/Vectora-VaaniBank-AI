@@ -1,15 +1,15 @@
-/* ============================================
+/*
    VaaniBank AI — InfoBoard Component
    Conversation Intelligence Dashboard
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import React, { useMemo, useState, useCallback } from 'react';
 import { useApp } from '../../context/AppContext';
 import SmartNavigator from './SmartNavigator';
 import toast from 'react-hot-toast';
 
-// ── SendToFormButton — shown at bottom of InfoBoard when fields are collected ──
+// SendToFormButton — shown at bottom of InfoBoard when fields are collected
 function SendToFormButton({ sendMessage, activeSession, filledFields }) {
   const [sent, setSent] = useState(false);
 
@@ -69,10 +69,10 @@ function SendToFormButton({ sendMessage, activeSession, filledFields }) {
   );
 }
 
-// ── Master field definitions ─────────────────────
+// Master field definitions
 // hindi = question staff should ASK customer to collect this info
 const FIELD_LABELS = {
-  // ─ common ────────────────────────────────────────────────────
+  // common
   customer_name:          { label: 'Customer Name',       icon: '👤', hindi: 'आपका नाम क्या है?' },
   purpose:                { label: 'Purpose',             icon: '🎯', hindi: 'यह खाता या लोन किस काम के लिए चाहिए?' },
   aadhaar_provided:       { label: 'Aadhaar',             icon: '🪪', hindi: 'क्या आप Aadhaar card लाए हैं?' },
@@ -80,7 +80,7 @@ const FIELD_LABELS = {
   address_proof_provided: { label: 'Address Proof',       icon: '📍', hindi: 'क्या आपके पास address proof है — utility bill या Aadhaar?' },
   phone_number_provided:  { label: 'Phone Number',        icon: '📱', hindi: 'आपका registered mobile number क्या है?' },
   photos_provided:        { label: 'Passport Photos',     icon: '📸', hindi: 'क्या आप 2 passport size photos लाए हैं?' },
-  // ─ loan_enquiry ─────────────────────────────────────────
+  // loan_enquiry
   loan_type:              { label: 'Loan Type',           icon: '💰', hindi: 'कौन सा लोन चाहिए — Home, Personal, Education, या Mudra?' },
   amount:                 { label: 'Amount',              icon: '₹',  hindi: 'कितनी राशि चाहिए आपको?' },
   tenure:                 { label: 'Tenure',              icon: '📅', hindi: 'कितने साल या महीने के लिए चाहिए?' },
@@ -89,39 +89,39 @@ const FIELD_LABELS = {
   cibil_score:            { label: 'CIBIL Score',         icon: '📊', hindi: 'क्या आपका CIBIL score pata है? (700+ ज़रूरी है)' },
   existing_emis:          { label: 'Existing EMIs',       icon: '🔄', hindi: 'अभी कोई और loan ki EMI तो नहीं चल रही?' },
   age:                    { label: 'Age',                 icon: '🎂', hindi: 'आपकी उम्र कितनी है?' },
-  // ─ account_opening ─────────────────────────────────────
+  // account_opening
   account_type:           { label: 'Account Type',        icon: '🏦', hindi: 'कौन सा खाता चाहिए — Savings, Current, या Jan Dhan?' },
   pmjdy_eligible:         { label: 'PMJDY Eligible',      icon: '🏛️', hindi: 'क्या आप Jan Dhan (zero balance) खाता खोलना चाहते हैं?' },
   initial_deposit:        { label: 'Initial Deposit',     icon: '💳', hindi: 'खाता खोलने के लिए कितनी राशि जमा कराने हैं?' },
   nominee_name:           { label: 'Nominee',             icon: '👨‍👩‍👧', hindi: 'खाते में nominee का नाम क्या रखना है?' },
-  // ─ kyc_update ────────────────────────────────────────────
+  // kyc_update
   update_type:            { label: 'Update Type',         icon: '🔄', hindi: 'क्या अपडेट करना है — पता, मोबाइल, आधार सीडिंग, या नॉमिनी?' },
   aadhaar_status:         { label: 'Aadhaar Status',      icon: '📊', hindi: 'क्या आपका Aadhaar bank account से link है?' },
   address_type:           { label: 'Address Type',        icon: '🏠', hindi: 'नया पता क्या है — बिजली बिल या आधार के साथ अपडेट करना है?' },
   mobile_linked:          { label: 'Mobile Linked',       icon: '📱', hindi: 'क्या आपका mobile number account से link है?' },
   re_kyc_due:             { label: 'Re-KYC Due',          icon: '📅', hindi: 'आपका रि-केवाईसी कब तक करना है?' },
-  // ─ fixed_deposit ──────────────────────────────────────────
+  // fixed_deposit
   fd_type:                { label: 'FD Type',             icon: '🏦', hindi: 'रेगुलर FD चाहिए या स्वीप-इन FD?' },
   senior_citizen:         { label: 'Senior Citizen',      icon: '👴', hindi: 'क्या आप 60 साल या उससे ज़्यादा उम्र के हैं? (वरिष्ठ नागरिक दर मिलेगी)' },
   form_15g_applicable:    { label: 'Form 15G/15H',        icon: '📄', hindi: 'क्या आपकी आय कर योग्य नहीं है? फॉर्म 15G/15H जमा करना होगा।' },
-  // ─ card_services ─────────────────────────────────────────
+  // card_services
   card_type:              { label: 'Card Type',           icon: '💳', hindi: 'कौन सा कार्ड चाहिए — RuPay, VISA, या Mastercard?' },
   card_issue:             { label: 'Card Issue',          icon: '⚠️', hindi: 'कार्ड के साथ क्या समस्या है?' },
   card_block_reason:      { label: 'Block Reason',        icon: '🚫', hindi: 'कार्ड क्यों ब्लॉक करना है — खोया, चोरी, या क्षतिग्रस्त?' },
   pin_issue:              { label: 'PIN Issue',           icon: '🔢', hindi: 'PIN भूल गए हैं या PIN रीसेट करना है?' },
-  // ─ balance_enquiry ────────────────────────────────────────
+  // balance_enquiry
   account_number_provided:{ label: 'Account Number',      icon: '🏦', hindi: 'आपका account number क्या है?' },
   identity_verified:      { label: 'Identity Verified',   icon: '✅', hindi: 'क्या आपकी identity verify हो गई — DOB या OTP?' },
 };
 
-// ── Determine if a value is "filled" ────────────
+// Determine if a value is "filled"
 function isFilled(val) {
   if (val === null || val === undefined || val === '' || val === false) return false;
   if (typeof val === 'string' && val.toLowerCase() === 'null') return false;
   return true;
 }
 
-// ── Format display value ────────────
+// Format display value
 function formatValue(key, val) {
   if (typeof val === 'boolean') return val ? '✅ Provided' : '—';
   if (typeof val === 'string') return val;
@@ -382,10 +382,10 @@ export default function InfoBoard({ sendStaffApproved: propSendApproved, sendMes
   );
 }
 
-// ── Shared font stack — matches ProcessPanel step text exactly ─────────
+// Shared font stack — matches ProcessPanel step text exactly
 const FONT = "'Inter', system-ui, 'Segoe UI', Roboto, sans-serif";
 
-// ── Inline styles using CSS variables ────────────
+// Inline styles using CSS variables
 const styles = {
   container: {
     backgroundColor: 'var(--card-bg)',
@@ -615,7 +615,7 @@ const styles = {
     background: 'var(--success-bg)',
   },
   /* scrollBody removed — scroll is now in the DashboardPage column wrapper */
-  // ── DRV (Document Readiness) styles ─────────────
+  // DRV (Document Readiness) styles
   drvHeader: {
     display: 'flex',
     alignItems: 'center',

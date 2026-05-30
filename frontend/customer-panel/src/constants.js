@@ -1,12 +1,12 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel Constants
    Union Bank of India | Team Vectora
 
    Shared constants imported from frontend/shared/constants.js
    Panel-specific constants defined below.
-   ============================================ */
+   */
 
-// ── Brand Colors ────────────────────────────
+// Brand Colors
 export const BRAND = {
   red: '#E8231A',
   redDark: '#C41810',
@@ -17,7 +17,7 @@ export const BRAND = {
   blueLight: '#e8eef8',
 };
 
-// ── Supported Languages ─────────────────────
+// Supported Languages
 export const LANGUAGES = [
   { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳' },
   { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳' },
@@ -31,7 +31,7 @@ export const LANGUAGES = [
   { code: 'ml', name: 'Malayalam', native: 'മലയാളം', flag: '🇮🇳' },
 ];
 
-// ── WebSocket Event Names ───────────────────
+// WebSocket Event Names
 export const WS_EVENTS = {
   // Server → Client
   SESSION_CONNECTED: 'session_connected',
@@ -57,7 +57,7 @@ export const WS_EVENTS = {
   STEP_COMPLETED: 'step_completed',
 };
 
-// ── Session Statuses ────────────────────────
+// Session Statuses
 export const SESSION_STATUS = {
   waiting: {
     label: 'Waiting',
@@ -81,7 +81,7 @@ export const SESSION_STATUS = {
   },
 };
 
-// ── Sentiment Labels ────────────────────────
+// Sentiment Labels
 export const SENTIMENTS = {
   calm: { label: 'Calm', emoji: '😊', color: '#16A34A' },
   frustrated: { label: 'Frustrated', emoji: '😤', color: '#DC2626' },
@@ -89,7 +89,7 @@ export const SENTIMENTS = {
   urgent: { label: 'Urgent', emoji: '🚨', color: '#9333EA' },
 };
 
-// ── App Meta ────────────────────────────────
+// App Meta
 export const APP_NAME = 'VaaniBank AI';
 export const APP_DESCRIPTION = 'Multilingual Voice-First Banking Assistant';
 export const BANK_NAME = 'Union Bank of India';
@@ -97,11 +97,11 @@ export const TEAM_NAME = 'Team Vectora';
 export const APP_VERSION = '1.0.0';
 
 
-// ── API & WebSocket Base URLs ───────────────
+// API & WebSocket Base URLs
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 export const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
 
-// ── Banking Services (with all language labels) ─
+// Banking Services (with all language labels)
 export const SERVICES = [
   {
     id: 'account_opening',
@@ -219,7 +219,7 @@ export const SERVICES = [
   },
 ];
 
-// ── Token Number Prefix by Language ─────────
+// Token Number Prefix by Language
 export const TOKEN_PREFIX = {
   hi: 'HIN',
   mr: 'MRT',
@@ -235,7 +235,7 @@ export const TOKEN_PREFIX = {
 
 
 
-// ── UI Strings (multilingual) ───────────────
+// UI Strings (multilingual)
 export const UI_STRINGS = {
   selectLanguage: {
     en: 'Select Your Language',

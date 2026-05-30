@@ -1,9 +1,9 @@
-/* ============================================
+/*
    VaaniBank AI — Waiting Page
    Customer waits here after language selection
    Staff must Accept before session begins
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,7 +15,7 @@ import { BRAND } from '../constants';
 import { useCustomerApp } from '../context/AppContext';
 import { getSession } from '../services/api';
 
-// ── Multilingual strings (10 languages) ──────
+// Multilingual strings (10 languages)
 const I18N = {
   hi: {
     tokenLabel:   'TOKEN NUMBER',
@@ -141,7 +141,7 @@ const I18N = {
 
 const getT = (code) => I18N[code] || I18N.hi;
 
-// ── Config ──────────────────────────────────
+// Config
 const WAIT_TIMEOUT_MS  = 2 * 60 * 1000;
 const POLL_INTERVAL_MS = 2500;
 

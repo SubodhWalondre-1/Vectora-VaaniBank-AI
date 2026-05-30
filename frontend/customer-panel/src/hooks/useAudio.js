@@ -1,11 +1,11 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel Audio Hook
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 
-// ── Shared Audio Context for mobile/browser persistence ──
+// Shared Audio Context for mobile/browser persistence
 let sharedPlaybackContext = null;
 
 function getPlaybackContext() {
@@ -19,7 +19,7 @@ function getPlaybackContext() {
   return sharedPlaybackContext;
 }
 
-// ── Audio constraints with noise suppression ──
+// Audio constraints with noise suppression
 const AUDIO_CONSTRAINTS = {
   audio: {
     channelCount: 1,
@@ -31,7 +31,7 @@ const AUDIO_CONSTRAINTS = {
   video: false,
 };
 
-// ── Preferred MIME types in order ───────────
+// Preferred MIME types in order
 const MIME_TYPES = [
   'audio/webm;codecs=opus',
   'audio/webm',
@@ -50,14 +50,14 @@ function getSupportedMimeType() {
 }
 
 export function useAudio() {
-  // ── Recording state ───────────────────────
+  // Recording state
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [error, setError] = useState(null);
 
-  // ── Refs ──────────────────────────────────
+  // Refs
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
   const chunksRef = useRef([]);
@@ -76,7 +76,7 @@ export function useAudio() {
   const recordingContextRef = useRef(null);
   const recordingProcessorRef = useRef(null);
 
-  // ── Cleanup audio analysis ────────────────
+  // Cleanup audio analysis
   const stopAnalysis = useCallback(() => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -85,7 +85,7 @@ export function useAudio() {
     setAudioLevel(0);
   }, []);
 
-  // ── Cleanup duration timer ────────────────
+  // Cleanup duration timer
   const stopDurationTimer = useCallback(() => {
     if (durationIntervalRef.current) {
       clearInterval(durationIntervalRef.current);
@@ -93,7 +93,7 @@ export function useAudio() {
     }
   }, []);
 
-  // ── Audio level analysis (waveform data) ──
+  // Audio level analysis (waveform data)
   const startAnalysis = useCallback((stream) => {
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -132,7 +132,7 @@ export function useAudio() {
     }
   }, []);
 
-  // ── Start Recording ───────────────────────
+  // Start Recording
   const startRecording = useCallback(async (onAudioChunk) => {
     setError(null);
 
@@ -182,7 +182,7 @@ export function useAudio() {
       setIsRecording(true);
       setRecordingDuration(0);
 
-      // ── Web Audio PCM streaming setup (starts in parallel) ──
+      // Web Audio PCM streaming setup (starts in parallel)
       if (onAudioChunk) {
         try {
           const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -245,7 +245,7 @@ export function useAudio() {
     }
   }, [startAnalysis, stopAnalysis, stopDurationTimer]);
 
-  // ── Stop Recording → Returns audioBlob ────
+  // Stop Recording → Returns audioBlob
   const stopRecording = useCallback(() => {
     return new Promise((resolve) => {
       stopAnalysis();
@@ -297,19 +297,19 @@ export function useAudio() {
     });
   }, [stopAnalysis, stopDurationTimer]);
 
-  // ── Play Audio from URL ───────────────────
+  // Play Audio from URL
   const playAudio = useCallback(async (url, isGesture = false) => {
     setError(null);
 
-    // ── Fix double-slash in URL (e.g. https://host//audio/file.wav) ──
+    // Fix double-slash in URL (e.g. https://host//audio/file.wav)
     const cleanUrl = url.replace(/([^:])(\/\/+)/g, '$1/');
 
-    // ── Stop any currently playing Web Audio ──
+    // Stop any currently playing Web Audio
     if (playbackSourceRef.current) {
       try { playbackSourceRef.current.stop(); } catch { /* already stopped */ }
       playbackSourceRef.current = null;
     }
-    // ── Stop any currently playing HTML5 Audio ──
+    // Stop any currently playing HTML5 Audio
     if (html5AudioRef.current) {
       html5AudioRef.current.pause();
       html5AudioRef.current.src = '';
@@ -318,7 +318,7 @@ export function useAudio() {
 
     setIsPlaying(true);
 
-    // ── Check if URL is cross-origin (CORS-sensitive external CDN URL) ──
+    // Check if URL is cross-origin (CORS-sensitive external CDN URL)
     let isCross = false;
     try {
       const parsed = new URL(cleanUrl);
@@ -332,7 +332,7 @@ export function useAudio() {
     if (isCross) {
       console.log('[Audio] Cross-origin URL detected, attempting fetch + blob to bypass CORS/Network issues:', cleanUrl);
       try {
-        // ── Strategy: Fetch the audio as a blob first ──
+        // Strategy: Fetch the audio as a blob first
         // This is more resilient to network changes and CORS issues than the <audio> tag.
         const response = await fetch(cleanUrl, { credentials: 'omit' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -370,7 +370,7 @@ export function useAudio() {
       } catch (err) {
         console.warn('[Audio] Blob-based playback failed (likely CORS), falling back to direct URL:', err.message);
         
-        // ── Fallback Strategy: Direct URL ──
+        // Fallback Strategy: Direct URL
         // If fetch fails (CORS error), we must use the direct URL. 
         // Browsers often allow media tags to play cross-origin even without CORS headers.
         try {
@@ -414,7 +414,7 @@ export function useAudio() {
       return;
     }
 
-    // ── Try Web Audio API first ───────────────
+    // Try Web Audio API first
     try {
       const response = await fetch(cleanUrl, { credentials: 'omit' });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -469,7 +469,7 @@ export function useAudio() {
         );
       }
     } catch (webAudioErr) {
-      // ── Fallback: HTML5 Audio element ────────
+      // Fallback: HTML5 Audio element
       console.warn('[Audio] Web Audio failed, using HTML5 fallback:', webAudioErr.message);
 
       try {
@@ -527,7 +527,7 @@ export function useAudio() {
     }
   }, []);
 
-  // ── Unlock Web Audio Context (Pre-warming for Mobile) ──
+  // Unlock Web Audio Context (Pre-warming for Mobile)
   const unlockAudio = useCallback(async () => {
     try {
       const audioCtx = getPlaybackContext();
@@ -558,7 +558,7 @@ export function useAudio() {
     }
   }, [playAudio]);
 
-  // ── Stop Audio Playback ───────────────────
+  // Stop Audio Playback
   const stopAudio = useCallback(() => {
     if (playbackSourceRef.current) {
       try {
@@ -572,7 +572,7 @@ export function useAudio() {
     setIsPlaying(false);
   }, []);
 
-  // ── Cleanup on unmount ────────────────────
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       // Stop recording if active

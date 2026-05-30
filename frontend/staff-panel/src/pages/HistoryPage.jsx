@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Session History Page
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -62,7 +62,7 @@ function endOfDay(d) {
 export default function HistoryPage() {
   const activeSession = useApp((s) => s.activeSession);
   const exchanges = useApp((s) => s.exchanges);
-  const endSession = useApp((s) => s.endSession);
+
 
   const [loading, setLoading] = useState(true);
   const [allSessions, setAllSessions] = useState([]);
@@ -299,13 +299,7 @@ export default function HistoryPage() {
   );
 
 
-  const handleEndSession = useCallback(async () => {
-    try {
-      await endSession("completed");
-    } catch (err) {
-      toast.error(err?.message ?? "Failed to end session");
-    }
-  }, [endSession]);
+
 
   const renderSessionStatus = useCallback((status) => {
     if (status === "completed") {
@@ -337,7 +331,7 @@ export default function HistoryPage() {
       <Sidebar />
 
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopBar onEndSession={handleEndSession} />
+        <TopBar />
 
         <div className="flex-1 min-h-0 overflow-y-auto px-6 py-5">
           <div className="flex items-center justify-between gap-4 mb-4">

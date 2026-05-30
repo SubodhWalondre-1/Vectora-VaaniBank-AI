@@ -1,20 +1,20 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel App + Routes
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useCustomerApp } from './context/AppContext';
 
-// ── Lazy-loaded pages ───────────────────────
+// Lazy-loaded pages
 const LanguageSelectPage = lazy(() => import('./pages/LanguageSelectPage'));
 const WaitingPage        = lazy(() => import('./pages/WaitingPage'));
 const LiveSessionPage    = lazy(() => import('./pages/LiveSessionPage'));
 const SaralFormPage      = lazy(() => import('./pages/SaralFormPage'));
 const SummaryPage        = lazy(() => import('./pages/SummaryPage'));
 
-// ── Loading fallback (mobile-optimized) ─────
+// Loading fallback (mobile-optimized)
 function PageLoader() {
   return (
     <div
@@ -60,7 +60,7 @@ function PageLoader() {
   );
 }
 
-// ── App Shell ───────────────────────────────
+// App Shell
 function AppShell() {
   const theme     = useCustomerApp((state) => state.theme);
   const initTheme = useCustomerApp((state) => state.initTheme);
@@ -69,6 +69,8 @@ function AppShell() {
   useEffect(() => {
     initTheme();
   }, [initTheme]);
+
+
 
   return (
     <div
@@ -101,7 +103,7 @@ function AppShell() {
   );
 }
 
-// ── App Component ───────────────────────────
+// App Component
 export default function App() {
   return (
     <BrowserRouter>

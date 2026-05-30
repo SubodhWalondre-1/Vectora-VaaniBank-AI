@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { sessionAPI } from "../../../services/api";
 
-// ── Mock Data: 10 Seeded Accounts ──────────────────────────────────────────
+// Mock Data: 10 Seeded Accounts
 const SEEDED_PROFILES = [
   {
     account_number: "30981234567",
@@ -296,7 +296,7 @@ const SEEDED_PROFILES = [
   },
 ];
 
-// ── Helper: Profile row ─────────────────────────────────────────────────────
+// Helper: Profile row
 function PRow({
   label,
   value,
@@ -363,7 +363,7 @@ function SectionHeader({ title, icon, color = "var(--color-text-secondary)" }) {
   );
 }
 
-// ─── Tab: Customer Profile ───────────────────────────────────────────────────
+// Tab: Customer Profile
 export default function ProfileTab({ sessionId, activeSession }) {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -377,7 +377,7 @@ export default function ProfileTab({ sessionId, activeSession }) {
     try {
       let data = await sessionAPI.getCustomerProfile(sessionId);
 
-      // ── Seed Logic: ONLY apply seeded data if customer has entered an account number ──
+      // Seed Logic: ONLY apply seeded data if customer has entered an account number
       // This ensures the profile section stays empty/waiting until the specific trigger
       if (data && data.account_number) {
         // Try to find matching seeded profile by account number first

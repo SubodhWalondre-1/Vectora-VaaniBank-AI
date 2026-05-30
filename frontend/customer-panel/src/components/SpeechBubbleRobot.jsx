@@ -1,22 +1,22 @@
-/* =====================================================
+/*
    VaaniBank AI — SpeechBubbleRobot Component
    Union Bank of India | Team Vectora
 
    Friendly AI robot surrounded by floating organic
    speech bubbles. Stats in blue, urgency in red,
    language tags in white/outline. No background added.
-   ===================================================== */
+   */
 
 import { motion } from 'framer-motion';
 import { BRAND } from '../constants';
 
-// ── Bubble Data ──────────────────────────────────────
+// Bubble Data
 // type: 'blue' | 'red' | 'outline'
 // x, y: offset from center (px)
 // floatY: vertical float amplitude
 // floatDuration: seconds for one float cycle
 const BUBBLES = [
-  // ── Blue solid — major stats ──
+  // Blue solid — major stats
   {
     id: 1, text: '21+\nLanguages', type: 'blue',
     x: -152, y: -48,
@@ -39,7 +39,7 @@ const BUBBLES = [
     pad: '7px 12px', radius: '18px 18px 18px 4px', fontSize: 12, fontWeight: 600,
   },
 
-  // ── Red — urgency / speed ──
+  // Red — urgency / speed
   {
     id: 4, text: '<300ms\nResponse', type: 'red',
     x: 110, y: 62,
@@ -55,7 +55,7 @@ const BUBBLES = [
     pad: '6px 12px', radius: '14px', fontSize: 11, fontWeight: 600,
   },
 
-  // ── Outline — language tags ──
+  // Outline — language tags
   {
     id: 6,  text: 'हिंदी',   type: 'outline',
     x: -82,  y: -152, tailX: 14, tailY: '100%', tailAnchor: 'bottom-right',
@@ -94,7 +94,7 @@ const BUBBLES = [
   },
 ];
 
-// ── Style lookup ─────────────────────────────────────
+// Style lookup
 const STYLE = {
   blue: {
     bg: BRAND.blue,
@@ -116,7 +116,7 @@ const STYLE = {
   },
 };
 
-// ── Bubble component ─────────────────────────────────
+// Bubble component
 function Bubble({ b, scale = 1 }) {
   const s = STYLE[b.type];
   return (
@@ -165,7 +165,7 @@ function Bubble({ b, scale = 1 }) {
   );
 }
 
-// ── Robot SVG ────────────────────────────────────────
+// Robot SVG
 function RobotSVG({ size }) {
   return (
     <svg
@@ -253,7 +253,7 @@ function RobotSVG({ size }) {
   );
 }
 
-// ── Main Export ──────────────────────────────────────
+// Main Export
 export default function SpeechBubbleRobot({ isMobile = false }) {
   // Scale down everything on mobile
   const scale      = isMobile ? 0.72 : 1;

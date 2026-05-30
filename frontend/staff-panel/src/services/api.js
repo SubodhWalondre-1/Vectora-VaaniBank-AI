@@ -1,12 +1,12 @@
-/* ============================================
+/*
    VaaniBank AI — Staff Panel API Service
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import axios from "axios";
 import { API_BASE_URL } from "../constants";
 
-// ── Axios Instance ──────────────────────────
+// Axios Instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
@@ -15,7 +15,7 @@ const api = axios.create({
   },
 });
 
-// ── Request Interceptor: Attach JWT ─────────
+// Request Interceptor: Attach JWT
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("vaanibank_token");
@@ -38,7 +38,7 @@ api.interceptors.request.use(
   },
 );
 
-// ── Response Interceptor: Handle 401 / 403 unauthenticated ──────────────────
+// Response Interceptor: Handle 401 / 403 unauthenticated
 // FastAPI's HTTPBearer(auto_error=True) returns 403 {"detail":"Not authenticated"}
 // when the Authorization header is completely absent (no token sent).
 // It returns 401 when a token IS sent but is invalid/expired.
@@ -82,9 +82,7 @@ api.interceptors.response.use(
   },
 );
 
-// ═══════════════════════════════════════════════
 //  AUTH APIs
-// ═══════════════════════════════════════════════
 
 export const authAPI = {
   login: async (staff_id, username, password) => {
@@ -119,9 +117,7 @@ export const authAPI = {
   },
 };
 
-// ═══════════════════════════════════════════════
 //  SESSION APIs
-// ═══════════════════════════════════════════════
 
 export const sessionAPI = {
   createSession: async (
@@ -179,9 +175,7 @@ export const sessionAPI = {
   },
 };
 
-// ═══════════════════════════════════════════════
 //  AI PIPELINE APIs
-// ═══════════════════════════════════════════════
 
 export const aiAPI = {
   transcribeAudio: async (
@@ -302,9 +296,7 @@ export const aiAPI = {
   },
 };
 
-// ═══════════════════════════════════════════════
 //  SUMMARY APIs
-// ═══════════════════════════════════════════════
 
 export const summaryAPI = {
   generateSummary: async (session_id, config = {}) => {
@@ -353,16 +345,14 @@ export const summaryAPI = {
   },
 
   sendWhatsApp: async (summary_id, phone_number) => {
-    const response = await api.post(`/summary/${summary_id}/whatsapp`, {
-      phone_number,
+    const response = await api.post(`/summary/${summary_id}/whatsapp`, null, {
+      params: { phone_number },
     });
     return response.data;
   },
 };
 
-// ═══════════════════════════════════════════════
 //  PROCESS STEP APIs
-// ═══════════════════════════════════════════════
 
 export const processAPI = {
   getProcessSteps: async (intent_type, language_code = "hi") => {
@@ -386,9 +376,7 @@ export const processAPI = {
   },
 };
 
-// ═══════════════════════════════════════════════
 //  ANALYTICS APIs
-// ═══════════════════════════════════════════════
 
 export const analyticsAPI = {
   getBranchAnalyticsToday: async (branch_id) => {
@@ -397,9 +385,7 @@ export const analyticsAPI = {
   },
 };
 
-// ═══════════════════════════════════════════════
 //  QR CODE APIs
-// ═══════════════════════════════════════════════
 
 export const qrAPI = {
   getBranchQR: async (branch_code) => {
@@ -408,9 +394,7 @@ export const qrAPI = {
   },
 };
 
-// ═══════════════════════════════════════════════
 //  STAFF MANAGEMENT APIs  (Phase 1 + Phase 5)
-// ═══════════════════════════════════════════════
 
 export const staffAPI = {
   /** Create staff — returns { staff, username, plain_password, message } */
@@ -492,23 +476,31 @@ export const staffAPI = {
     const response = await api.get("/admin/audit-logs", { params });
     return response.data;
   },
+
+  adminGetSettings: async () => {
+    const response = await api.get("/admin/settings");
+    return response.data;
+  },
+
+  adminUpdateSettings: async (settings) => {
+    const response = await api.post("/admin/settings", settings);
+    return response.data;
+  },
 };
 
-// ── Default Export ───────────────────────────
+// Default Export
 export default api;
 
-// ═══════════════════════════════════════════════
 //  NAMED EXPORTS — flat convenience wrappers
-// ═══════════════════════════════════════════════
 
-// ── Auth ─────────────────────────────────────
+// Auth
 export const login = (staff_id, username, password) =>
   authAPI.login(staff_id, username, password);
 export const logout = () => authAPI.logout();
 export const refreshToken = () => authAPI.refreshToken();
 export const getMe = () => authAPI.getMe();
 
-// ── Sessions ──────────────────────────────────
+// Sessions
 export const createSession = (payload) =>
   sessionAPI.createSession(
     payload.branch_code,
@@ -528,7 +520,7 @@ export const getCustomerProfile = (session_id) =>
 export const getCollectedInfo = (session_id) =>
   sessionAPI.getCollectedInfo(session_id);
 
-// ── AI Pipeline ───────────────────────────────
+// AI Pipeline
 export const transcribeAudio = (blob, lang, sid, num, token) =>
   aiAPI.transcribeAudio(blob, lang, sid, num, token);
 export const detectLanguage = (blob) => aiAPI.detectLanguage(blob);
@@ -540,7 +532,7 @@ export const generateTTS = (text, lang, sid, token) =>
   aiAPI.generateTTS(text, lang, sid, token);
 export const getAudioUrl = (filename) => aiAPI.getAudioUrl(filename);
 
-// ── Summary ───────────────────────────────────
+// Summary
 export const generateSummary = (session_id) =>
   summaryAPI.generateSummary(session_id, { timeout: 60000 }); // 60s timeout for AI summary
 export const getSummary = (session_id) =>
@@ -554,7 +546,7 @@ export const getSummaryPDF = async (summary_id) => {
 export const sendWhatsApp = (summary_id, phone) =>
   summaryAPI.sendWhatsApp(summary_id, phone);
 
-// ── Process Steps ─────────────────────────────
+// Process Steps
 export const getProcessSteps = (intent, lang) =>
   processAPI.getProcessSteps(intent, lang);
 export const completeProcessStep = (payload) =>
@@ -562,9 +554,9 @@ export const completeProcessStep = (payload) =>
 export const getSessionProgress = (session_id) =>
   processAPI.getSessionProgress(session_id);
 
-// ── Analytics ─────────────────────────────────
+// Analytics
 export const fetchAnalytics = (branch_id) =>
   analyticsAPI.getBranchAnalyticsToday(branch_id);
 
-// ── QR ────────────────────────────────────────
+// QR
 export const getBranchQR = (branch_code) => qrAPI.getBranchQR(branch_code);

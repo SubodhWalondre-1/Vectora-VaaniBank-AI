@@ -1,8 +1,8 @@
-/* ============================================
+/*
    VaaniBank AI — Language Select Page
    Union Bank of India | Team Vectora
    First screen after QR scan: /?branch=NGP-CVL-01
-   ============================================ */
+   */
 
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -21,7 +21,7 @@ import { useCustomerApp } from "../context/AppContext";
 import { createSession } from "../services/api";
 import { useAudio } from "../hooks/useAudio";
 
-// ── Animation Variants ──────────────────────
+// Animation Variants
 const pageVariants = {
   initial: { opacity: 0 },
   animate: {
@@ -56,7 +56,7 @@ const selectedBounce = {
   transition: { duration: 0.35, ease: "easeInOut" },
 };
 
-// ── Inline Keyframes (needed for Loader2 spinner) ──
+// Inline Keyframes (needed for Loader2 spinner)
 const spinnerKeyframes = `
   @keyframes loader-spin {
     to { transform: rotate(360deg); }
@@ -67,9 +67,7 @@ const spinnerKeyframes = `
   }
 `;
 
-// ═══════════════════════════════════════════════
 //  LANGUAGE SELECT PAGE
-// ═══════════════════════════════════════════════
 
 export default function LanguageSelectPage() {
   const navigate = useNavigate();
@@ -80,13 +78,13 @@ export default function LanguageSelectPage() {
     return window.matchMedia("(max-width: 768px)").matches;
   });
 
-  // ── Store ─────────────────────────────────
+  // Store
   const setLanguage = useCustomerApp((s) => s.setLanguage);
   const setSession = useCustomerApp((s) => s.setSession);
   const theme = useCustomerApp((s) => s.theme);
   const toggleTheme = useCustomerApp((s) => s.toggleTheme);
 
-  // ── Local state ───────────────────────────
+  // Local state
   const [selectedLang, setSelectedLang] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
@@ -102,7 +100,7 @@ export default function LanguageSelectPage() {
     return () => mediaQuery.removeEventListener("change", syncMobileState);
   }, []);
 
-  // ── Audio hook for voice language detect ──
+  // Audio hook for voice language detect
   const {
     startRecording,
     stopRecording,
@@ -111,7 +109,7 @@ export default function LanguageSelectPage() {
     unlockAudio,
   } = useAudio();
 
-  // ── Select language by tap ────────────────
+  // Select language by tap
   const handleSelectLanguage = useCallback(
     (lang) => {
       setSelectedLang(lang);
@@ -121,7 +119,7 @@ export default function LanguageSelectPage() {
     [unlockAudio],
   );
 
-  // ── Voice detect: hold-to-record ──────────
+  // Voice detect: hold-to-record
   const handleVoiceStart = useCallback(async () => {
     setIsDetecting(true);
     setDetectedLang(null);
@@ -192,7 +190,7 @@ export default function LanguageSelectPage() {
     }
   }, [stopRecording]);
 
-  // ── Continue → create session ─────────────
+  // Continue → create session
   const handleContinue = useCallback(async () => {
     if (!selectedLang || !branchCode) return;
 
@@ -232,9 +230,7 @@ export default function LanguageSelectPage() {
     unlockAudio,
   ]);
 
-  // ────────────────────────────────────────────
   //  ERROR STATE — No branch param
-  // ────────────────────────────────────────────
   if (!branchCode) {
     return (
       <div style={styles.errorContainer}>
@@ -316,9 +312,7 @@ export default function LanguageSelectPage() {
     );
   }
 
-  // ────────────────────────────────────────────
   //  MAIN RENDER
-  // ────────────────────────────────────────────
   return (
     <motion.div
       variants={pageVariants}
@@ -652,12 +646,10 @@ export default function LanguageSelectPage() {
   );
 }
 
-// ═══════════════════════════════════════════════
 //  STYLES (Inline JS Object — mobile-first)
-// ═══════════════════════════════════════════════
 
 const styles = {
-  // ── Page & Container ─────────────────────
+  // Page & Container
   page: {
     width: "100%",
     height: "100dvh",
@@ -688,7 +680,7 @@ const styles = {
     paddingBottom: 20,
   },
 
-  // ── Theme Toggle ─────────────────────────
+  // Theme Toggle
   themeToggle: {
     position: "absolute",
     top: 0,
@@ -707,7 +699,7 @@ const styles = {
     transition: "background-color 0.2s ease, border-color 0.2s ease",
   },
 
-  // ── Header / Logo ────────────────────────
+  // Header / Logo
   header: {
     textAlign: "center",
     paddingTop: 8,
@@ -770,7 +762,7 @@ const styles = {
     fontStyle: "italic",
   },
 
-  // ── Section Title ────────────────────────
+  // Section Title
   sectionTitle: {
     textAlign: "center",
     padding: "4px 0",
@@ -798,7 +790,7 @@ const styles = {
     fontSize: 13,
   },
 
-  // ── Language Grid ────────────────────────
+  // Language Grid
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(2, 1fr)",
@@ -898,7 +890,7 @@ const styles = {
     justifyContent: "center",
   },
 
-  // ── Voice Select ─────────────────────────
+  // Voice Select
   voiceSection: {
     display: "flex",
     flexDirection: "column",
@@ -990,7 +982,7 @@ const styles = {
     lineHeight: 1.3,
   },
 
-  // ── Continue Button ──────────────────────
+  // Continue Button
   continueBtn: {
     display: "flex",
     alignItems: "center",
@@ -1027,7 +1019,7 @@ const styles = {
     fontSize: 14,
   },
 
-  // ── Footer ───────────────────────────────
+  // Footer
   footer: {
     textAlign: "center",
     marginTop: 4,
@@ -1058,7 +1050,7 @@ const styles = {
     opacity: 0.7,
   },
 
-  // ── Error State ──────────────────────────
+  // Error State
   errorContainer: {
     width: "100%",
     height: "100dvh",
@@ -1127,7 +1119,7 @@ const styles = {
     letterSpacing: 0.3,
   },
 
-  // ── QR Code Display Screen ────────────────
+  // QR Code Display Screen
   qrCard: {
     width: "100%",
     maxWidth: 420,

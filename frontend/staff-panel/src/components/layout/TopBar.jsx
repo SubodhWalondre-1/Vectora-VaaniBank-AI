@@ -1,10 +1,12 @@
-/* ============================================
+/*
    VaaniBank AI — TopBar Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
   Shield,
   Bell,
@@ -30,7 +32,7 @@ function formatTime(seconds) {
   return `${m}:${s}`;
 }
 
-// ── TopBar receives pendingApprovals from DashboardPage ──
+// TopBar receives pendingApprovals from DashboardPage
 // pendingApprovals = [{ id, token_number, customer_language, session_id, created_at, branch_code }]
 // onApprove(approval) / onReject(approval) callbacks
 export default function TopBar({ onEndSession, sendMessage, pendingApprovals = [], onApprove, onReject, connectionStatus = 'connected', onRetryWS }) {
@@ -44,8 +46,29 @@ export default function TopBar({ onEndSession, sendMessage, pendingApprovals = [
   const currentIntent  = useApp((s) => s.currentIntent);
   const piiAlert       = useApp((s) => s.piiAlert);
   const clearPIIAlert  = useApp((s) => s.clearPIIAlert);
+  const endSession     = useApp((s) => s.endSession);
+  const resetSession   = useApp((s) => s.resetSession);
+  const navigate       = useNavigate();
+  const [isEnding, setIsEnding] = useState(false);
 
-  // ── Notification dropdown ─────────────────
+  const handleEndSessionInternal = async () => {
+    setIsEnding(true);
+    try {
+      if (onEndSession) {
+        await onEndSession();
+      } else {
+        await endSession("completed");
+        resetSession();
+        navigate("/");
+      }
+    } catch (err) {
+      toast.error(err?.message ?? "Failed to end session");
+    } finally {
+      setIsEnding(false);
+    }
+  };
+
+  // Notification dropdown
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef      = useRef(null);
   const unreadCount   = pendingApprovals.length;
@@ -70,7 +93,7 @@ export default function TopBar({ onEndSession, sendMessage, pendingApprovals = [
     return () => document.removeEventListener('mousedown', handler);
   }, [notifOpen]);
 
-  // ── Session timer ─────────────────────────
+  // Session timer
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef(null);
   useEffect(() => {
@@ -83,7 +106,7 @@ export default function TopBar({ onEndSession, sendMessage, pendingApprovals = [
     return () => clearInterval(timerRef.current);
   }, [sessionStatus]);
 
-  // ── Derived values ────────────────────────
+  // Derived values
   const isActive      = sessionStatus === 'active';
   const langCode      = activeSession?.customer_language_code;
   const langObj       = LANGUAGES.find((l) => l.code === langCode);
@@ -415,7 +438,7 @@ export default function TopBar({ onEndSession, sendMessage, pendingApprovals = [
               exit={{ opacity: 0, width: 0 }}
               className="overflow-hidden"
             >
-              <Button variant="danger" size="sm" icon={XCircle} onClick={onEndSession}>
+              <Button variant="danger" size="sm" icon={XCircle} loading={isEnding} onClick={handleEndSessionInternal}>
                 End Session
               </Button>
             </motion.div>

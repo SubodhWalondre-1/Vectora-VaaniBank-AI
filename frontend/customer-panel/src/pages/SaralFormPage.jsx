@@ -1,4 +1,4 @@
-/* ============================================================
+/*
    VaaniBank AI — SaralForm Page
    Union Bank of India | Team Vectora
    URL: /saral-form
@@ -10,7 +10,7 @@
      Step 1 → Review + edit all AI-pre-filled fields
      Step 2 → Draw signature on HTML5 canvas
      Submit → POST /forms/submit → navigate to /summary/:session_id
-   ============================================================ */
+   */
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -25,7 +25,7 @@ import {
 import toast from "react-hot-toast";
 import { BRAND, API_BASE_URL } from "../constants";
 
-// ── KYC Form Configuration ──────────────────────────────────────────────────
+// KYC Form Configuration
 import {
   KYC_FIELD_LABELS,
   KYC_FIELD_OPTIONS,
@@ -61,12 +61,12 @@ import {
   CARD_FIELD_STATUS,
 } from "./CardService";
 
-// ── Inline keyframe for loader spinner ──────────────────────────────────────
+// Inline keyframe for loader spinner
 const inlineKeyframes = `
   @keyframes loader-spin { to { transform: rotate(360deg); } }
 `;
 
-// ── Bilingual field label map — EN + 10 Indian languages ─────────────────────
+// Bilingual field label map — EN + 10 Indian languages
 // Each key maps exactly to a field name in session.collected_data.
 // Labels shown in English (for bank staff context) AND customer language.
 const FIELD_LABELS = {
@@ -258,7 +258,7 @@ const FIELD_LABELS = {
   },
 };
 
-// ── Dropdown options for select fields ──────────────────────────────────────
+// Dropdown options for select fields
 const FIELD_OPTIONS = {
   ...KYC_FIELD_OPTIONS,
   ...ACCOUNT_FIELD_OPTIONS,
@@ -479,7 +479,7 @@ const FIELD_OPTIONS = {
   ],
 };
 
-// ── Select fields (render as option grid, not text input) ────────────────────
+// Select fields (render as option grid, not text input)
 const SELECT_FIELDS = new Set([
   ...Object.keys(FIELD_OPTIONS),
   ...KYC_SELECT_FIELDS,
@@ -499,7 +499,7 @@ const CHECKBOX_FIELDS = new Set([
   ...CARD_CHECKBOX_FIELDS,
 ]);
 
-// ── Intent → required fields to always show (even if empty) ────────────────
+// Intent → required fields to always show (even if empty)
 const INTENT_FIELDS = {
   account_opening: ACCOUNT_INTENT_FIELDS,
   loan_enquiry: LOAN_INTENT_FIELDS,
@@ -528,7 +528,7 @@ const INTENT_FIELDS = {
   general: ["customer_name", "purpose", "phone_number_provided"],
 };
 
-// ── Intent → official form reference code ────────────────────────────────────
+// Intent → official form reference code
 const FORM_REFS = {
   account_opening: "A-101",
   loan_enquiry: "LA-201",
@@ -539,7 +539,7 @@ const FORM_REFS = {
   general: "GQ-601",
 };
 
-// ── Framer Motion variants ────────────────────────────────────────────────────
+// Framer Motion variants
 const pageVariants = {
   initial: { opacity: 0 },
   animate: {
@@ -556,15 +556,13 @@ const itemVariants = {
   },
 };
 
-// ══════════════════════════════════════════════════════════════════════════════
 // COMPONENT
-// ══════════════════════════════════════════════════════════════════════════════
 
 export default function SaralFormPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ── Receive state from navigate("/saral-form", { state: {...} }) ─────────
+  // Receive state from navigate("/saral-form", { state: {...} })
   const {
     tokenNumber = "N/A",
     sessionId = null,
@@ -577,20 +575,20 @@ export default function SaralFormPage() {
   const formRef = FORM_REFS[intent] || "GQ-601";
   const shortLang = langCode.split("-")[0].toLowerCase();
 
-  // ── Component state ───────────────────────────────────────────────────────
+  // Component state
   const [step, setStep] = useState(1); // 1 = Review, 2 = Sign
   const [formValues, setFormValues] = useState({}); // editable field values
   const [openSelect, setOpenSelect] = useState(null); // which select field is expanded
   const [editingKey, setEditingKey] = useState(null); // which text field is in edit mode
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ── Canvas / signature refs ───────────────────────────────────────────────
+  // Canvas / signature refs
   const canvasRef = useRef(null);
   const isDrawingRef = useRef(false); // whether pointer is currently down
   const lastPosRef = useRef({ x: 0, y: 0 });
   const [hasSignature, setHasSignature] = useState(false);
 
-  // ── Initialize form values from AI-collected data ──────────────────────────
+  // Initialize form values from AI-collected data
   // Only populate fields that exist in FIELD_LABELS to avoid surfacing
   // internal keys (e.g. verification_submitted, completion_percent).
   useEffect(() => {
@@ -606,7 +604,7 @@ export default function SaralFormPage() {
     setFormValues(initial);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Bilingual label helper ─────────────────────────────────────────────────
+  // Bilingual label helper
   // Returns label in customer language, falls back to Hindi, then English.
   const getLabel = (fieldKey) => {
     const labels = FIELD_LABELS[fieldKey];
@@ -614,7 +612,7 @@ export default function SaralFormPage() {
     return labels[shortLang] || labels["hi"] || labels["en"];
   };
 
-  // ── Option label helper ───────────────────────────────────────────────────
+  // Option label helper
   // Handles both legacy string labels and new multi-language label objects.
   const getOptionLabel = (opt, lang = "en") => {
     if (!opt) return "";
@@ -652,7 +650,7 @@ export default function SaralFormPage() {
     return null;
   };
 
-  // ── Canvas: get pointer position (mouse OR touch) ─────────────────────────
+  // Canvas: get pointer position (mouse OR touch)
   const getPos = (e, canvas) => {
     const rect = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -666,7 +664,7 @@ export default function SaralFormPage() {
     };
   };
 
-  // ── Canvas: start drawing ─────────────────────────────────────────────────
+  // Canvas: start drawing
   const startDrawing = useCallback((e) => {
     e.preventDefault();
     const canvas = canvasRef.current;
@@ -675,7 +673,7 @@ export default function SaralFormPage() {
     lastPosRef.current = getPos(e, canvas);
   }, []);
 
-  // ── Canvas: draw stroke ───────────────────────────────────────────────────
+  // Canvas: draw stroke
   const draw = useCallback((e) => {
     e.preventDefault();
     if (!isDrawingRef.current) return;
@@ -701,7 +699,7 @@ export default function SaralFormPage() {
     isDrawingRef.current = false;
   }, []);
 
-  // ── Canvas: clear signature ───────────────────────────────────────────────
+  // Canvas: clear signature
   const clearSignature = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -709,7 +707,7 @@ export default function SaralFormPage() {
     setHasSignature(false);
   }, []);
 
-  // ── Resize canvas to its rendered CSS dimensions when step 2 mounts ───────
+  // Resize canvas to its rendered CSS dimensions when step 2 mounts
   // This prevents stretched/blurry signatures on high-DPI / mobile screens.
   useEffect(() => {
     if (step !== 2) return;
@@ -720,7 +718,7 @@ export default function SaralFormPage() {
     canvas.height = rect.height;
   }, [step]);
 
-  // ── Submit form ───────────────────────────────────────────────────────────
+  // Submit form
   const handleSubmit = useCallback(async () => {
     // Guard: signature is mandatory
     if (!hasSignature) {
@@ -780,9 +778,7 @@ export default function SaralFormPage() {
     navigate,
   ]);
 
-  // ══════════════════════════════════════════════════════════════════════════
   // RENDER
-  // ══════════════════════════════════════════════════════════════════════════
 
   return (
     <motion.div
@@ -953,7 +949,7 @@ export default function SaralFormPage() {
               {/* Render fields based on intent — dynamically filtered for KYC to show only relevant parts */}
               {(INTENT_FIELDS[intent] || INTENT_FIELDS.general)
                 .filter((fieldKey) => {
-                  // ── SMART FILTER FOR KYC UPDATE ──
+                  // SMART FILTER FOR KYC UPDATE
                   // If it's a KYC update, only show fields that:
                   // 1. Are essential (Name, ID, Account No)
                   // 2. Already have a value (meaning AI heard them or they were pre-filled)
@@ -982,7 +978,7 @@ export default function SaralFormPage() {
                   const labelLocal = getLabel(fieldKey);
                   const isEmpty = !val;
 
-                  // ── Checkbox / document-provided fields ────────────────────
+                  // Checkbox / document-provided fields
                   if (CHECKBOX_FIELDS.has(fieldKey)) {
                     const isChecked =
                       val === "true" ||
@@ -1050,7 +1046,7 @@ export default function SaralFormPage() {
                     );
                   }
 
-                  // ── Select / option-grid fields ─────────────────────────────
+                  // Select / option-grid fields
                   if (SELECT_FIELDS.has(fieldKey)) {
                     const options = FIELD_OPTIONS[fieldKey];
                     const selected = val;
@@ -1188,7 +1184,7 @@ export default function SaralFormPage() {
                                   }}
                                 >
                                   <span style={styles.optionChipLabel}>
-                                    {getOptionLabel(opt, shortLang)}
+                                    {getOptionLabel(opt, "en")}
                                   </span>
                                   {shortLang !== "en" && (
                                     <span
@@ -1211,7 +1207,7 @@ export default function SaralFormPage() {
                     );
                   }
 
-                  // ── Text / editable fields ─────────────────────────────────
+                  // Text / editable fields
                   const isEditing = editingKey === fieldKey;
                   const statusColor = getFieldStatusColor(fieldKey);
 
@@ -1435,9 +1431,7 @@ export default function SaralFormPage() {
   );
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
 // STYLES — inline style objects (no Tailwind dependency)
-// ══════════════════════════════════════════════════════════════════════════════
 
 const styles = {
   page: {

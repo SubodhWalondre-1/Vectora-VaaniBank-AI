@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
-// ─── Input field configurations ──────────────────────────────────────────────
+// Input field configurations
 const INPUT_FIELDS = [
   {
     field_type: "aadhaar",
@@ -60,7 +60,7 @@ const INPUT_FIELDS = [
   },
 ];
 
-// ─── Tab: Send Input Request ─────────────────────────────────────────────────
+// Tab: Send Input Request
 export default function SendTab({ activeSession, sendMessage }) {
   const sessionId = activeSession?.id ?? activeSession?.session_id ?? null;
   const [sent, setSent] = useState(null); // field_type of last sent

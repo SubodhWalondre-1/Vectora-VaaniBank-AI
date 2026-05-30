@@ -9,56 +9,81 @@ import Modal from "../ui/Modal";
 import Spinner from "../ui/Spinner";
 import { useAudio } from "../../hooks/useAudio";
 
-// ─── WhatsApp Phone Modal ─────────────────────────────────────────────────────
+// WhatsApp Phone Modal
 function WhatsAppModal({ isOpen, summaryId, summary, onClose, onSuccess }) {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
 
   const isValid = /^[6-9]\d{9}$/.test(phone.replace(/\s/g, ""));
 
-  const handleSend = () => {
+  const getWhatsAppWebUrl = () => {
+    const cleanPhone = phone.replace(/\s/g, "");
+    const keyHindi = summary?.key_points_hindi ?? [];
+    const keyCust = summary?.key_points_customer ?? [];
+    const nextHindi = summary?.next_steps_hindi ?? [];
+    const nextCust = summary?.next_steps_customer ?? [];
+    const custLang = summary?.customer_language ?? "Customer Language";
+
+    let msg = `🏦 *VaaniBank AI — Session Summary*\n\n`;
+    if (keyHindi.length > 0 || keyCust.length > 0) {
+      msg += `📌 *Key Points (Hindi):*\n`;
+      keyHindi.forEach((p, i) => {
+        msg += `  ${i + 1}. ${p}\n`;
+      });
+      msg += `\n📌 *Key Points (${custLang}):*\n`;
+      keyCust.forEach((p, i) => {
+        msg += `  ${i + 1}. ${p}\n`;
+      });
+      msg += `\n`;
+    }
+    if (nextHindi.length > 0 || nextCust.length > 0) {
+      msg += `📋 *Next Steps (Hindi):*\n`;
+      nextHindi.forEach((p, i) => {
+        msg += `  ${i + 1}. ${p}\n`;
+      });
+      msg += `\n📋 *Next Steps (${custLang}):*\n`;
+      nextCust.forEach((p, i) => {
+        msg += `  ${i + 1}. ${p}\n`;
+      });
+      msg += `\n`;
+    }
+    if (summary?.pdf_url) {
+      const relativePath = summary.pdf_url.replace("/storage/summaries/", "/summaries/");
+      const pdfUrl = summary.pdf_url.startsWith("http")
+        ? summary.pdf_url
+        : `${API_BASE_URL}${relativePath}`;
+      msg += `📄 *Bilingual Session PDF:* ${pdfUrl}\n\n`;
+    }
+    msg += `_Powered by VaaniBank AI — Union Bank of India_`;
+    return `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}`;
+  };
+
+  const handleSendTwilio = async () => {
     setError("");
+    setSending(true);
     try {
       const cleanPhone = phone.replace(/\s/g, "");
-      // Build a formatted summary message
-      const keyHindi = summary?.key_points_hindi ?? [];
-      const keyCust = summary?.key_points_customer ?? [];
-      const nextHindi = summary?.next_steps_hindi ?? [];
-      const nextCust = summary?.next_steps_customer ?? [];
-      const custLang = summary?.customer_language ?? "Customer Language";
-
-      let msg = `🏦 *VaaniBank AI — Session Summary*\n\n`;
-      if (keyHindi.length > 0 || keyCust.length > 0) {
-        msg += `📌 *Key Points (Hindi):*\n`;
-        keyHindi.forEach((p, i) => {
-          msg += `  ${i + 1}. ${p}\n`;
-        });
-        msg += `\n📌 *Key Points (${custLang}):*\n`;
-        keyCust.forEach((p, i) => {
-          msg += `  ${i + 1}. ${p}\n`;
-        });
-        msg += `\n`;
-      }
-      if (nextHindi.length > 0 || nextCust.length > 0) {
-        msg += `📋 *Next Steps (Hindi):*\n`;
-        nextHindi.forEach((p, i) => {
-          msg += `  ${i + 1}. ${p}\n`;
-        });
-        msg += `\n📋 *Next Steps (${custLang}):*\n`;
-        nextCust.forEach((p, i) => {
-          msg += `  ${i + 1}. ${p}\n`;
-        });
-        msg += `\n`;
-      }
-      msg += `_Powered by VaaniBank AI — Union Bank of India_`;
-
-      const waUrl = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(msg)}`;
-      window.open(waUrl, "_blank");
+      await summaryAPI.sendWhatsApp(summaryId, cleanPhone);
       onSuccess?.();
       onClose();
     } catch (err) {
-      setError(err?.message ?? "Failed to open WhatsApp. Try again.");
+      console.error("[WhatsAppModal] Twilio send error:", err);
+      setError(
+        err?.response?.data?.detail ||
+          err?.message ||
+          "Failed to send via Twilio. Try using the manual option below."
+      );
+    } finally {
+      setSending(false);
     }
+  };
+
+  const handleSendManual = () => {
+    const waUrl = getWhatsAppWebUrl();
+    window.open(waUrl, "_blank");
+    onSuccess?.();
+    onClose();
   };
 
   return (
@@ -71,7 +96,7 @@ function WhatsAppModal({ isOpen, summaryId, summary, onClose, onSuccess }) {
       <div className="flex flex-col gap-4">
         <p className="text-sm" style={{ color: "var(--text-muted, #64748b)" }}>
           Enter the customer's 10-digit mobile number to send the bilingual
-          summary.
+          summary and PDF link.
         </p>
 
         <div className="flex flex-col gap-1.5">
@@ -112,42 +137,75 @@ function WhatsAppModal({ isOpen, summaryId, summary, onClose, onSuccess }) {
                 (e.target.style.border =
                   "1.5px solid var(--border-color, rgba(0,48,135,0.15))")
               }
+              disabled={sending}
             />
           </div>
           {error && (
-            <p className="text-xs" style={{ color: "#dc2626" }}>
+            <p className="text-xs mt-1" style={{ color: "#dc2626" }}>
               {error}
             </p>
           )}
         </div>
 
-        <div className="flex justify-end gap-2 pt-1">
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <button
-            onClick={handleSend}
-            disabled={!isValid}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-150"
-            style={{
-              background: isValid ? "#25D366" : "rgba(37,211,102,0.25)",
-              color: "white",
-              cursor: isValid ? "pointer" : "not-allowed",
-              border: "none",
-            }}
+        <div className="flex flex-col gap-2.5 mt-2">
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" onClick={onClose} disabled={sending}>
+              Cancel
+            </Button>
+            <button
+              onClick={handleSendTwilio}
+              disabled={!isValid || sending}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150"
+              style={{
+                background: isValid && !sending ? "#003087" : "rgba(0,48,135,0.25)",
+                color: "white",
+                cursor: isValid && !sending ? "pointer" : "not-allowed",
+                border: "none",
+              }}
+            >
+              {sending ? (
+                <>
+                  <Spinner size="sm" />
+                  Sending via Twilio...
+                </>
+              ) : (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
+                  </svg>
+                  Send via Twilio
+                </>
+              )}
+            </button>
+          </div>
+
+          <div
+            className="flex items-center justify-center gap-2 pt-2.5 border-t text-xs"
+            style={{ borderColor: "var(--border-color, rgba(0,48,135,0.1))" }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z" />
-            </svg>
-            Send Summary
-          </button>
+            <span style={{ color: "var(--text-muted, #64748b)" }}>Or use backup:</span>
+            <button
+              onClick={handleSendManual}
+              disabled={!isValid || sending}
+              className="font-medium underline hover:text-green-600 transition-colors"
+              style={{
+                color: isValid && !sending ? "#25D366" : "var(--text-muted, #64748b)",
+                cursor: isValid && !sending ? "pointer" : "not-allowed",
+                background: "none",
+                border: "none",
+                padding: 0,
+              }}
+            >
+              Send via WhatsApp Web
+            </button>
+          </div>
         </div>
       </div>
     </Modal>
   );
 }
 
-// ─── Summary Table Row ────────────────────────────────────────────────────────
+// Summary Table Row
 function SummaryRow({ hindi, customer, isHeader }) {
   return (
     <div className="grid gap-px" style={{ gridTemplateColumns: "1fr 1fr" }}>
@@ -178,7 +236,7 @@ function SummaryRow({ hindi, customer, isHeader }) {
   );
 }
 
-// ─── Expanded Summary Content ─────────────────────────────────────────────────
+// Expanded Summary Content
 function SummaryContent({
   summary,
   customerLang,
@@ -318,7 +376,7 @@ function SummaryContent({
   );
 }
 
-// ─── BilingualSummary ─────────────────────────────────────────────────────────
+// BilingualSummary
 export default function BilingualSummary() {
   const activeSession = useApp((s) => s.activeSession);
   const exchanges = useApp((s) => s.exchanges);

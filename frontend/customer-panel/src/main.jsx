@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel Entry Point
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';

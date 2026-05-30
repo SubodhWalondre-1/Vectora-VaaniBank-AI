@@ -1,12 +1,12 @@
-/* ============================================
+/*
    VaaniBank AI — Staff Panel Constants
    Union Bank of India | Team Vectora
 
    Shared constants imported from frontend/shared/constants.js
    Panel-specific constants defined below.
-   ============================================ */
+   */
 
-// ── Brand Colors ────────────────────────────
+// Brand Colors
 export const BRAND = {
   red: '#E8231A',
   redDark: '#C41810',
@@ -17,7 +17,7 @@ export const BRAND = {
   blueLight: '#e8eef8',
 };
 
-// ── Supported Languages ─────────────────────
+// Supported Languages
 export const LANGUAGES = [
   { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳' },
   { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳' },
@@ -31,7 +31,7 @@ export const LANGUAGES = [
   { code: 'ml', name: 'Malayalam', native: 'മലയാളം', flag: '🇮🇳' },
 ];
 
-// ── App Meta ────────────────────────────────
+// App Meta
 export const APP_NAME = 'VaaniBank AI';
 export const APP_DESCRIPTION = 'Multilingual Voice-First Banking Assistant';
 export const BANK_NAME = 'Union Bank of India';
@@ -39,7 +39,7 @@ export const TEAM_NAME = 'Team Vectora';
 export const APP_VERSION = '1.0.0';
 
 
-// ── Intent Types ────────────────────────────
+// Intent Types
 export const INTENTS = {
   account_opening: {
     label: 'Account Opening',
@@ -92,7 +92,7 @@ export const INTENTS = {
   },
 };
 
-// ── Sentiment Types ─────────────────────────
+// Sentiment Types
 export const SENTIMENTS = {
   calm: {
     label: 'Calm',
@@ -124,11 +124,11 @@ export const SENTIMENTS = {
   },
 };
 
-// ── API & WebSocket Base URLs ───────────────
+// API & WebSocket Base URLs
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 export const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || 'ws://localhost:8000';
 
-// ── Banking Services ────────────────────────
+// Banking Services
 export const SERVICES = [
   {
     id: 'account_opening',
@@ -180,7 +180,7 @@ export const SERVICES = [
   },
 ];
 
-// ── Token Number Prefix by Language ─────────
+// Token Number Prefix by Language
 export const TOKEN_PREFIX = {
   hi: 'HIN',
   mr: 'MRT',
@@ -194,7 +194,7 @@ export const TOKEN_PREFIX = {
   ml: 'MAL',
 };
 
-// ── Session Statuses ────────────────────────
+// Session Statuses
 export const SESSION_STATUS = {
   waiting: {
     label: 'Waiting',
@@ -222,14 +222,14 @@ export const SESSION_STATUS = {
   },
 };
 
-// ── Entry Methods ───────────────────────────
+// Entry Methods
 export const ENTRY_METHODS = {
   qr_scan: { label: 'QR Scan', icon: 'QrCode' },
   manual: { label: 'Manual Entry', icon: 'Keyboard' },
   walk_in: { label: 'Walk-In', icon: 'Footprints' },
 };
 
-// ── Staff Roles ─────────────────────────────
+// Staff Roles
 export const STAFF_ROLES = {
   teller: { label: 'Teller', color: '#2563EB' },
   manager: { label: 'Manager', color: '#7C3AED' },
@@ -237,7 +237,7 @@ export const STAFF_ROLES = {
   admin: { label: 'Admin', color: '#DC2626' },
 };
 
-// ── WebSocket Event Names ───────────────────
+// WebSocket Event Names
 export const WS_EVENTS = {
   // Server → Client
   SESSION_CONNECTED: 'session_connected',
@@ -258,7 +258,7 @@ export const WS_EVENTS = {
   PING: 'ping',
 };
 
-// ── PII Types ───────────────────────────────
+// PII Types
 export const PII_TYPES = {
   aadhaar: { label: 'Aadhaar Number', icon: 'Fingerprint', severity: 'high' },
   pan: { label: 'PAN Card', icon: 'CreditCard', severity: 'high' },
@@ -267,7 +267,7 @@ export const PII_TYPES = {
   dob: { label: 'Date of Birth', icon: 'Calendar', severity: 'medium' },
 };
 
-// ── Demo Credentials (only exposed in dev/demo builds) ──
+// Demo Credentials (only exposed in dev/demo builds)
 const _DEMO_CREDS = [
   {
     staff_id: 'UBI-NGP-001',

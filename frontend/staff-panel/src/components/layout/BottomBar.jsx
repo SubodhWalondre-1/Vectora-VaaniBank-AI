@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — BottomBar Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,7 +13,7 @@ import Badge from "../ui/Badge";
 import Button from "../ui/Button";
 import toast from "react-hot-toast";
 
-// ── Language map: customer language name → Sarvam codes ──────
+// Language map: customer language name → Sarvam codes
 const LANG_CODE_MAP = {
   Malayalam: { code: "ml-IN", speaker: "meera" },
   Tamil: { code: "ta-IN", speaker: "anushka" },
@@ -28,14 +28,14 @@ const LANG_CODE_MAP = {
   English: { code: "en-IN", speaker: "meera" },
 };
 
-// ── Staff language → Sarvam STT language code ────────────────
+// Staff language → Sarvam STT language code
 const STAFF_LANG_STT = {
   Hindi: "hi-IN",
   English: "en-IN",
   Marathi: "mr-IN",
 };
 
-// ── Preferred MIME types for MediaRecorder ───────────────────
+// Preferred MIME types for MediaRecorder
 const MIME_TYPES = [
   "audio/webm;codecs=opus",
   "audio/webm",
@@ -53,7 +53,7 @@ function getConfidenceColor(confidence) {
   return "#DC2626";
 }
 
-// ── PII Keyword Detection Config ──────────────────────────────
+// PII Keyword Detection Config
 // When staff speaks via "Speak to Customer" and STT detects
 // these keywords, an input popup appears on the customer panel.
 const INPUT_KEYWORDS = [
@@ -152,10 +152,6 @@ export default function BottomBar({
   const setListening = useApp((s) => s.setListening);
   const setProcessing = useApp((s) => s.setProcessing);
   const addExchange = useApp((s) => s.addExchange);
-  // AI hint: next question from InfoBoard
-  const nextQuestionHint = useApp(
-    (s) => s.infoBoard?.next_question_hindi || "",
-  );
 
   const {
     startRecording,
@@ -171,7 +167,7 @@ export default function BottomBar({
 
   const [saving, setSaving] = useState(false);
 
-  // ── Staff-speak state ─────────────────────────────────────
+  // Staff-speak state
   const [staffRecording, setStaffRecording] = useState(false);
   const [staffProcessing, setStaffProcessing] = useState(false);
   const [staffOriginalText, setStaffOriginalText] = useState("");
@@ -186,7 +182,7 @@ export default function BottomBar({
   const isActive = sessionStatus === "active";
   const isOffline = activeSession?.offline_mode || false;
 
-  // ── Force-reset stuck processing state (escape hatch) ────
+  // Force-reset stuck processing state (escape hatch)
   const resetProcessingState = useCallback(() => {
     if (processingTimeoutRef.current) {
       clearTimeout(processingTimeoutRef.current);
@@ -196,7 +192,7 @@ export default function BottomBar({
     setListening(false);
   }, [setProcessing, setListening]);
 
-  // ── Clear watchdog when AI pipeline completes via WS ─────
+  // Clear watchdog when AI pipeline completes via WS
   // Also handles the WS-path stuck state:
   // transcription_ready sets isProcessing=true via WS.
   // If ai_suggestion_ready never fires (backend timeout/error),
@@ -208,7 +204,7 @@ export default function BottomBar({
     const onWsEvent = (e) => {
       const { type } = e.detail || {};
 
-      // ── REST-path watchdog: clear on completion ──
+      // REST-path watchdog: clear on completion
       if (
         type === "ai_suggestion_ready" ||
         type === "session_ended" ||
@@ -220,7 +216,7 @@ export default function BottomBar({
         }
       }
 
-      // ── WS-path watchdog: start timer when transcription begins ──
+      // WS-path watchdog: start timer when transcription begins
       if (type === "transcription_ready") {
         // Clear any previous WS watchdog
         if (wsProcessingTimerRef.current) {
@@ -238,7 +234,7 @@ export default function BottomBar({
         }, WS_PROCESSING_TIMEOUT_MS);
       }
 
-      // ── WS-path watchdog: clear when AI response arrives ──
+      // WS-path watchdog: clear when AI response arrives
       if (
         type === "ai_suggestion_ready" ||
         type === "audio_ready" ||
@@ -272,7 +268,7 @@ export default function BottomBar({
   const confidence = sttConfidence ?? 0;
   const confidenceColor = getConfidenceColor(confidence);
 
-  // ── Customer language derived values ─────────────────────
+  // Customer language derived values
   const customerLangName = activeSession?.customer_language || "Hindi";
   const customerLangInfo =
     LANG_CODE_MAP[customerLangName] || LANG_CODE_MAP["Hindi"];
@@ -281,7 +277,7 @@ export default function BottomBar({
   const staffLangName = activeSession?.staff_language || "Hindi";
   const staffSttCode = STAFF_LANG_STT[staffLangName] || "hi-IN";
 
-  // ── Customer Mic Toggle (listens to customer) ─────────────
+  // Customer Mic Toggle (listens to customer)
   const handleMicToggle = useCallback(async () => {
     if (isRecording) {
       const blob = await stopRecording();
@@ -361,7 +357,7 @@ export default function BottomBar({
     setListening,
   ]);
 
-  // ── Play / Stop AI response audio ────────────────────────
+  // Play / Stop AI response audio
   const handlePlayToggle = useCallback(() => {
     if (isPlaying) {
       stopAudio();
@@ -370,12 +366,12 @@ export default function BottomBar({
     }
   }, [isPlaying, lastAudioUrl, playAudio, stopAudio]);
 
-  // ── Staff Mic: Record → STT → Translate → TTS → Play ─────
+  // Staff Mic: Record → STT → Translate → TTS → Play
   // Staff speaks in Hindi/Marathi → customer hears in their own language
   const handleStaffMicToggle = useCallback(async () => {
     if (!isActive) return;
 
-    // ── STOP recording ──
+    // STOP recording
     if (staffRecording) {
       try {
         if (
@@ -395,7 +391,7 @@ export default function BottomBar({
       return;
     }
 
-    // ── START recording ──
+    // START recording
     setStaffOriginalText("");
     setStaffTranslated("");
 
@@ -510,7 +506,7 @@ export default function BottomBar({
             field_label_customer: detectedKw.field_label_customer,
             request_id: requestId,
           });
-          // ── Fallback: if backend does not handle trigger_input_request
+          // Fallback: if backend does not handle trigger_input_request
           // (legacy backend version) directly broadcast to customer panel
           // via vaani_input_request custom event (same-origin only).
           // This works when both panels are in the same browser window (dev).
@@ -529,7 +525,6 @@ export default function BottomBar({
             // BroadcastChannel not supported — silently skip, WS path is primary
           }
         }
-        // ─────────────────────────────────────────────────────────────────
 
         // 2. Translate to customer's language
         const translateResult = await aiAPI.translateStaffResponse(
@@ -580,7 +575,7 @@ export default function BottomBar({
           duration: 3000,
         });
 
-        // ── Add to ConversationPanel as staff_to_customer exchange ──
+        // Add to ConversationPanel as staff_to_customer exchange
         addExchange({
           id: `staff-${Date.now()}`,
           direction: "staff_to_customer",
@@ -619,7 +614,7 @@ export default function BottomBar({
     sendMessage,
   ]);
 
-  // ── Save exchange ─────────────────────────────────────────
+  // Save exchange
   const handleSave = useCallback(async () => {
     setSaving(true);
     try {
@@ -630,7 +625,7 @@ export default function BottomBar({
     setSaving(false);
   }, []);
 
-  // ── Format recording duration mm:ss ──────────────────────
+  // Format recording duration mm:ss
   const formatDuration = (s) => {
     const m = Math.floor(s / 60)
       .toString()
@@ -798,37 +793,6 @@ export default function BottomBar({
         )}
       </div>
 
-      {/* ── AI Hint: next question near mic ──────────────── */}
-      {nextQuestionHint && !isRecording && !isProcessing && (
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
-            className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-lg max-w-[220px]"
-            style={{
-              backgroundColor: "rgba(234, 179, 8, 0.08)",
-              border: "1px solid rgba(234, 179, 8, 0.2)",
-            }}
-            title={nextQuestionHint}
-          >
-            <span style={{ fontSize: 11, flexShrink: 0 }}>💡</span>
-            <span
-              className="text-[10px] font-medium leading-tight"
-              style={{
-                color: "#a16207",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-              }}
-            >
-              {nextQuestionHint}
-            </span>
-          </motion.div>
-        </AnimatePresence>
-      )}
 
       {/* ── Right: Staff Speak + Actions ────────────────── */}
       <div className="flex items-center gap-2 min-w-[260px] justify-end">

@@ -1,4 +1,4 @@
-/* ============================================
+/*
    VaaniBank AI — Admin Panel Page
    Union Bank of India | Team Vectora
 
@@ -6,7 +6,7 @@
      1. All Branches   — overview + create branch
      2. Network Analytics — cross-branch charts
      3. Audit Logs     — activity + PII log
-   ============================================ */
+   */
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import {
@@ -23,6 +23,7 @@ import Sidebar from '../components/layout/Sidebar';
 import TopBar from '../components/layout/TopBar';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
+import toast from 'react-hot-toast';
 import Modal from '../components/ui/Modal';
 import { useApp } from '../context/AppContext';
 import { staffAPI, qrAPI } from '../services/api';
@@ -33,7 +34,7 @@ import {
   StatCard, StatusDot, ActionBadge,
 } from '../utils/managerUtils.jsx';
 
-// ── Tab definitions ────────────────────────
+// Tab definitions
 const TABS = [
   { id: 'branches',  label: 'All Branches',      icon: Building2 },
   { id: 'analytics', label: 'Network Analytics', icon: BarChart3 },
@@ -41,9 +42,7 @@ const TABS = [
   { id: 'settings',  label: 'System Settings',   icon: Settings  },
 ];
 
-// ════════════════════════════════════════════
 //  SECTION 1 — All Branches
-// ════════════════════════════════════════════
 function CreateBranchModal({ isOpen, onClose, onCreated }) {
   const [form, setForm] = useState({ branch_code: '', branch_name: '', city: '', state: '', ifsc_prefix: '' });
   const [loading, setLoading] = useState(false);
@@ -268,9 +267,7 @@ function BranchesSection() {
   );
 }
 
-// ════════════════════════════════════════════
 //  SECTION 2 — Network Analytics
-// ════════════════════════════════════════════
 function NetworkAnalyticsSection() {
   const [fromDate, setFromDate] = useState(daysAgoStr(6));
   const [toDate, setToDate]     = useState(todayStr());
@@ -402,9 +399,7 @@ function NetworkAnalyticsSection() {
   );
 }
 
-// ════════════════════════════════════════════
 //  SECTION 3 — Audit Logs
-// ════════════════════════════════════════════
 const ACTION_FILTERS = [
   { value: '', label: 'All Actions' },
   { value: 'login', label: 'Login' },
@@ -580,9 +575,7 @@ function AuditLogsSection() {
   );
 }
 
-// ════════════════════════════════════════════
 //  SECTION 4 — System Settings
-// ════════════════════════════════════════════
 
 // Small read-only info row used inside settings cards
 function InfoRow({ label, value, mono = false }) {
@@ -618,28 +611,72 @@ function Toggle({ checked, onChange, disabled = false }) {
 function SystemSettingsSection() {
   const DEMO_KEY = 'vaanibank_demo_mode';
 
-  // ── Demo mode state (persisted in localStorage) ──
-  const [demoMode, setDemoMode] = useState(
-    () => localStorage.getItem(DEMO_KEY) === 'true'
-  );
+  const [settings, setSettings] = useState({
+    demo_mode: false,
+    default_session_timeout: 15,
+    max_exchanges_per_session: 50,
+    pii_detection: true,
+    idle_timeout: 5,
+    primary_stt: 'sarvam_saarika_2.5',
+    fallback_stt_1: 'groq_whisper',
+    fallback_stt_2: 'reverie',
+    llm_model: 'groq_llama_3.3_70b',
+    translation_engine: 'sarvam_translate',
+    tts_engine: 'sarvam_bulbul_v3',
+  });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // ── QR state per branch ──
+  // QR state per branch
   const [branches, setBranches]     = useState([]);
   const [branchLoading, setBranchLoading] = useState(true);
   const [qrLoading, setQrLoading]   = useState({});   // { branch_code: bool }
   const [qrResults, setQrResults]   = useState({});   // { branch_code: { url, error } }
 
-  // Load branch list once
+  const fetchSettings = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await staffAPI.adminGetSettings();
+      setSettings(res);
+      localStorage.setItem(DEMO_KEY, String(!!res.demo_mode));
+    } catch (e) {
+      toast.error('Failed to load system settings');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Load branch list and settings once
   useEffect(() => {
+    fetchSettings();
     staffAPI.adminListBranches(false)
       .then(res => setBranches(res.branches || []))
       .catch(() => setBranches([]))
       .finally(() => setBranchLoading(false));
-  }, []);
+  }, [fetchSettings]);
 
-  const handleDemoToggle = (val) => {
-    setDemoMode(val);
-    localStorage.setItem(DEMO_KEY, String(val));
+  const handleChange = (key, val) => {
+    setSettings(prev => {
+      const updated = { ...prev, [key]: val };
+      if (key === 'demo_mode') {
+        localStorage.setItem(DEMO_KEY, String(val));
+      }
+      return updated;
+    });
+  };
+
+  const handleSaveSettings = async () => {
+    try {
+      setSaving(true);
+      const updated = await staffAPI.adminUpdateSettings(settings);
+      setSettings(updated);
+      localStorage.setItem(DEMO_KEY, String(!!updated.demo_mode));
+      toast.success('System settings updated globally!');
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || e?.message || 'Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleGenerateQR = async (branch_code) => {
@@ -647,7 +684,6 @@ function SystemSettingsSection() {
     setQrResults(prev => ({ ...prev, [branch_code]: null }));
     try {
       const res = await qrAPI.getBranchQR(branch_code);
-      // API returns { qr_url, qr_data } or similar — adapt to actual shape
       const url = res?.qr_image_url || res?.qr_url || res?.url || null;
       setQrResults(prev => ({ ...prev, [branch_code]: { url, error: url ? null : 'No QR URL in response' } }));
     } catch (e) {
@@ -660,87 +696,250 @@ function SystemSettingsSection() {
     }
   };
 
-  const cardStyle = { background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 16, padding: 20 };
+  const cardStyle = {
+    background: 'var(--card-bg)',
+    border: '1px solid var(--card-border)',
+    borderRadius: 16,
+    padding: 20,
+    boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.03)',
+    transition: 'all 0.3s ease'
+  };
+
+  const selectStyle = {
+    background: 'var(--body-bg)',
+    border: '1px solid var(--card-border)',
+    color: 'var(--text-primary)',
+    borderRadius: 12,
+    padding: '8px 12px',
+    fontSize: 14,
+    outline: 'none',
+    width: '100%',
+    cursor: 'pointer',
+    marginTop: 4
+  };
+
+  const inputStyle = {
+    background: 'var(--body-bg)',
+    border: '1px solid var(--card-border)',
+    color: 'var(--text-primary)',
+    borderRadius: 12,
+    padding: '8px 12px',
+    fontSize: 14,
+    outline: 'none',
+    width: '100%',
+    marginTop: 4
+  };
+
+  const formLabelStyle = {
+    fontSize: 12,
+    fontWeight: 600,
+    color: 'var(--text-muted)',
+    display: 'block'
+  };
+
   const sectionTitle = (t) => (
     <p className="text-sm font-bold mb-4" style={{ color: 'var(--text-primary)' }}>{t}</p>
   );
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 gap-3">
+        <Spinner size="lg" />
+        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading active system configuration...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-5">
+      {/* Save action bar */}
+      <div className="flex items-center justify-between p-4 rounded-2xl"
+        style={{
+          background: 'rgba(0, 48, 135, 0.03)',
+          border: '1px dashed var(--card-border)'
+        }}>
+        <div className="flex items-center gap-2">
+          <Info size={16} style={{ color: '#003087' }} />
+          <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
+            Changes are saved immediately to dual-persistence (Redis + dynamic_settings.json) to drive all live voice counters.
+          </span>
+        </div>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={handleSaveSettings}
+          loading={saving}
+          style={{ paddingLeft: 24, paddingRight: 24 }}
+        >
+          Save Settings
+        </Button>
+      </div>
 
       {/* Row 1 — Demo Mode + Session Config */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
         {/* Demo Mode card */}
-        <div style={cardStyle}>
+        <div style={cardStyle} className="hover:shadow-md">
           {sectionTitle('🎮 Demo Mode')}
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
               <p className="text-sm" style={{ color: 'var(--text-primary)' }}>
-                When enabled, the app shows <strong>simulated data</strong> for presentations.
-                Disables live API calls in customer panel.
+                When enabled, the customer panel kiosk shows the 🎬 Demo floating button, allowing simulated websocket operations without backend microservices connectivity.
               </p>
               <div className="mt-3 flex items-center gap-2">
                 <span
                   className="px-2.5 py-1 rounded-lg text-xs font-bold"
                   style={{
-                    background: demoMode ? 'rgba(22,163,74,0.12)' : 'rgba(107,114,128,0.1)',
-                    color: demoMode ? '#16A34A' : '#6B7280',
+                    background: settings.demo_mode ? 'rgba(22,163,74,0.12)' : 'rgba(107,114,128,0.1)',
+                    color: settings.demo_mode ? '#16A34A' : '#6B7280',
                   }}
                 >
-                  {demoMode ? '✓ Demo Mode ON' : 'Demo Mode OFF'}
+                  {settings.demo_mode ? '✓ Demo Mode ON' : 'Demo Mode OFF'}
                 </span>
               </div>
             </div>
-            <Toggle checked={demoMode} onChange={handleDemoToggle} />
+            <Toggle checked={settings.demo_mode} onChange={(val) => handleChange('demo_mode', val)} />
           </div>
         </div>
 
         {/* Session Config card */}
-        <div style={cardStyle}>
+        <div style={cardStyle} className="hover:shadow-md">
           {sectionTitle('⏱️ Session Configuration')}
-          <div className="flex flex-col">
-            <InfoRow label="Default Session Timeout" value="15 minutes" />
-            <InfoRow label="Max Exchanges per Session" value="50" />
-            <InfoRow label="PII Detection" value="Enabled" />
-            <InfoRow label="Idle Timeout" value="5 minutes" />
-          </div>
-          <div className="mt-3 flex items-center gap-1.5">
-            <Info size={13} style={{ color: 'var(--text-muted)' }} />
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-              Edit via backend config. Live changes require restart.
-            </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label style={formLabelStyle}>Session Timeout (min)</label>
+              <input
+                type="number"
+                value={settings.default_session_timeout}
+                onChange={(e) => handleChange('default_session_timeout', parseInt(e.target.value) || 1)}
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={formLabelStyle}>Max Exchanges</label>
+              <input
+                type="number"
+                value={settings.max_exchanges_per_session}
+                onChange={(e) => handleChange('max_exchanges_per_session', parseInt(e.target.value) || 1)}
+                style={inputStyle}
+              />
+            </div>
+            <div>
+              <label style={formLabelStyle}>Idle Timeout (min)</label>
+              <input
+                type="number"
+                value={settings.idle_timeout}
+                onChange={(e) => handleChange('idle_timeout', parseInt(e.target.value) || 1)}
+                style={inputStyle}
+              />
+            </div>
+            <div className="flex flex-col justify-end pb-1">
+              <div className="flex items-center justify-between px-2">
+                <span style={formLabelStyle}>PII Detection</span>
+                <Toggle
+                  checked={settings.pii_detection}
+                  onChange={(val) => handleChange('pii_detection', val)}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Row 2 — AI Pipeline config */}
-      <div style={cardStyle}>
-        {sectionTitle('🤖 AI Pipeline Configuration')}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--text-muted)' }}>Speech-to-Text</p>
-            <InfoRow label="Primary STT"     value="Sarvam AI — saarika:v2.5" />
-            <InfoRow label="Fallback STT 1"  value="Groq Whisper (large-v3)" />
-            <InfoRow label="Fallback STT 2"  value="Reverie RevUp BFSI" />
-            <InfoRow label="Languages"       value="11 Indian languages" />
+      <div style={cardStyle} className="hover:shadow-md">
+        {sectionTitle('🤖 AI Pipeline Dynamic Shift')}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col gap-4">
+            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#003087' }}>Speech-to-Text Falling-Chain</p>
+            
+            <div>
+              <label style={formLabelStyle}>Primary STT (Engine 1)</label>
+              <select
+                value={settings.primary_stt}
+                onChange={(e) => handleChange('primary_stt', e.target.value)}
+                style={selectStyle}
+              >
+                <option value="sarvam_saarika_2.5">Sarvam AI — saarika:v2.5</option>
+                <option value="groq_whisper">Groq Whisper (large-v3-turbo)</option>
+                <option value="reverie">Reverie RevUp BFSI</option>
+                <option value="none">Disabled (none)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={formLabelStyle}>STT Fallback 1 (Engine 2)</label>
+              <select
+                value={settings.fallback_stt_1}
+                onChange={(e) => handleChange('fallback_stt_1', e.target.value)}
+                style={selectStyle}
+              >
+                <option value="sarvam_saarika_2.5">Sarvam AI — saarika:v2.5</option>
+                <option value="groq_whisper">Groq Whisper (large-v3-turbo)</option>
+                <option value="reverie">Reverie RevUp BFSI</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={formLabelStyle}>STT Fallback 2 (Engine 3)</label>
+              <select
+                value={settings.fallback_stt_2}
+                onChange={(e) => handleChange('fallback_stt_2', e.target.value)}
+                style={selectStyle}
+              >
+                <option value="sarvam_saarika_2.5">Sarvam AI — saarika:v2.5</option>
+                <option value="groq_whisper">Groq Whisper (large-v3-turbo)</option>
+                <option value="reverie">Reverie RevUp BFSI</option>
+                <option value="none">None</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2 mt-4 md:mt-0" style={{ color: 'var(--text-muted)' }}>LLM + TTS</p>
-            <InfoRow label="LLM Model"         value="Groq — LLaMA 3.3 70B" />
-            <InfoRow label="Translation"        value="Sarvam AI (Translate API)" />
-            <InfoRow label="TTS Engine"         value="Sarvam — Bulbul v3 (suhani)" />
-            <InfoRow label="Context Window"     value="128K tokens" />
+
+          <div className="flex flex-col gap-4">
+            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: '#003087' }}>LLM Suggester + TTS Generation</p>
+            
+            <div>
+              <label style={formLabelStyle}>LLM Suggester Model</label>
+              <select
+                value={settings.llm_model}
+                onChange={(e) => handleChange('llm_model', e.target.value)}
+                style={selectStyle}
+              >
+                <option value="groq_llama_3.3_70b">Groq — LLaMA 3.3 70B Versatile</option>
+                <option value="gemini_2.0_flash">Google Gemini 2.0 Flash</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={formLabelStyle}>Translation Engine</label>
+              <select
+                value={settings.translation_engine}
+                onChange={(e) => handleChange('translation_engine', e.target.value)}
+                style={selectStyle}
+              >
+                <option value="sarvam_translate">Sarvam AI Mayura Translation API</option>
+                <option value="llm_translation">Direct LLM Translation (Llama/Gemini)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={formLabelStyle}>TTS Synthesis Engine</label>
+              <select
+                value={settings.tts_engine}
+                onChange={(e) => handleChange('tts_engine', e.target.value)}
+                style={selectStyle}
+              >
+                <option value="sarvam_bulbul_v3">Sarvam AI Bulbul v3 (Suhani)</option>
+                <option value="none">Bypass TTS (No Audio Output)</option>
+              </select>
+            </div>
           </div>
-        </div>
-        <div className="mt-3 flex items-center gap-1.5">
-          <Info size={13} style={{ color: 'var(--text-muted)' }} />
-          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Models are read-only. Switch requires code deploy.</p>
         </div>
       </div>
 
       {/* Row 3 — QR Code Regeneration */}
-      <div style={cardStyle}>
+      <div style={cardStyle} className="hover:shadow-md">
         {sectionTitle('📷 Branch QR Code Regeneration')}
         <p className="text-sm mb-4" style={{ color: 'var(--text-muted)' }}>
           Regenerate the customer-facing QR code for any branch. Each QR links to that branch’s voice session start page.

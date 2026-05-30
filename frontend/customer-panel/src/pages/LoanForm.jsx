@@ -1,9 +1,9 @@
-/* ============================================================
+/*
    VaaniBank AI — Loan Form Configuration
    Union Bank of India | Team Vectora
-   ============================================================ */
+   */
 
-// ── Loan Field Labels (11 Languages) ──────────────────────────────────────────
+// Loan Field Labels (11 Languages)
 export const LOAN_FIELD_LABELS = {
   // 1. Core: Common Retail Loan Application
   customer_name: {
@@ -302,7 +302,7 @@ export const LOAN_FIELD_LABELS = {
   },
 };
 
-// ── Loan Field Options ───────────────────────────────────────────────────────
+// Loan Field Options
 export const LOAN_FIELD_OPTIONS = {
   loan_type: [
     {
@@ -438,7 +438,7 @@ export const LOAN_FIELD_OPTIONS = {
   ],
 };
 
-// ── Loan Field Groups ────────────────────────────────────────────────────────
+// Loan Field Groups
 export const LOAN_INTENT_FIELDS = [
   // Core
   "loan_type",
@@ -479,7 +479,7 @@ export const LOAN_CHECKBOX_FIELDS = [
   // Add any boolean flags if needed
 ];
 
-// ── Field Requirement Status (Dots) ──────────────────────────────────────────
+// Field Requirement Status (Dots)
 export const LOAN_FIELD_STATUS = {
   mandatory: [
     "loan_type",

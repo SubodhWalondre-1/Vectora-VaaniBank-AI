@@ -1,11 +1,11 @@
-/* ============================================
+/*
    VaaniBank AI — Audio Recording & Playback Hook
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useRef, useState, useCallback, useEffect } from 'react';
 
-// ── Audio constraints ───────────────────────────────────────────
+// Audio constraints
 // We try 3 levels from strictest to bare minimum:
 // Level 1: ideal sampleRate + noise cancellation (preferred)
 // Level 2: just noise cancellation, no sampleRate constraint
@@ -67,7 +67,7 @@ async function getAudioStream() {
   throw lastErr;
 }
 
-// ── Preferred MIME types in order ───────────
+// Preferred MIME types in order
 const MIME_TYPES = [
   'audio/webm;codecs=opus',
   'audio/webm',
@@ -86,14 +86,14 @@ function getSupportedMimeType() {
 }
 
 export function useAudio() {
-  // ── Recording state ───────────────────────
+  // Recording state
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [error, setError] = useState(null);
 
-  // ── Refs ──────────────────────────────────
+  // Refs
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
   const chunksRef = useRef([]);
@@ -106,7 +106,7 @@ export function useAudio() {
   const resolveBlobRef = useRef(null);
   const html5AudioRef = useRef(null);
 
-  // ── Cleanup audio analysis ────────────────
+  // Cleanup audio analysis
   const stopAnalysis = useCallback(() => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -115,7 +115,7 @@ export function useAudio() {
     setAudioLevel(0);
   }, []);
 
-  // ── Cleanup duration timer ────────────────
+  // Cleanup duration timer
   const stopDurationTimer = useCallback(() => {
     if (durationIntervalRef.current) {
       clearInterval(durationIntervalRef.current);
@@ -123,7 +123,7 @@ export function useAudio() {
     }
   }, []);
 
-  // ── Audio level analysis (waveform data) ──
+  // Audio level analysis (waveform data)
   const startAnalysis = useCallback((stream) => {
     try {
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -162,7 +162,7 @@ export function useAudio() {
     }
   }, []);
 
-  // ── Start Recording ───────────────────────
+  // Start Recording
   const startRecording = useCallback(async () => {
     setError(null);
 
@@ -255,7 +255,7 @@ export function useAudio() {
     }
   }, [startAnalysis, stopAnalysis, stopDurationTimer]);
 
-  // ── Stop Recording → Returns audioBlob ────
+  // Stop Recording → Returns audioBlob
   const stopRecording = useCallback(() => {
     return new Promise((resolve) => {
       stopAnalysis();
@@ -296,7 +296,7 @@ export function useAudio() {
     });
   }, [stopAnalysis, stopDurationTimer]);
 
-  // ── Play Audio from URL ───────────────────
+  // Play Audio from URL
   const playAudio = useCallback(async (url) => {
     setError(null);
 
@@ -313,10 +313,10 @@ export function useAudio() {
 
       setIsPlaying(true);
 
-      // ── Fix double-slash in URL (e.g. https://host//audio/file.wav) ──
+      // Fix double-slash in URL (e.g. https://host//audio/file.wav)
       const cleanUrl = url.replace(/([^:])(\/\/+)/g, '$1/');
 
-      // ── Check if URL is cross-origin (CORS-sensitive external CDN URL) ──
+      // Check if URL is cross-origin (CORS-sensitive external CDN URL)
       let isCross = false;
       try {
         const parsed = new URL(cleanUrl);
@@ -406,7 +406,7 @@ export function useAudio() {
     }
   }, []);
 
-  // ── Stop Audio Playback ───────────────────
+  // Stop Audio Playback
   const stopAudio = useCallback(() => {
     if (playbackSourceRef.current) {
       try {
@@ -431,7 +431,7 @@ export function useAudio() {
     setIsPlaying(false);
   }, []);
 
-  // ── Cleanup on unmount ────────────────────
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       // Stop recording if active

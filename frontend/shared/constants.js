@@ -1,4 +1,4 @@
-/* ============================================
+/*
    VaaniBank AI — Shared Constants
    Union Bank of India | Team Vectora
 
@@ -8,9 +8,9 @@
    Both panels import from their own constants.js
    which re-exports these shared values plus
    panel-specific additions.
-   ============================================ */
+   */
 
-// ── Brand Colors ────────────────────────────
+// Brand Colors
 export const BRAND = {
   red: '#E8231A',
   redDark: '#C41810',
@@ -21,7 +21,7 @@ export const BRAND = {
   blueLight: '#e8eef8',
 };
 
-// ── Supported Languages ─────────────────────
+// Supported Languages
 export const LANGUAGES = [
   { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳' },
   { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳' },
@@ -35,7 +35,7 @@ export const LANGUAGES = [
   { code: 'ml', name: 'Malayalam', native: 'മലയാളം', flag: '🇮🇳' },
 ];
 
-// ── WebSocket Event Names ───────────────────
+// WebSocket Event Names
 export const WS_EVENTS = {
   // Server → Client
   SESSION_CONNECTED: 'session_connected',
@@ -61,7 +61,7 @@ export const WS_EVENTS = {
   STEP_COMPLETED: 'step_completed',
 };
 
-// ── Session Statuses ────────────────────────
+// Session Statuses
 export const SESSION_STATUS = {
   waiting: {
     label: 'Waiting',
@@ -85,7 +85,7 @@ export const SESSION_STATUS = {
   },
 };
 
-// ── Sentiment Labels ────────────────────────
+// Sentiment Labels
 export const SENTIMENTS = {
   calm: { label: 'Calm', emoji: '😊', color: '#16A34A' },
   frustrated: { label: 'Frustrated', emoji: '😤', color: '#DC2626' },
@@ -93,7 +93,7 @@ export const SENTIMENTS = {
   urgent: { label: 'Urgent', emoji: '🚨', color: '#9333EA' },
 };
 
-// ── App Meta ────────────────────────────────
+// App Meta
 export const APP_NAME = 'VaaniBank AI';
 export const APP_DESCRIPTION = 'Multilingual Voice-First Banking Assistant';
 export const BANK_NAME = 'Union Bank of India';

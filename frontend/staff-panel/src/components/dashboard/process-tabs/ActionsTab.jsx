@@ -1,7 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-// ─── Tab: Quick Actions ─────────────────────────────────────────────────────
+// Tab: Quick Actions
 export default function ActionsTab({ activeSession, sendMessage }) {
   const sessionId  = activeSession?.id ?? activeSession?.session_id ?? null;
   const tokenNo    = activeSession?.token_number ?? "—";

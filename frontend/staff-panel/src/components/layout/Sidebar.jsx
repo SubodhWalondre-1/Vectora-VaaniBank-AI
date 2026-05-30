@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Sidebar Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -38,8 +38,10 @@ function isSuperAdminRole(role) {
 
 function allowedNavForRole(role) {
   const r = (role || '').toLowerCase();
-  // Super Admin gets full access.
-  if (isSuperAdminRole(r)) return NAV_ITEMS;
+  // Super Admin gets access only to Admin Panel and Settings
+  if (isSuperAdminRole(r)) {
+    return NAV_ITEMS.filter((i) => ['admin', 'settings'].includes(i.id));
+  }
   if (r === 'manager') {
     return NAV_ITEMS.filter((i) => ['manager', 'settings'].includes(i.id));
   }

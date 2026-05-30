@@ -9,7 +9,7 @@ import Modal from "../ui/Modal";
 import Spinner from "../ui/Spinner";
 import { LANGUAGES } from "../../constants";
 
-// ─── PII Alert Banner ─────────────────────────────────────────────────────────
+// PII Alert Banner
 function PIIAlert({ onHide }) {
   useEffect(() => {
     const t = setTimeout(onHide, 3000);
@@ -35,7 +35,7 @@ function PIIAlert({ onHide }) {
   );
 }
 
-// ─── Sentiment Config ─────────────────────────────────────────────────────────
+// Sentiment Config
 const SENTIMENT_CONFIG = {
   calm: { label: "Calm", color: "#16a34a", bg: "rgba(22,163,74,0.12)" },
   frustrated: {
@@ -47,7 +47,7 @@ const SENTIMENT_CONFIG = {
   urgent: { label: "Urgent", color: "#7c3aed", bg: "rgba(124,58,237,0.12)" },
 };
 
-// ─── Staff-to-Customer Card ───────────────────────────────────────────────────
+// Staff-to-Customer Card
 function StaffSpeakCard({ exchange, exchangeIndex }) {
   const theme = useApp((s) => s.theme);
   const isDark = theme === "dark";
@@ -196,7 +196,7 @@ function StaffSpeakCard({ exchange, exchangeIndex }) {
   );
 }
 
-// ─── Customer-to-Staff Card ───────────────────────────────────────────────────
+// Customer-to-Staff Card
 function CustomerCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
   const theme = useApp((s) => s.theme);
   const isDark = theme === "dark";
@@ -378,7 +378,7 @@ function CustomerCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
   );
 }
 
-// ─── Exchange Card Router ─────────────────────────────────────────────────────
+// Exchange Card Router
 function ExchangeCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
   if (exchange.direction === "staff_to_customer") {
     return <StaffSpeakCard exchange={exchange} exchangeIndex={exchangeIndex} />;
@@ -393,7 +393,7 @@ function ExchangeCard({ exchange, exchangeIndex, offlineMode, staffLanguage }) {
   );
 }
 
-// ─── Idle Stats Card ──────────────────────────────────────────────────────────
+// Idle Stats Card
 function StatsCard({ label, value, sub, icon: Icon, color }) {
   const theme = useApp((s) => s.theme);
   const isDark = theme === "dark";
@@ -453,7 +453,7 @@ function StatsCard({ label, value, sub, icon: Icon, color }) {
   );
 }
 
-// ─── Walk-in Language Select Modal ────────────────────────────────────────────
+// Walk-in Language Select Modal
 function WalkInModal({ isOpen, onClose, onConfirm, loading }) {
   const [selectedLang, setSelectedLang] = useState(null);
 
@@ -520,7 +520,7 @@ function WalkInModal({ isOpen, onClose, onConfirm, loading }) {
   );
 }
 
-// ─── Idle State ───────────────────────────────────────────────────────────────
+// Idle State
 function IdleState({ analytics, onWalkIn }) {
   const staff = useApp((s) => s.staff);
   const theme = useApp((s) => s.theme);
@@ -798,7 +798,7 @@ function IdleState({ analytics, onWalkIn }) {
   );
 }
 
-// ─── Customer Speaking Indicator ─────────────────────────────────────────────
+// Customer Speaking Indicator
 function CustomerSpeakingIndicator({ isListening, isProcessing }) {
   if (!isListening && !isProcessing) return null;
 
@@ -878,7 +878,7 @@ function CustomerSpeakingIndicator({ isListening, isProcessing }) {
   );
 }
 
-// ─── Live Ghost Card (Real-time customer speech streaming) ───────────────────
+// Live Ghost Card (Real-time customer speech streaming)
 function LiveGhostCard({ text }) {
   if (!text) return null;
 
@@ -973,7 +973,7 @@ function LiveGhostCard({ text }) {
   );
 }
 
-// ─── Active Session State ─────────────────────────────────────────────────────
+// Active Session State
 function ActiveState({
   exchanges,
   offlineMode,
@@ -1081,7 +1081,7 @@ function ActiveState({
   );
 }
 
-// ─── ConversationPanel (root export) ─────────────────────────────────────────
+// ConversationPanel (root export)
 export default function ConversationPanel() {
   const activeSession = useApp((s) => s.activeSession);
   const exchanges = useApp((s) => s.exchanges);

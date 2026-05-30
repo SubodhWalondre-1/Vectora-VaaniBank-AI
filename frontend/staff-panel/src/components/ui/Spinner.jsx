@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Spinner Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 const colorMap = {
   red: {

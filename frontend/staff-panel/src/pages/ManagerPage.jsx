@@ -1,4 +1,4 @@
-/* ============================================
+/*
    VaaniBank AI — Manager Panel Page (Phase 2)
    Union Bank of India | Team Vectora
 
@@ -6,7 +6,7 @@
      1. Staff Management  — CRUD + password reset
      2. Branch Analytics  — charts + stat cards
      3. Session Logs      — table + CSV export + PII masked
-   ============================================ */
+   */
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import {
@@ -35,9 +35,7 @@ import {
   StatCard, RoleBadge, StatusDot,
 } from '../utils/managerUtils.jsx';
 
-// ══════════════════════════════════════════════
 //  SECTION 1 — Staff Management
-// ══════════════════════════════════════════════
 function StaffSection({ branchId }) {
   const [staff, setStaff]             = useState([]);
   const [loading, setLoading]         = useState(true);
@@ -235,9 +233,7 @@ function StaffSection({ branchId }) {
   );
 }
 
-// ══════════════════════════════════════════════
 //  SECTION 2 — Branch Analytics
-// ══════════════════════════════════════════════
 function AnalyticsSection({ branchId }) {
   const [fromDate, setFromDate] = useState(daysAgoStr(6));
   const [toDate, setToDate]     = useState(todayStr());
@@ -446,9 +442,7 @@ function AnalyticsSection({ branchId }) {
   );
 }
 
-// ══════════════════════════════════════════════
 //  SECTION 3 — Session Logs
-// ══════════════════════════════════════════════
 // PII masking rules: Aadhaar → XXXX-XXXX-1234  (last 4 only)
 function maskPII(text) {
   if (!text) return text;
@@ -750,9 +744,7 @@ function SessionLogsSection({ branchId }) {
   );
 }
 
-// ══════════════════════════════════════════════
 //  MAIN PAGE — tabs
-// ══════════════════════════════════════════════
 const TABS = [
   { id: 'staff',     label: 'Staff Management', icon: Users },
   { id: 'analytics', label: 'Branch Analytics', icon: BarChart3 },

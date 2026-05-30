@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel WebSocket Hook
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import toast from "react-hot-toast";
@@ -24,12 +24,12 @@ export function useWebSocket() {
 
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
 
-  // ── Store actions ─────────────────────────
+  // Store actions
   const setStaffMessage = useCustomerStore((s) => s.setStaffMessage);
   const setStatus = useCustomerStore((s) => s.setStatus);
   const endSessionStore = useCustomerStore((s) => s.endSession);
 
-  // ── Cleanup helper ────────────────────────
+  // Cleanup helper
   const cleanup = useCallback(() => {
     if (reconnectTimerRef.current) {
       clearTimeout(reconnectTimerRef.current);
@@ -43,14 +43,14 @@ export function useWebSocket() {
 
   // Audio playback is handled exclusively by LiveSessionPage via the store.
 
-  // ── Navigation callback ref ───────────────
+  // Navigation callback ref
   const navigateRef = useRef(null);
 
   const setNavigate = useCallback((navigateFn) => {
     navigateRef.current = navigateFn;
   }, []);
 
-  // ── Handle incoming messages ──────────────
+  // Handle incoming messages
   const handleMessage = useCallback(
     (event) => {
       let parsed;
@@ -136,7 +136,7 @@ export function useWebSocket() {
         }
 
         case "all_info_collected": {
-          // ── Auto-trigger when backend detects all info + docs collected ──
+          // Auto-trigger when backend detects all info + docs collected
           // Just show celebration UI/toast, do NOT duplicate fallback timer/bubble logic.
           // The standalone 'staff_message' + 'audio_ready' events sent by the backend handle the bubble.
           
@@ -282,11 +282,11 @@ export function useWebSocket() {
     [setStaffMessage, setStatus, endSessionStore],
   );
 
-  // ── Ref-based forwarders to break circular dependency ──
+  // Ref-based forwarders to break circular dependency
   const connectInternalRef = useRef(null);
   const attemptReconnectRef = useRef(null);
 
-  // ── Reconnect with exponential backoff ────
+  // Reconnect with exponential backoff
   const attemptReconnect = useCallback((tokenNumber) => {
     if (retriesRef.current >= MAX_RETRIES) {
       setConnectionStatus("error");
@@ -312,7 +312,7 @@ export function useWebSocket() {
     }, delay);
   }, []);
 
-  // ── Internal connect ──────────────────────
+  // Internal connect
   const connectInternal = useCallback(
     (tokenNumber) => {
       cleanup();
@@ -403,13 +403,13 @@ export function useWebSocket() {
     [handleMessage, cleanup],
   );
 
-  // ── Sync refs after each render ───────────
+  // Sync refs after each render
   useEffect(() => {
     connectInternalRef.current = connectInternal;
     attemptReconnectRef.current = attemptReconnect;
   });
 
-  // ── Public: connect ───────────────────────
+  // Public: connect
   const connect = useCallback(
     (tokenNumber, role = "customer") => {
       // Don't reconnect if already connected to the same token
@@ -432,7 +432,7 @@ export function useWebSocket() {
     [connectInternal],
   );
 
-  // ── Public: disconnect ────────────────────
+  // Public: disconnect
   const disconnect = useCallback(() => {
     intentionalCloseRef.current = true;
     cleanup();
@@ -448,7 +448,7 @@ export function useWebSocket() {
     setConnectionStatus("disconnected");
   }, [cleanup]);
 
-  // ── Public: sendMessage ───────────────────
+  // Public: sendMessage
   const sendMessage = useCallback((eventType, data = {}) => {
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
       console.warn("[WS] Cannot send — not connected");
@@ -469,7 +469,7 @@ export function useWebSocket() {
     return true;
   }, []);
 
-  // ── Public: sendBinary (raw ArrayBuffer for PCM audio streaming) ──
+  // Public: sendBinary (raw ArrayBuffer for PCM audio streaming)
   const sendBinary = useCallback((arrayBuffer) => {
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
       return false;
@@ -478,7 +478,7 @@ export function useWebSocket() {
     return true;
   }, []);
 
-  // ── Cleanup on unmount ────────────────────
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       intentionalCloseRef.current = true;

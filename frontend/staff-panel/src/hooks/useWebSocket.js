@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — WebSocket Hook
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useRef, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +44,7 @@ export function useWebSocket() {
   const [connectionStatus, setConnectionStatus] = useState("disconnected");
   const [isPeerConnected, setIsPeerConnected] = useState(false);
 
-  // ── Store actions ─────────────────────────
+  // Store actions
   const addExchange = useAppStore((s) => s.addExchange);
   const updateSuggestion = useAppStore((s) => s.updateSuggestion);
   const updateProcessStep = useAppStore((s) => s.updateProcessStep);
@@ -62,7 +62,7 @@ export function useWebSocket() {
   // Note: customerSelectedIntent and activeSession are read via
   // useAppStore.getState() inside handleMessage to avoid stale closures
 
-  // ── Cleanup helper ────────────────────────
+  // Cleanup helper
   const cleanup = useCallback(() => {
     if (reconnectTimerRef.current) {
       clearTimeout(reconnectTimerRef.current);
@@ -74,18 +74,18 @@ export function useWebSocket() {
     }
   }, []);
 
-  // ── navigate ref — prevent stale closure ────
+  // navigate ref — prevent stale closure
   const navigateRef = useRef(null);
   useEffect(() => {
     navigateRef.current = navigate;
   }, [navigate]);
 
-  // ── Customer-ended flag — stops polling after customer exits ────
+  // Customer-ended flag — stops polling after customer exits
   const customerEndedRef = useRef(false);
 
   const handleMessage = useCallback(
     (event) => {
-      // ── Outer try/catch: a malformed/unexpected event must NEVER crash React ──
+      // Outer try/catch: a malformed/unexpected event must NEVER crash React
       let parsed;
       try {
         parsed = JSON.parse(event.data);
@@ -235,7 +235,7 @@ export function useWebSocket() {
           case "ai_suggestion_ready": {
             setProcessing(false);
 
-            // ── Duplicate-suggestion guard ──────────────────────────────────────
+            // Duplicate-suggestion guard
             // Only block if BOTH Hindi AND customer-lang text are identical AND
             // it is the exact same exchange (same exchange_id from backend).
             // This prevents false-positive blocks when a NEW customer message
@@ -262,7 +262,6 @@ export function useWebSocket() {
               );
               break;
             }
-            // ───────────────────────────────────────────────────────────────────
 
             updateSuggestion({
               suggested_hindi: data.suggested_hindi,
@@ -418,8 +417,6 @@ export function useWebSocket() {
             setListening(false);
             setProcessing(false);
 
-            // Use ref to avoid stale closure
-            // Stop polling first by resetting store, then navigate
             setTimeout(() => {
               // endSession API call skip — session already ended by customer
               // Direct reset — skip endSession API call since customer already ended
@@ -647,7 +644,7 @@ export function useWebSocket() {
     ],
   );
 
-  // ── Reconnect with exponential backoff ────
+  // Reconnect with exponential backoff
   const attemptReconnect = useCallback((tokenNumber, role, jwtToken) => {
     if (retriesRef.current >= MAX_RETRIES) {
       setConnectionStatus("error");
@@ -673,7 +670,7 @@ export function useWebSocket() {
     }, delay);
   }, []);
 
-  // ── Internal connect ──────────────────────
+  // Internal connect
   const connectInternal = useCallback(
     (tokenNumber, role, jwtToken) => {
       if (wsRef.current) {
@@ -743,7 +740,7 @@ export function useWebSocket() {
     [handleMessage, cleanup, attemptReconnect],
   );
 
-  // ── Public: connect ───────────────────────
+  // Public: connect
   const connect = useCallback(
     (tokenNumber, role = "staff", jwtToken) => {
       customerEndedRef.current = false;
@@ -754,7 +751,7 @@ export function useWebSocket() {
     [connectInternal],
   );
 
-  // ── Public: disconnect ────────────────────
+  // Public: disconnect
   const disconnect = useCallback(() => {
     customerEndedRef.current = false;
     intentionalCloseRef.current = true;
@@ -771,7 +768,7 @@ export function useWebSocket() {
     setConnectionStatus("disconnected");
   }, [cleanup]);
 
-  // ── Public: sendMessage ───────────────────
+  // Public: sendMessage
   const sendMessage = useCallback((eventType, data = {}) => {
     if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
       console.warn("[WS] Cannot send — not connected");
@@ -793,7 +790,7 @@ export function useWebSocket() {
     return true;
   }, []);
 
-  // ── Public: sendStaffApproved ─────────────
+  // Public: sendStaffApproved
   // FIX: Always reads customer language from activeSession — never hardcodes 'hi'
   // FIX: Passes step_id so backend can look up translated text from DB
   const sendStaffApproved = useCallback(
@@ -852,7 +849,7 @@ export function useWebSocket() {
     [sendMessage, addExchange, setProcessing],
   );
 
-  // ── Public: sendStaffEdited ───────────
+  // Public: sendStaffEdited
   // FIX: Always reads customer language from activeSession — never hardcodes 'hi'
   const sendStaffEdited = useCallback(
     (response_text, target_language_code = null, step_id = null) => {
@@ -901,7 +898,7 @@ export function useWebSocket() {
     [sendMessage, addExchange, setProcessing],
   );
 
-  // ── Public: sendStepCompleted ─────────────
+  // Public: sendStepCompleted
   const sendStepCompleted = useCallback(
     (step_id) => {
       return sendMessage("step_completed", { step_id });
@@ -909,7 +906,7 @@ export function useWebSocket() {
     [sendMessage],
   );
 
-  // ── Public: sendEndSession ────────────────
+  // Public: sendEndSession
   const sendEndSession = useCallback(() => {
     const sent = sendMessage("end_session", {});
     if (sent) {
@@ -919,7 +916,7 @@ export function useWebSocket() {
     return sent;
   }, [sendMessage, setListening, setProcessing]);
 
-  // ── Public: sendEscalateToManager ────────
+  // Public: sendEscalateToManager
   const sendEscalateToManager = useCallback(
     (reason = "Staff escalation") => {
       const state = useAppStore.getState();
@@ -939,7 +936,7 @@ export function useWebSocket() {
     [sendMessage],
   );
 
-  // ── Public: sendForceNext ─────────────────
+  // Public: sendForceNext
   // CLIENT-SIDE ONLY — no WS message sent (backend doesn't support this event).
   // Advances navigatorState locally: removes currentFieldKey from missing[],
   // promotes it to collected[] with value '—', recalculates fill_percent,
@@ -1005,7 +1002,7 @@ export function useWebSocket() {
     [], // no dependencies — reads store directly
   );
 
-  // ── Public: sendEditField ─────────────────
+  // Public: sendEditField
   // CLIENT-SIDE ONLY — patches navigatorState and infoBoard locally.
   // Moves the field from missing[] → collected[] with the corrected value,
   // OR updates an existing collected[] entry.
@@ -1087,7 +1084,7 @@ export function useWebSocket() {
     [], // no dependencies — reads store directly
   );
 
-  // ── Public: sendUndoNext ──────────────────
+  // Public: sendUndoNext
   // CLIENT-SIDE ONLY — moves the last collected field back to the front of missing[].
   const sendUndoNext = useCallback(
     (previousFieldKey = null) => {
@@ -1142,7 +1139,7 @@ export function useWebSocket() {
     [], // no dependencies — reads store directly
   );
 
-  // ── Cleanup on unmount ────────────────────
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       intentionalCloseRef.current = true;

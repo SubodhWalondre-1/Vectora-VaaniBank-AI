@@ -74,7 +74,7 @@ function getItemPriority(item) {
 }
 
 const FIELD_LABELS = {
-  // ─ common ────────────────────────────────────────────────────
+  // common
   customer_name: {
     label: "Customer Name",
     icon: "👤",
@@ -110,7 +110,7 @@ const FIELD_LABELS = {
     icon: "📸",
     hindi: "क्या आप 2 passport size photos लाए हैं?",
   },
-  // ─ loan_enquiry ─────────────────────────────────────────
+  // loan_enquiry
   loan_type: {
     label: "Loan Type",
     icon: "💰",
@@ -143,7 +143,7 @@ const FIELD_LABELS = {
     hindi: "अभी कोई और loan ki EMI तो नहीं चल रही?",
   },
   age: { label: "Age", icon: "🎂", hindi: "आपकी उम्र कितनी है?" },
-  // ─ account_opening ─────────────────────────────────────
+  // account_opening
   account_type: {
     label: "Account Type",
     icon: "🏦",
@@ -164,7 +164,7 @@ const FIELD_LABELS = {
     icon: "👨‍👩‍👧",
     hindi: "खाते में nominee का नाम क्या रखना है?",
   },
-  // ─ kyc_update ────────────────────────────────────────────
+  // kyc_update
   update_type: {
     label: "Update Type",
     icon: "🔄",
@@ -190,7 +190,7 @@ const FIELD_LABELS = {
     icon: "📅",
     hindi: "आपका रि-केवाईसी कब तक करना है?",
   },
-  // ─ fixed_deposit ──────────────────────────────────────────
+  // fixed_deposit
   fd_type: {
     label: "FD Type",
     icon: "🏦",
@@ -207,7 +207,7 @@ const FIELD_LABELS = {
     icon: "📄",
     hindi: "क्या आपकी आय कर योग्य नहीं है? फॉर्म 15G/15H जमा करना होगा।",
   },
-  // ─ card_services ─────────────────────────────────────────
+  // card_services
   card_type: {
     label: "Card Type",
     icon: "💳",
@@ -228,7 +228,7 @@ const FIELD_LABELS = {
     icon: "🔢",
     hindi: "PIN भूल गए हैं या PIN रीसेट करना है?",
   },
-  // ─ balance_enquiry ────────────────────────────────────────
+  // balance_enquiry
   account_number_provided: {
     label: "Account Number",
     icon: "🏦",
@@ -242,7 +242,7 @@ const FIELD_LABELS = {
 };
 
 const FIELD_EXPLANATIONS = {
-  // ─ common ────────────────────────────────────────────────────
+  // common
   customer_name:
     "Customer's official name for legal bank account mapping and records.",
   purpose:
@@ -257,7 +257,7 @@ const FIELD_EXPLANATIONS = {
     "Primary communication link for securing OTPs, SMS alerts, and mobile app login.",
   photos_provided:
     "Physical passport photos required for card indexing and physical ledger records.",
-  // ─ loan_enquiry ─────────────────────────────────────────
+  // loan_enquiry
   loan_type:
     "Specifies the loan product category to calculate interest rates and options.",
   amount:
@@ -273,7 +273,7 @@ const FIELD_EXPLANATIONS = {
   existing_emis:
     "Deducted from monthly earnings to calculate net surplus disposable income.",
   age: "Verifies compliance with minimum/maximum age limits and senior citizen bonuses.",
-  // ─ account_opening ─────────────────────────────────────
+  // account_opening
   account_type:
     "Specifies savings or current account structures matching transactional needs.",
   pmjdy_eligible:
@@ -282,7 +282,7 @@ const FIELD_EXPLANATIONS = {
     "The seed capital deposited to activate and fund the new account ledger.",
   nominee_name:
     "Designates a beneficiary to secure and easily transfer funds in case of emergency.",
-  // ─ kyc_update ────────────────────────────────────────────
+  // kyc_update
   update_type:
     "Identifies whether address, phone number, nominee, or Aadhaar is being updated.",
   aadhaar_status:
@@ -293,14 +293,14 @@ const FIELD_EXPLANATIONS = {
     "Verifies if active phone number is mapped to the customer's secure account profile.",
   re_kyc_due:
     "Indicates the regulatory deadline to update customer details with the bank.",
-  // ─ fixed_deposit ──────────────────────────────────────────
+  // fixed_deposit
   fd_type:
     "Specifies the FD interest structure — reinvestment, monthly payout, or tax-saving.",
   senior_citizen:
     "Enables special senior citizen interest rate premium (+0.50% p.a.).",
   form_15g_applicable:
     "Tax declaration preventing TDS deduction for low-income or senior depositors.",
-  // ─ card_services ─────────────────────────────────────────
+  // card_services
   card_type:
     "Specifies network preference (RuPay for domestic/UPI, Visa/Mastercard for global).",
   card_issue:
@@ -308,13 +308,13 @@ const FIELD_EXPLANATIONS = {
   card_block_reason:
     "Provides the hotlisting trigger (theft, loss) to secure against fraud.",
   pin_issue: "Authenticates request to reset or issue a physical PIN envelope.",
-  // ─ balance_enquiry ────────────────────────────────────────
+  // balance_enquiry
   account_number_provided:
     "Unique customer account identifier required to fetch active balances.",
   identity_verified:
     "Security check using date-of-birth or OTP to prevent unauthorized access.",
 
-  // ─ documents (from docReadiness) ──────────────────────────
+  // documents (from docReadiness)
   aadhaar:
     "Mandatory biometrically-verified identity card for Aadhaar e-KYC validation.",
   pan: "Government-issued tax identity card mandatory for high-value monitoring.",
@@ -545,15 +545,12 @@ export default function InfoTab({
 
   // Undo — go back to previous question
   const handleUndo = useCallback(() => {
-    if (!sendUndoNext) return;
-    const history = questionHistoryRef.current;
-    const prevKey = history.length >= 2 ? history[history.length - 2] : null;
+    if (!sendUndoNext || !nav?.collected || nav.collected.length === 0) return;
+    const lastField = nav.collected[nav.collected.length - 1];
     setUndoing(true);
-    sendUndoNext(prevKey);
-    // Pop the last entry from history
-    questionHistoryRef.current = history.slice(0, -1);
-    setTimeout(() => setUndoing(false), 4000);
-  }, [sendUndoNext]);
+    sendUndoNext(lastField?.key ?? null);
+    setTimeout(() => setUndoing(false), 2000);
+  }, [sendUndoNext, nav?.collected]);
 
   // Save post-ask manual value — saves the field and advances to next
   const handlePostAskSave = useCallback(() => {
@@ -1063,7 +1060,7 @@ export default function InfoTab({
                       <div className="text-[10px] font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">
                         ✏️ Voice didn't capture? Type manually:
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-col gap-2">
                         <input
                           autoFocus
                           placeholder={`Enter ${nav.next_question.label}...`}
@@ -1073,28 +1070,30 @@ export default function InfoTab({
                             if (e.key === "Enter") handlePostAskSave();
                             if (e.key === "Escape") handlePostAskCancel();
                           }}
-                          className="flex-1 text-xs rounded-lg px-2.5 py-1.5 border outline-none"
+                          className="w-full text-xs rounded-lg px-2.5 py-1.5 border outline-none"
                           style={{
                             borderColor: "rgba(217,119,6,0.4)",
                             background: "var(--body-bg, #fff)",
                             color: "var(--text-primary)",
                           }}
                         />
-                        <button
-                          onClick={handlePostAskSave}
-                          disabled={savingPostAsk || !postAskEditValue.trim()}
-                          className="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-green-600 hover:bg-green-700 text-white border-none shrink-0 disabled:opacity-50"
-                          title="Save and move to next question"
-                        >
-                          {savingPostAsk ? "⏳" : "✓ Save & Next"}
-                        </button>
-                        <button
-                          onClick={handlePostAskCancel}
-                          className="px-2 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 border-none shrink-0"
-                          title="Cancel"
-                        >
-                          ×
-                        </button>
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={handlePostAskCancel}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 border-none"
+                            title="Cancel"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handlePostAskSave}
+                            disabled={savingPostAsk || !postAskEditValue.trim()}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold bg-green-600 hover:bg-green-700 text-white border-none disabled:opacity-50"
+                            title="Save and move to next question"
+                          >
+                            {savingPostAsk ? "⏳" : "✓ Save & Next"}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1156,7 +1155,7 @@ export default function InfoTab({
                       </button>
                     )}
                     {/* Undo — go back to previously asked question */}
-                    {sendUndoNext && questionHistoryRef.current.length >= 1 && (
+                    {sendUndoNext && nav?.collected && nav.collected.length >= 1 && (
                       <button
                         onClick={handleUndo}
                         disabled={undoing}
@@ -1247,27 +1246,26 @@ export default function InfoTab({
               </div>
             )}
 
-            {/* All Complete Banner */}
-            {nav.all_complete && nav.phase !== "close" && (
-              <div className="p-2.5 text-center text-xs font-bold text-green-700 dark:text-green-400 bg-green-50/50 dark:bg-green-950/20 border border-green-200/40 rounded-xl">
-                🎉 All information collected!
-              </div>
-            )}
           </div>
         )}
 
         {/* Unified STILL NEEDED Section */}
         <div className="flex flex-col gap-2">
-          <div className="text-xs font-bold text-amber-600 dark:text-amber-400 flex items-center justify-between px-1">
+          <div className={`text-xs font-bold flex items-center justify-between px-1 ${
+            pendingItems.length > 0
+              ? "text-amber-600 dark:text-amber-400"
+              : "text-green-600 dark:text-green-400"
+          }`}>
             <span className="flex items-center gap-1">
-              <span>⏳</span>
+              <span>{pendingItems.length > 0 ? "⏳" : "✅"}</span>
               <span>
-                STILL NEEDED{" "}
-                {pendingItems.length > 0 ? `(${pendingItems.length})` : ""}
+                {pendingItems.length > 0
+                  ? `STILL NEEDED (${pendingItems.length})`
+                  : "ALL ITEMS COLLECTED"}
               </span>
             </span>
             <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500 uppercase">
-              Action Required
+              {pendingItems.length > 0 ? "Action Required" : "Ready"}
             </span>
           </div>
 

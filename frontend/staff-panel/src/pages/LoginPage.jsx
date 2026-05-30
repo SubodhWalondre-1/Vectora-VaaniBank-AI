@@ -1,8 +1,8 @@
-/* ============================================
+/*
    VaaniBank AI — Login Page (Redesigned v3)
    Split Layout: White brand panel + Dark form panel
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -33,19 +33,69 @@ export default function LoginPage() {
   const [fieldErrors,  setFieldErrors]  = useState({});
   const [demoOpen,     setDemoOpen]     = useState(false);
   const [generating,   setGenerating]   = useState(false);
+  const [preGeneratedCreds, setPreGeneratedCreds] = useState(null);
+
+  // Pre-fetch dynamic demo credentials and pre-cache layout modules in background on mount
+  useEffect(() => {
+    let active = true;
+
+    // Pre-fetch dynamic demo credentials from backend DB
+    const prefetchCredentials = async () => {
+      try {
+        const res = await authAPI.generateDemoTeller();
+        if (res && res.success && active) {
+          setPreGeneratedCreds(res);
+        }
+      } catch (err) {
+        console.warn("Background demo credentials pre-fetch failed:", err);
+      }
+    };
+
+    // Pre-load dynamic imports for main lazy loaded pages to ensure instant navigation transitions
+    const prefetchLazyPages = () => {
+      import('./DashboardPage').catch(() => {});
+      import('./HistoryPage').catch(() => {});
+    };
+
+    prefetchCredentials();
+    const pageTimer = setTimeout(prefetchLazyPages, 800);
+
+    return () => {
+      active = false;
+      clearTimeout(pageTimer);
+    };
+  }, []);
 
   const handleGenerateDemoTeller = useCallback(async () => {
+    setError('');
+    setFieldErrors({});
+
+    // 1. If pre-fetched credentials are ready, use them instantly (0ms latency!)
+    if (preGeneratedCreds) {
+      const creds = preGeneratedCreds;
+      setStaffId(creds.staff_id);
+      setUsername(creds.username);
+      setPassword(creds.password);
+
+      // Nullify current pre-fetched, and queue a new pre-fetch in the background
+      setPreGeneratedCreds(null);
+      authAPI.generateDemoTeller()
+        .then((res) => {
+          if (res && res.success) setPreGeneratedCreds(res);
+        })
+        .catch(() => {});
+      return;
+    }
+
+    // 2. Fallback: normal API call if click happens before background pre-fetch is finished
     if (generating) return;
     setGenerating(true);
-    setError('');
     try {
       const res = await authAPI.generateDemoTeller();
       if (res && res.success) {
         setStaffId(res.staff_id);
         setUsername(res.username);
         setPassword(res.password);
-        setError('');
-        setFieldErrors({});
       } else {
         setError('Failed to generate dynamic demo credentials.');
       }
@@ -59,7 +109,7 @@ export default function LoginPage() {
     } finally {
       setGenerating(false);
     }
-  }, [generating]);
+  }, [preGeneratedCreds, generating]);
 
   useEffect(() => {
     if (isAuthenticated) {

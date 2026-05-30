@@ -1,32 +1,26 @@
-/* ============================================
+/*
    VaaniBank AI — Staff Panel State (Zustand)
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist } from "zustand/middleware";
 import { authAPI, sessionAPI, processAPI } from "../services/api";
 
-// ═══════════════════════════════════════════════
 //  MAIN APP STORE
-// ═══════════════════════════════════════════════
 
 const useAppStore = create(
   persist(
     immer((set, get) => ({
-      // ─────────────────────────────────────────
       //  HYDRATION FLAG (Zustand persist)
-      // ─────────────────────────────────────────
       _hasHydrated: false,
       setHasHydrated: (value) =>
         set((state) => {
           state._hasHydrated = value;
         }),
 
-      // ─────────────────────────────────────────
       //  AUTH STATE
-      // ─────────────────────────────────────────
       staff: null,
       isAuthenticated: false,
       token: null,
@@ -62,14 +56,14 @@ const useAppStore = create(
       },
 
       logout: async () => {
-        try {
-          await authAPI.logout();
-        } catch {
-          // logout even if API fails
-        }
-
+        // Clear storage synchronously for immediate UI feedback
         localStorage.removeItem("vaanibank_token");
         localStorage.removeItem("vaanibank_staff");
+
+        // Execute API logout call in the background without blocking the UI
+        authAPI.logout().catch((err) => {
+          console.warn("Backend logout request failed (non-fatal):", err);
+        });
 
         set((state) => {
           state.staff = null;
@@ -130,9 +124,7 @@ const useAppStore = create(
         }
       },
 
-      // ─────────────────────────────────────────
       //  SESSION STATE
-      // ─────────────────────────────────────────
       activeSession: null,
       sessionStatus: "idle", // idle | active | ended
       exchanges: [],
@@ -147,7 +139,7 @@ const useAppStore = create(
       isListening: false,
       isProcessing: false,
       liveTranscript: null,
-      // ── Conversation Intelligence (InfoBoard) ──
+      // Conversation Intelligence (InfoBoard)
       infoBoard: null, // { collected_info, completion_percent, next_question_hindi, next_question_customer_lang, auto_step_completed }
 
       createSession: async (data) => {
@@ -427,9 +419,7 @@ const useAppStore = create(
         });
       },
 
-      // ─────────────────────────────────────────
       //  SIDEBAR COLLAPSED STATE
-      // ─────────────────────────────────────────
       sidebarCollapsed: false,
 
       toggleSidebar: () => {
@@ -438,9 +428,7 @@ const useAppStore = create(
         });
       },
 
-      // ─────────────────────────────────────────
       //  STAFF LANGUAGE STATE
-      // ─────────────────────────────────────────
       staffLanguage: "hi", // 'hi' | 'en'
 
       setStaffLanguage: (lang) => {
@@ -449,9 +437,7 @@ const useAppStore = create(
         });
       },
 
-      // ─────────────────────────────────────────
       //  THEME STATE
-      // ─────────────────────────────────────────
       theme: "light",
 
       toggleTheme: () => {
@@ -478,9 +464,7 @@ const useAppStore = create(
         document.documentElement.classList.toggle("dark", theme === "dark");
       },
 
-      // ─────────────────────────────────────────
       //  NOTIFICATION / PII ALERT STATE
-      // ─────────────────────────────────────────
       piiAlert: null,
 
       showPIIAlert: (type) => {
@@ -545,13 +529,11 @@ const useAppStore = create(
   ),
 );
 
-// ═══════════════════════════════════════════════
 //  HOOK EXPORT
-// ═══════════════════════════════════════════════
 
 export const useApp = useAppStore;
 
-// ── Granular selectors for performance (P1 audit fix) ───────────────
+// Granular selectors for performance (P1 audit fix)
 
 /** Auth state — login page, header, guards */
 export const useAuth = () =>

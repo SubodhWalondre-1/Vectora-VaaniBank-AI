@@ -1,15 +1,15 @@
-/* ============================================
+/*
    VaaniBank AI — Customer Panel Theme
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ──────────────────────────────────────────────
+/*
    CSS Variables — Light Theme (default)
-   ────────────────────────────────────────────── */
+   */
 :root {
   --sidebar-bg: #003087;
   --sidebar-text: #ffffff;
@@ -67,9 +67,9 @@
   --lang-card-active-text: #FFFFFF;
 }
 
-/* ──────────────────────────────────────────────
+/*
    CSS Variables — Dark Theme
-   ────────────────────────────────────────────── */
+   */
 [data-theme="dark"],
 .dark {
   --sidebar-bg: #001a52;
@@ -128,9 +128,9 @@
   --lang-card-active-text: #FFFFFF;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Base Styles
-   ────────────────────────────────────────────── */
+   */
 html {
   scroll-behavior: smooth;
 }
@@ -156,9 +156,9 @@ body {
   overflow: hidden;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Scrollbar Styles
-   ────────────────────────────────────────────── */
+   */
 ::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -185,9 +185,9 @@ body {
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Selection
-   ────────────────────────────────────────────── */
+   */
 ::selection {
   background-color: rgba(0, 48, 135, 0.2);
   color: var(--text-primary);
@@ -198,9 +198,9 @@ body {
   background-color: rgba(26, 77, 181, 0.3);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Pulse (generic)
-   ────────────────────────────────────────────── */
+   */
 @keyframes pulse-gentle {
   0%, 100% {
     opacity: 1;
@@ -214,9 +214,9 @@ body {
   animation: pulse-gentle 2s ease-in-out infinite;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Fade In
-   ────────────────────────────────────────────── */
+   */
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -234,9 +234,9 @@ body {
   animation: fade-in 0.6s ease-out forwards;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Slide Up
-   ────────────────────────────────────────────── */
+   */
 @keyframes slide-up {
   from {
     opacity: 0;
@@ -252,9 +252,9 @@ body {
   animation: slide-up 0.35s ease-out forwards;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Slide Down
-   ────────────────────────────────────────────── */
+   */
 @keyframes slide-down {
   from {
     opacity: 0;
@@ -270,9 +270,9 @@ body {
   animation: slide-down 0.35s ease-out forwards;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Slide In Left / Right
-   ────────────────────────────────────────────── */
+   */
 @keyframes slide-in-left {
   from {
     opacity: 0;
@@ -303,9 +303,9 @@ body {
   animation: slide-in-right 0.35s ease-out forwards;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Scale In (for modals / popups)
-   ────────────────────────────────────────────── */
+   */
 @keyframes scale-in {
   from {
     opacity: 0;
@@ -321,9 +321,9 @@ body {
   animation: scale-in 0.25s ease-out forwards;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Animation: Mic Pulse (recording indicator)
-   ────────────────────────────────────────────── */
+   */
 @keyframes mic-pulse {
   0% {
     box-shadow: 0 0 0 0 var(--mic-btn-glow);
@@ -340,9 +340,9 @@ body {
   animation: mic-pulse 1.2s ease-out infinite;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Live Indicator — Blinking Red/Green Dot
-   ────────────────────────────────────────────── */
+   */
 @keyframes live-blink {
   0%, 100% {
     opacity: 1;
@@ -376,9 +376,9 @@ body {
   height: 12px;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Confidence Bar
-   ────────────────────────────────────────────── */
+   */
 .confidence-bar {
   width: 100%;
   height: 6px;
@@ -406,9 +406,9 @@ body {
   background-color: var(--error);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Skeleton Loading
-   ────────────────────────────────────────────── */
+   */
 @keyframes skeleton-shimmer {
   0% {
     background-position: -200% 0;
@@ -430,9 +430,9 @@ body {
   border-radius: 6px;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Card Styles (utility classes)
-   ────────────────────────────────────────────── */
+   */
 .card {
   background-color: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -450,9 +450,9 @@ body {
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Service Card (customer-panel specific)
-   ────────────────────────────────────────────── */
+   */
 .service-card {
   background-color: var(--service-card-bg);
   border: 1px solid var(--service-card-border);
@@ -478,9 +478,9 @@ body {
   box-shadow: 0 8px 24px rgb(0 0 0 / 0.3);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Language Card (customer-panel specific)
-   ────────────────────────────────────────────── */
+   */
 .lang-card {
   background-color: var(--lang-card-bg);
   border: 2px solid var(--lang-card-border);
@@ -512,9 +512,9 @@ body {
   box-shadow: 0 8px 24px rgb(0 0 0 / 0.3);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Tooltip
-   ────────────────────────────────────────────── */
+   */
 .tooltip {
   position: relative;
 }
@@ -543,9 +543,9 @@ body {
   transform: translateX(-50%) scale(1);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Audio Waveform Animation
-   ────────────────────────────────────────────── */
+   */
 @keyframes wave-bar {
   0%, 100% {
     height: 4px;
@@ -575,17 +575,17 @@ body {
 .audio-wave__bar:nth-child(4) { animation-delay: 0.45s; }
 .audio-wave__bar:nth-child(5) { animation-delay: 0.6s; }
 
-/* ──────────────────────────────────────────────
+/*
    Utility: Focus Ring
-   ────────────────────────────────────────────── */
+   */
 .focus-ring:focus-visible {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Utility: Truncate multiline
-   ────────────────────────────────────────────── */
+   */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -600,9 +600,9 @@ body {
   overflow: hidden;
 }
 
-/* ──────────────────────────────────────────────
+/*
    Safe Area (mobile notch support)
-   ────────────────────────────────────────────── */
+   */
 .safe-area-top {
   padding-top: env(safe-area-inset-top, 0);
 }
@@ -611,9 +611,9 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* ──────────────────────────────────────────────
+/*
    Print Styles
-   ────────────────────────────────────────────── */
+   */
 @media print {
   body {
     background: white;

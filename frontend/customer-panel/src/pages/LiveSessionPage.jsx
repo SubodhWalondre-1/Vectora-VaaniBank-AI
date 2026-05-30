@@ -1,9 +1,9 @@
-/* ============================================
+/*
    VaaniBank AI — Live Session Page
    Union Bank of India | Team Vectora
    URL: /session/:token
    Two sections: Service Select → Live Conversation
-   ============================================ */
+   */
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -24,14 +24,14 @@ import { SERVICES, BRAND, APP_NAME, API_BASE_URL } from "../constants";
 import { useCustomerApp } from "../context/AppContext";
 import { useWebSocket } from "../hooks/useWebSocket";
 import { useAudio } from "../hooks/useAudio";
-import { transcribeAudio, getCollectedInfo } from "../services/api";
+import { transcribeAudio, getCollectedInfo, getPublicSettings } from "../services/api";
 import { DEMO_SCRIPT, DEMO_AI_RESPONSES } from "../demoData";
 import DocumentChecklist from "../components/DocumentChecklist";
 import ServiceSelectionGrid from "../components/ServiceSelectionGrid";
 import ConversationBubble from "../components/ConversationBubble";
 import MicControl from "../components/MicControl";
 
-// ── Animation Variants ──────────────────────
+// Animation Variants
 const pageVariants = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 0.4, staggerChildren: 0.06 } },
@@ -76,14 +76,12 @@ const SERVICE_EMOJIS = {
   fixed_deposit: "🎙️",
 };
 
-// ═══════════════════════════════════════════════
 //  LIVE SESSION PAGE
-// ═══════════════════════════════════════════════
 export default function LiveSessionPage() {
   const { token } = useParams();
   const navigate = useNavigate();
 
-  // ── Store ─────────────────────────────────
+  // Store
   const tokenNumber = useCustomerApp((s) => s.tokenNumber);
   const sessionId = useCustomerApp((s) => s.sessionId);
   const customerLanguage = useCustomerApp((s) => s.customerLanguage);
@@ -106,7 +104,7 @@ export default function LiveSessionPage() {
   // Walk-in customer  = speaker mode (Staff speaks, customer listens)
   const isQrCustomer = entryMethod === "qr_scan";
 
-  // ── Hooks ─────────────────────────────────
+  // Hooks
   const {
     connect,
     disconnect,
@@ -126,7 +124,7 @@ export default function LiveSessionPage() {
     error: audioError,
   } = useAudio();
 
-  // ── Local State ───────────────────────────
+  // Local State
   const [showConversation, setShowConversation] = useState(
     chatHistory.length > 0 || !!selectedService,
   );
@@ -137,6 +135,18 @@ export default function LiveSessionPage() {
   const [messages, setMessages] = useState(chatHistory);
   const [demoIndex, setDemoIndex] = useState(0);
   const [isDemoRunning, setIsDemoRunning] = useState(false);
+  const [demoModeFromServer, setDemoModeFromServer] = useState(false);
+
+  // Fetch public system settings on mount
+  useEffect(() => {
+    getPublicSettings()
+      .then((data) => {
+        setDemoModeFromServer(!!data?.demo_mode);
+      })
+      .catch((err) => {
+        console.error("Failed to load public settings:", err);
+      });
+  }, []);
 
   // Sync messages from store chatHistory
   useEffect(() => {
@@ -145,13 +155,13 @@ export default function LiveSessionPage() {
 
   const lastProcessedSeqRef = useRef(staffMessageSeq);
 
-  // ── Smart Input Popup state ───────────────
+  // Smart Input Popup state
   const [inputRequest, setInputRequest] = useState(null); // { field_type, field_label, field_label_customer, request_id }
   const [inputValue, setInputValue] = useState("");
   const [inputSubmitting, setInputSubmitting] = useState(false);
   const [inputDone, setInputDone] = useState(false);
 
-  // ── All info collected banner state ───────────────────────────
+  // All info collected banner state
   const [showAllCollectedBanner, setShowAllCollectedBanner] = useState(false);
   const [allCollectedText, setAllCollectedText] = useState("");
 
@@ -163,7 +173,7 @@ export default function LiveSessionPage() {
   const displayToken = tokenNumber || token || "N/A";
   const sessionToken = token || tokenNumber;
 
-  // ── Connect WebSocket ─────────────────────
+  // Connect WebSocket
   useEffect(() => {
     if (token) {
       setNavigate(navigate);
@@ -174,7 +184,7 @@ export default function LiveSessionPage() {
     };
   }, [token]);
 
-  // ── Session timer ─────────────────────────
+  // Session timer
   useEffect(() => {
     if (isConnected) {
       timerRef.current = setInterval(() => setSessionTimer((p) => p + 1), 1000);
@@ -184,7 +194,7 @@ export default function LiveSessionPage() {
     };
   }, [isConnected]);
 
-  // ── Restore checklist on mount/refresh ────
+  // Restore checklist on mount/refresh
   useEffect(() => {
     if (sessionId) {
       getCollectedInfo(sessionId)
@@ -202,7 +212,7 @@ export default function LiveSessionPage() {
     }
   }, [sessionId, setDocChecklist]);
 
-  // ── Unlock Web Audio context on first user interaction ──
+  // Unlock Web Audio context on first user interaction
   useEffect(() => {
     const unlock = () => {
       unlockAudio();
@@ -218,7 +228,7 @@ export default function LiveSessionPage() {
     };
   }, [unlockAudio, unlockAudioStore]);
 
-  // ── Staff message → show in chat + play audio ─
+  // Staff message → show in chat + play audio
   useEffect(() => {
     // Only process if it's a NEW message sequence
     if (
@@ -249,7 +259,7 @@ export default function LiveSessionPage() {
     }
   }, [staffMessageSeq, isAudioUnlocked]);
 
-  // ── Listen for transcription ready (from useWebSocket) ──
+  // Listen for transcription ready (from useWebSocket)
   useEffect(() => {
     const handleTranscription = (e) => {
       const { text_original, text_translated } = e.detail;
@@ -274,7 +284,7 @@ export default function LiveSessionPage() {
     };
   }, [addCustomerMessage]);
 
-  // ── Transcription timeout safety (revert to mic after 5s if stuck) ──
+  // Transcription timeout safety (revert to mic after 5s if stuck)
   useEffect(() => {
     let timeoutId;
     if (isTranscribing) {
@@ -290,7 +300,7 @@ export default function LiveSessionPage() {
     };
   }, [isTranscribing]);
 
-  // ── Auto-scroll ───────────────────────────
+  // Auto-scroll
   useEffect(() => {
     if (conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight;
@@ -304,7 +314,7 @@ export default function LiveSessionPage() {
     return `${m}:${(s % 60).toString().padStart(2, "0")}`;
   };
 
-  // ── Service Select ────────────────────────
+  // Service Select
   const handleServiceSelect = useCallback(
     (service) => {
       unlockAudio();
@@ -318,10 +328,8 @@ export default function LiveSessionPage() {
     [sendMessage, unlockAudio, setSelectedServiceStore],
   );
 
-  // ══════════════════════════════════════════════
   //  TAP-TO-LISTEN  (tap once = start, tap again = stop+send)
   //  Also works as hold-to-speak on desktop (mousedown/mouseup)
-  // ══════════════════════════════════════════════
 
   // Internal: start mic
   const _startMic = useCallback(async () => {
@@ -366,7 +374,7 @@ export default function LiveSessionPage() {
     setIsTranscribing(true);
   }, [isRecording, isTranscribing, stopRecording, sendMessage]);
 
-  // ── End Session ───────────────────────────
+  // End Session
   // NOTE: Do NOT navigate here manually. The WS "session_ended" event
   // from the backend carries collected_data + intent and navigates to
   // /summary automatically via useWebSocket.js handler.
@@ -397,7 +405,7 @@ export default function LiveSessionPage() {
     }
   }, [sendMessage, endSessionStore, navigate, sessionId]);
 
-  // ── Demo Mode ─────────────────────────────
+  // Demo Mode
   const startDemo = useCallback(() => {
     if (isDemoRunning) {
       clearInterval(demoIntervalRef.current);
@@ -440,7 +448,7 @@ export default function LiveSessionPage() {
     };
   }, []);
 
-  // ── Smart Input Popup — WS event listener ────────
+  // Smart Input Popup — WS event listener
   useEffect(() => {
     const onInputRequest = (e) => {
       setInputRequest(e.detail);
@@ -462,7 +470,7 @@ export default function LiveSessionPage() {
     };
   }, []);
 
-  // ── Intent Notification Popup — for intents like balance enquiry ──
+  // Intent Notification Popup — for intents like balance enquiry
   const [intentNotif, setIntentNotif] = useState(null); // { intent, title, message, message_en, icon }
 
   useEffect(() => {
@@ -511,7 +519,7 @@ export default function LiveSessionPage() {
   const getServiceLabel = (service) =>
     service.labels?.[customerLanguageCode] || service.labels?.en || service.id;
 
-  // ── Smart Input Popup submit ───────────────
+  // Smart Input Popup submit
   const handleInputSubmit = useCallback(() => {
     if (!inputRequest || !inputValue.trim() || inputSubmitting) return;
     setInputSubmitting(true);
@@ -580,9 +588,7 @@ export default function LiveSessionPage() {
   };
   const langLabel = LANG_LABELS[customerLanguageCode] || LANG_LABELS["hi"];
 
-  // ────────────────────────────────────────────
   //  RENDER
-  // ────────────────────────────────────────────
   return (
     <motion.div
       variants={pageVariants}
@@ -1093,7 +1099,7 @@ export default function LiveSessionPage() {
         </AnimatePresence>
 
         {/* DEMO BUTTON */}
-        {showConversation && (
+        {showConversation && demoModeFromServer && (
           <div style={styles.demoFloatingWrap}>
             <AnimatePresence>
               {isDemoRunning && (
@@ -1128,9 +1134,7 @@ export default function LiveSessionPage() {
   );
 }
 
-// ═══════════════════════════════════════
 //  STYLES
-// ═══════════════════════════════════════
 const styles = {
   page: {
     width: "100%",

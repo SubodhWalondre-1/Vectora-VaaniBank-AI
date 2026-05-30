@@ -29,7 +29,7 @@ export default function MicControl({
   onStopMicRef.current = onStopMic;
   unlockAudioRef.current = unlockAudio;
 
-  // ── Touch start (mobile tap-toggle) ──
+  // Touch start (mobile tap-toggle)
   const handleTouchStart = useCallback((e) => {
     e.preventDefault();
     unlockAudioRef.current();
@@ -43,13 +43,13 @@ export default function MicControl({
     }
   }, []);
 
-  // ── Touch end (mobile tap-toggle no-op) ──
+  // Touch end (mobile tap-toggle no-op)
   const handleTouchEnd = useCallback((e) => {
     e.preventDefault();
     touchActiveRef.current = false;
   }, []);
 
-  // ── Touch events manual passive listener wrapper to prevent console error ──
+  // Touch events manual passive listener wrapper to prevent console error
   const micButtonRef = useCallback((node) => {
     if (micButtonElementRef.current) {
       const prevNode = micButtonElementRef.current;
@@ -81,7 +81,7 @@ export default function MicControl({
     }
   }, [handleTouchStart, handleTouchEnd]);
 
-  // ── Mouse down (desktop tap-toggle) ──────
+  // Mouse down (desktop tap-toggle)
   const handleMouseDown = useCallback((e) => {
     if (touchActiveRef.current) return; // already handled by touch
     unlockAudioRef.current();
@@ -94,7 +94,7 @@ export default function MicControl({
     }
   }, []);
 
-  // ── Mouse up / Mouse leave (no-op for tap-to-talk) ──────
+  // Mouse up / Mouse leave (no-op for tap-to-talk)
   const handleMouseUp = useCallback((e) => {
     // No-op to allow tap-to-speak and tap-to-close behavior
   }, []);

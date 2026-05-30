@@ -1,10 +1,10 @@
-/* ============================================
+/*
    VaaniBank AI — Document Readiness Checklist
    Union Bank of India | Team Vectora
 
    Floating card component that shows on customer's
    phone when backend sends document_checklist WS event.
-   ============================================ */
+   */
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,7 +12,7 @@ import { ChevronDown, ChevronUp, FileCheck2 } from "lucide-react";
 import { BRAND } from "../constants";
 import { useCustomerApp } from "../context/AppContext";
 
-// ── Localized header labels ─────────────────
+// Localized header labels
 const HEADERS = {
   hi: {
     title: "आवश्यक दस्तावेज़",
@@ -96,7 +96,7 @@ export default function DocumentChecklist({ sendMessage, languageCode }) {
   const lang = (languageCode || "hi").split("-")[0];
   const labels = HEADERS[lang] || HEADERS.en;
 
-  // ── Sync with store (mount/refresh) ───────
+  // Sync with store (mount/refresh)
   useEffect(() => {
     if (storeDocChecklist?.checklist?.length > 0) {
       const merged = storeDocChecklist.checklist.map((doc) => ({
@@ -109,7 +109,7 @@ export default function DocumentChecklist({ sendMessage, languageCode }) {
     }
   }, [storeDocChecklist]);
 
-  // ── Listen for WS events — MERGE with local confirmations ──
+  // Listen for WS events — MERGE with local confirmations
   useEffect(() => {
     const onChecklist = (e) => {
       const data = e.detail;
@@ -130,7 +130,7 @@ export default function DocumentChecklist({ sendMessage, languageCode }) {
       window.removeEventListener("vaani_document_checklist", onChecklist);
   }, []);
 
-  // ── Tap to toggle a document ──────────────
+  // Tap to toggle a document
   const handleToggle = useCallback(
     (docId, docLabel, currentState) => {
       const newState = !currentState;
@@ -157,7 +157,7 @@ export default function DocumentChecklist({ sendMessage, languageCode }) {
     [sendMessage],
   );
 
-  // ── Derived counts ────────────────────────
+  // Derived counts
   const total = checklist.length;
   const confirmed = checklist.filter((d) => d.confirmed).length;
   const pct = total > 0 ? Math.round((confirmed / total) * 100) : 0;
@@ -326,9 +326,7 @@ export default function DocumentChecklist({ sendMessage, languageCode }) {
   );
 }
 
-// ═══════════════════════════════════════
 //  STYLES
-// ═══════════════════════════════════════
 const styles = {
   wrapper: {
     margin: "0 12px",

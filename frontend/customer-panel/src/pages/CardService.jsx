@@ -1,9 +1,9 @@
-/* ============================================================
+/*
    VaaniBank AI — Card Service Form Configuration
    Union Bank of India | Team Vectora
-   ============================================================ */
+   */
 
-// ── Card Service Field Labels ───────────────────────────────────────────────
+// Card Service Field Labels
 export const CARD_FIELD_LABELS = {
   // 1. Basic Details
   customer_id: {
@@ -300,7 +300,7 @@ export const CARD_FIELD_LABELS = {
   },
 };
 
-// ── Card Service Field Options ──────────────────────────────────────────────
+// Card Service Field Options
 export const CARD_FIELD_OPTIONS = {
   address_type: [
     { value: "communication", label: { en: "Communication", hi: "पत्राचार" } },
@@ -336,7 +336,7 @@ export const CARD_FIELD_OPTIONS = {
   ],
 };
 
-// ── Card Service Field Groups ───────────────────────────────────────────────
+// Card Service Field Groups
 export const CARD_INTENT_FIELDS = [
   // Basic Details
   "customer_id",

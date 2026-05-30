@@ -1,10 +1,10 @@
-/* ============================================
+/*
    VaaniBank AI — Add Staff Modal
    Phase 5 | Union Bank of India | Team Vectora
 
    Manager opens this to create a new teller/supervisor.
    On success → CredentialsModal shows plain password once.
-   ============================================ */
+   */
 
 import { useState } from 'react';
 import { UserPlus, X } from 'lucide-react';
@@ -36,7 +36,7 @@ export default function AddStaffModal({ isOpen, onClose, onCreated }) {
   const [creds, setCreds]       = useState(null);   // { staffName, username, password }
   const [showCreds, setShowCreds] = useState(false);
 
-  // ── Field handlers ────────────────────────
+  // Field handlers
   const set = (key, value) => setForm((f) => ({ ...f, [key]: value }));
 
   const toggleLang = (lang) =>
@@ -47,7 +47,7 @@ export default function AddStaffModal({ isOpen, onClose, onCreated }) {
         : [...f.languages_known, lang],
     }));
 
-  // ── Submit ────────────────────────────────
+  // Submit
   const handleSubmit = async () => {
     setError('');
 

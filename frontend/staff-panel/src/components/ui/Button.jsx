@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Button Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { motion } from 'framer-motion';
 

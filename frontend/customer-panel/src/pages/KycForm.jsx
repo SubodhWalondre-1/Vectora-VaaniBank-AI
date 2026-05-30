@@ -1,9 +1,9 @@
-/* ============================================================
+/*
    VaaniBank AI — KYC Form Configuration
    Union Bank of India | Team Vectora
-   ============================================================ */
+   */
 
-// ── KYC Field Labels ────────────────────────────────────────────────────────
+// KYC Field Labels
 export const KYC_FIELD_LABELS = {
   // 1. Basic Account Information
   customer_name: {
@@ -447,7 +447,7 @@ export const KYC_FIELD_LABELS = {
   },
 };
 
-// ── KYC Field Options ───────────────────────────────────────────────────────
+// KYC Field Options
 export const KYC_FIELD_OPTIONS = {
   constitution: [
     {
@@ -649,7 +649,7 @@ export const KYC_FIELD_OPTIONS = {
   ],
 };
 
-// ── KYC Field Groups ────────────────────────────────────────────────────────
+// KYC Field Groups
 export const KYC_INTENT_FIELDS = [
   // Basic Info
   "customer_name",

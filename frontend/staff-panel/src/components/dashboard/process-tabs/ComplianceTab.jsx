@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-// ─── RBI Compliance Data ────────────────────────────────────────────────────
+// RBI Compliance Data
 const COMPLIANCE_MAP = {
   account_opening: {
     formRef: "A-101 (AOF)",
@@ -75,7 +75,7 @@ const COMPLIANCE_MAP = {
   },
 };
 
-// ─── Tab: RBI Compliance Checklist ───────────────────────────────────────────
+// Tab: RBI Compliance Checklist
 export default function ComplianceTab({ intentKey, completedCount, keyEntities }) {
   const compData = COMPLIANCE_MAP[intentKey] ?? COMPLIANCE_MAP["general"];
   const checks   = compData.checks;

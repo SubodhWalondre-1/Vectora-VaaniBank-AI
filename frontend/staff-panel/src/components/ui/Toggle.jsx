@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Theme Toggle Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { motion } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';

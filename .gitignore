@@ -1,35 +1,112 @@
+# ==========================================================
+# 1. AI CONTEXT & INTERNAL DOCUMENTATION FILES
+# ==========================================================
 AGENTS.md
 AI_CONTEXT.md
+analysis_results.md
 CLAUDE.md
+code_format.md
 D1_problem_solution.md
 data.md
+DEPLOYMENT_GUIDE.md
 feature.md
 HACKATHON_JUDGE_PROMPT.md
+hackathon.md
 minor_major.md
 project_context.md
+run.md
 saralform.md
 TECHNICAL_ARCHITECTURE.md
+understanding.md
 
-# Redundant Backup Archives
-frontend/staff-panel.rar
+# ==========================================================
+# 2. SECURITY & SECRETS PREVENTION (Prevent GitHub Leaks)
+# ==========================================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*
+*.env
+*.pem
+*.key
+*.pub
+*.cert
+*.pfx
+*.p12
+*.der
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+secrets.yml
+credentials.yml
+*.keystore
+*.jks
 
-# Temporary / Unused Graphics
-customer-panel-scanner.png
-
-# Build / Runtime Directories & Caches
-.pytest_cache/
+# ==========================================================
+# 3. VIRTUAL ENVIRONMENTS & DEPENDENCIES
+# ==========================================================
+node_modules/
 **/node_modules/
-**/dist/
-**/*.log
-backend/storage/
-backend/storage/chroma_db/
-backend/venv/
-backend/.env
+.venv/
+venv/
+ENV/
+env/
+**/venv/
+**/venv*/
+**/env*/
 
-# IDE & System Files
+# ==========================================================
+# 4. BUILDS & CACHES
+# ==========================================================
+dist/
+**/dist/
+build/
+**/build/
+out/
+.vite/
+.eslintcache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+**/.pytest_cache/
+.cache/
+
+# ==========================================================
+# 5. RUNTIME DATABASES & STORAGE (and ML Models)
+# ==========================================================
+backend/storage/
+**/storage/
+backend/models/
+**/models/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+**/*.log
+
+# ==========================================================
+# 6. IDE, EDITOR, & SYSTEM FILES
+# ==========================================================
 .vscode/
 .idea/
 .DS_Store
 Thumbs.db
+desktop.ini
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
-
+# ==========================================================
+# 7. REDUNDANT BACKUPS & GRAPHICS
+# ==========================================================
+*.rar
+*.zip
+*.tar.gz
+frontend/staff-panel.rar
+customer-panel-scanner.png

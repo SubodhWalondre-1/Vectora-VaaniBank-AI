@@ -7,7 +7,7 @@ import Button from "../ui/Button";
 import Modal from "../ui/Modal";
 import Spinner from "../ui/Spinner";
 
-// ─── Intent Badge ─────────────────────────────────────────────────────────────
+// Intent Badge
 const INTENT_LABELS = {
   account_opening: {
     label: "Account Opening",
@@ -42,7 +42,7 @@ const INTENT_LABELS = {
   general: { label: "General", color: "#64748b", bg: "rgba(100,116,139,0.10)" },
 };
 
-// ─── Balance Enquiry Profile Modal ────────────────────────────────────────────
+// Balance Enquiry Profile Modal
 function BalanceEnquiryModal({ isOpen, onClose, profile, loading }) {
   return (
     <Modal
@@ -167,7 +167,7 @@ function BalanceEnquiryModal({ isOpen, onClose, profile, loading }) {
   );
 }
 
-// ─── Edit Modal ───────────────────────────────────────────────────────────────
+// Edit Modal
 function EditModal({ isOpen, suggestion, onSave, onClose }) {
   const [text, setText] = useState(suggestion ?? "");
   useEffect(() => {
@@ -227,7 +227,7 @@ function EditModal({ isOpen, suggestion, onSave, onClose }) {
   );
 }
 
-// ─── AISuggestionBox ──────────────────────────────────────────────────────────
+// AISuggestionBox
 export default function AISuggestionBox({
   sendStaffApproved: propSendApproved,
   sendStaffEdited: propSendEdited,
@@ -243,7 +243,7 @@ export default function AISuggestionBox({
 
   const isProcessing = useApp((s) => s.isProcessing);
 
-  // ── Balance Enquiry Profile Popup state ───────────────────────────────────
+  // Balance Enquiry Profile Popup state
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [customerProfile, setCustomerProfile] = useState(null);
   const [profileLoading, setProfileLoading] = useState(false);
@@ -292,7 +292,7 @@ export default function AISuggestionBox({
     prevSessionIdRef.current = currentId;
   }, [activeSession?.id, clearSuggestion]);
 
-  // ── On balance enquiry detection — show animated toast first, then modal after 1.5s ──
+  // On balance enquiry detection — show animated toast first, then modal after 1.5s
   useEffect(() => {
     const intent = aiSuggestion?.intent ?? aiSuggestion?.detected_intent ?? "";
     const sessionId = activeSession?.id;
@@ -371,7 +371,7 @@ export default function AISuggestionBox({
     }
   }, [aiSuggestion?.intent, aiSuggestion?.detected_intent, activeSession?.id]);
 
-  // ── Send Hindi text to backend — backend handles translation via TTS pipeline.
+  // Send Hindi text to backend — backend handles translation via TTS pipeline.
   // staff_response_final = Hindi (shown in Staff box)
   // staff_response_translated = customer lang (filled by audio_ready event)
   const sendStaffApproved = useCallback(

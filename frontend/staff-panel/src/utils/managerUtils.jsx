@@ -1,12 +1,12 @@
-/* ============================================
+/*
    VaaniBank AI — Shared Manager/Admin Utilities
    Union Bank of India | Team Vectora
 
    Shared between ManagerPage.jsx and AdminPage.jsx.
    Single source of truth — no duplication.
-   ============================================ */
+   */
 
-// ── Brand palette ──────────────────────────────────────────
+// Brand palette
 export const CHART_COLORS = [
   '#003087', '#E8231A', '#16A34A', '#D97706',
   '#9333EA', '#0891B2', '#BE185D',
@@ -19,7 +19,7 @@ export const SENTIMENT_COLORS = {
   urgent:    '#9333EA',
 };
 
-// ── Date helpers ───────────────────────────────────────────
+// Date helpers
 export function todayStr() {
   return new Date().toISOString().split('T')[0];
 }
@@ -30,7 +30,7 @@ export function daysAgoStr(n) {
   return d.toISOString().split('T')[0];
 }
 
-// ── Formatters ─────────────────────────────────────────────
+// Formatters
 export function fmtDuration(s) {
   const n = Number(s ?? 0);
   if (!n) return '—';
@@ -52,7 +52,7 @@ export function fmtDateTime(v) {
   });
 }
 
-// ── Shared UI components ───────────────────────────────────
+// Shared UI components
 
 /** Generic metric card used in both panels */
 export function StatCard({ label, value, sub, icon: Icon, color = '#003087' }) {

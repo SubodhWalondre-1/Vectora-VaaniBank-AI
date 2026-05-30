@@ -1,4 +1,4 @@
-/* ============================================
+/*
    VaaniBank AI — Credentials Show-Once Modal
    Phase 5 | Union Bank of India | Team Vectora
 
@@ -7,7 +7,7 @@
      2. Reset Password → shows new_plain_password
 
    Password is NEVER shown again after this modal closes.
-   ============================================ */
+   */
 
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,7 +15,7 @@ import { Copy, Check, ShieldAlert, X, KeyRound, User, IdCard } from 'lucide-reac
 import Modal from './Modal';
 import Button from './Button';
 
-// ── Copy-to-clipboard hook ───────────────────
+// Copy-to-clipboard hook
 function useCopyText() {
   const [copied, setCopied] = useState(null); // key of item copied
 
@@ -42,7 +42,7 @@ function useCopyText() {
   return { copied, copy };
 }
 
-// ── Credential Row ───────────────────────────
+// Credential Row
 function CredRow({ label, value, copyKey, copied, onCopy, icon: Icon }) {
   const isCopied = copied === copyKey;
 
@@ -110,7 +110,7 @@ function CredRow({ label, value, copyKey, copied, onCopy, icon: Icon }) {
   );
 }
 
-// ── Main Modal ───────────────────────────────
+// Main Modal
 /**
  * Props:
  *   isOpen        boolean

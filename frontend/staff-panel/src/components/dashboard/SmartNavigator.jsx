@@ -1,4 +1,4 @@
-/* ============================================
+/*
    VaaniBank AI — Smart Staff Navigator
    Deterministic Phase-Aware Guidance Panel
    Union Bank of India | Team Vectora
@@ -6,7 +6,7 @@
    Replaces LLM-based "AI Suggests You Ask Next"
    with a deterministic state machine output.
    100% reliable. Never repeats. Phase-aware.
-   ============================================ */
+   */
 
 import React, { useState, useCallback, useRef } from 'react';
 import { useApp } from '../../context/AppContext';
@@ -109,14 +109,12 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
   }, [sendForceNext, nav?.next_question?.key]);
 
   const handleUndo = useCallback(() => {
-    if (!sendUndoNext) return;
-    const history = questionHistoryRef.current;
-    const prevKey = history.length >= 2 ? history[history.length - 2] : null;
+    if (!sendUndoNext || !nav?.collected || nav.collected.length === 0) return;
+    const lastField = nav.collected[nav.collected.length - 1];
     setUndoing(true);
-    sendUndoNext(prevKey);
-    questionHistoryRef.current = history.slice(0, -1);
-    setTimeout(() => setUndoing(false), 4000);
-  }, [sendUndoNext]);
+    sendUndoNext(lastField?.key ?? null);
+    setTimeout(() => setUndoing(false), 2000);
+  }, [sendUndoNext, nav?.collected]);
 
   const handleEditStart = useCallback((fieldKey, currentValue) => {
     setEditingKey(fieldKey);
@@ -208,7 +206,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
                 <div style={{ fontSize: 10, fontWeight: 700, color: '#d97706', textTransform: 'uppercase', letterSpacing: '0.04em', fontFamily: FONT }}>
                   ✏️ Voice didn't capture? Type manually:
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                   <input
                     autoFocus
                     placeholder={`Enter ${nav.next_question.label}...`}
@@ -218,23 +216,25 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
                       if (e.key === 'Enter') handlePostAskSave();
                       if (e.key === 'Escape') handlePostAskCancel();
                     }}
-                    style={{ ...styles.inlineEditInput, flex: 1 }}
+                    style={{ ...styles.inlineEditInput }}
                   />
-                  <button
-                    onClick={handlePostAskSave}
-                    disabled={savingPostAsk || !postAskEditValue.trim()}
-                    style={{ ...styles.editSaveBtn, padding: '4px 10px', fontSize: 11 }}
-                    title="Save and move to next question"
-                  >
-                    {savingPostAsk ? '⏳' : '✓ Save & Next'}
-                  </button>
-                  <button
-                    onClick={handlePostAskCancel}
-                    style={styles.editCancelBtn}
-                    title="Cancel"
-                  >
-                    ×
-                  </button>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 6 }}>
+                    <button
+                      onClick={handlePostAskCancel}
+                      style={{ ...styles.editCancelBtn, padding: '4px 10px', fontSize: 11 }}
+                      title="Cancel"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handlePostAskSave}
+                      disabled={savingPostAsk || !postAskEditValue.trim()}
+                      style={{ ...styles.editSaveBtn, padding: '4px 10px', fontSize: 11 }}
+                      title="Save and move to next question"
+                    >
+                      {savingPostAsk ? '⏳' : '✓ Save & Next'}
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -287,7 +287,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
                 </button>
               )}
               {/* Undo — go back */}
-              {sendUndoNext && questionHistoryRef.current.length >= 1 && (
+              {sendUndoNext && nav?.collected && nav.collected.length >= 1 && (
                 <button
                   style={{
                     ...styles.undoBtn,
@@ -492,9 +492,7 @@ export default function SmartNavigator({ sendStaffApproved, sendMessage, sendFor
   );
 }
 
-// ═════════════════════════════════════════
 //  STYLES — matched to ProcessPanel step text font
-// ═════════════════════════════════════════
 const FONT = "'Inter', system-ui, 'Segoe UI', Roboto, sans-serif";
 const styles = {
   container: {

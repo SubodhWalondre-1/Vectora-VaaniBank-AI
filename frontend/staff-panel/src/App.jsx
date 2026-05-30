@@ -1,19 +1,19 @@
-/* ============================================
+/*
    VaaniBank AI — Staff Panel App + Routes
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useApp } from './context/AppContext';
 
-// ── Role helper (mirrors Sidebar logic) ─────
+// Role helper (mirrors Sidebar logic)
 function isSuperAdminRole(role) {
   const r = (role || '').toLowerCase();
   return ['admin', 'super_admin', 'superadmin', 'supervisor'].includes(r);
 }
 
-// ── Lazy-loaded pages ───────────────────────
+// Lazy-loaded pages
 const LoginPage     = lazy(() => import('./pages/LoginPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const HistoryPage   = lazy(() => import('./pages/HistoryPage'));
@@ -23,7 +23,7 @@ const SettingsPage  = lazy(() => import('./pages/SettingsPage'));
 const ManagerPage   = lazy(() => import('./pages/ManagerPage'));
 const AdminPage     = lazy(() => import('./pages/AdminPage'));
 
-// ── Loading fallback ────────────────────────
+// Loading fallback
 function PageLoader() {
   return (
     <div
@@ -70,7 +70,7 @@ function PageLoader() {
   );
 }
 
-// ── Protected Route ─────────────────────────
+// Protected Route
 function ProtectedRoute({ children }) {
   const isAuthenticated = useApp((state) => state.isAuthenticated);
   const location = useLocation();
@@ -90,14 +90,14 @@ function RoleRoute({ allow, children }) {
     role = 'super_admin';
   }
 
-  // allow === undefined => allow all authenticated
+  // allow  undefined > allow all authenticated
   if (Array.isArray(allow) && allow.length > 0 && !allow.includes(role)) {
     return <Navigate to="/knowledge" state={{ from: location }} replace />;
   }
   return children;
 }
 
-// ── App Shell ───────────────────────────────
+// App Shell
 function AppShell() {
   const theme       = useApp((state) => state.theme);
   const initTheme   = useApp((state) => state.initTheme);
@@ -108,6 +108,8 @@ function AppShell() {
   useEffect(() => {
     initTheme();
   }, [initTheme]);
+
+
 
   // Block rendering until Zustand persist has rehydrated from localStorage.
   // Without this, ProtectedRoute sees isAuthenticated=false on the very first
@@ -215,7 +217,7 @@ function AppShell() {
   );
 }
 
-// ── App Component ───────────────────────────
+// App Component
 export default function App() {
   return (
     <BrowserRouter>

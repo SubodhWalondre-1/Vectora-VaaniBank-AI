@@ -15,18 +15,14 @@ import { getIntentData } from "../../bankingKnowledge";
 // Import extracted tab components statically
 import {
   StepsTab,
-  DocsTab,
-  EligibilityTab,
   InfoTab,
-  NumbersTab,
 } from "./process-tabs";
 
 // Lazy-loaded heavy tab components
-const RatesTab = lazy(() => import("./process-tabs/RatesTab"));
-const ComplianceTab = lazy(() => import("./process-tabs/ComplianceTab"));
+
 const ProfileTab = lazy(() => import("./process-tabs/ProfileTab"));
 const SendTab = lazy(() => import("./process-tabs/SendTab"));
-const ActionsTab = lazy(() => import("./process-tabs/ActionsTab"));
+
 
 // Lightweight fallback for lazy tab loading
 const TabLoader = () => (
@@ -42,7 +38,7 @@ const TabLoader = () => (
   </div>
 );
 
-// ─── Backend intent → Frontend key normaliser ───────────────────────────────
+// Backend intent → Frontend key normaliser
 const BACKEND_TO_FRONTEND_INTENT = {
   HOME_LOAN: "loan_enquiry",
   PERSONAL_LOAN: "loan_enquiry",
@@ -116,17 +112,11 @@ const INTENT_CONFIG = {
 const TABS = [
   { id: "info", label: "Key Info" },
   { id: "steps", label: "Steps" },
-  { id: "docs", label: "Documents" },
-  { id: "eligibility", label: "Eligibility" },
-  { id: "numbers", label: "Quick " },
   { id: "profile", label: "Profile" },
-  { id: "rates", label: "Rates & EMI" },
-  { id: "compliance", label: "✅ RBI" },
-  { id: "actions", label: "⚡ Actions" },
   { id: "send", label: "📨 Send" },
 ];
 
-// ─── Waiting State ────────────────────────────────────────────────────────────
+// Waiting State
 function WaitingState() {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-3 py-10">
@@ -159,7 +149,7 @@ function WaitingState() {
     </div>
   );
 }
-// ─── ProcessPanel ─────────────────────────────────────────────────────────────
+// ProcessPanel
 export default function ProcessPanel({
   isDemoActive: propIsDemo,
   sendMessage,
@@ -182,7 +172,7 @@ export default function ProcessPanel({
   const [demoCompletedCount, setDemoCompletedCount] = useState(null);
   const [localCompletedCount, setLocalCompletedCount] = useState(null);
 
-  // ── Dynamic process from intent_engine (PROCESS_UPDATE) ───────────────────────────
+  // Dynamic process from intent_engine (PROCESS_UPDATE)
   const [dynamicProcess, setDynamicProcess] = useState(null); // full process_data from JSON
   const [staffMessage, setStaffMessage] = useState(null); // Hindi guidance for staff
   const [detectedLang, setDetectedLang] = useState(null); // e.g. "ta"
@@ -244,7 +234,7 @@ export default function ProcessPanel({
       window.removeEventListener("process_update", handleProcessUpdate);
   }, []);
 
-  // ── P2: Auto-step advancement from AI-detected completion ───────────────
+  // P2: Auto-step advancement from AI-detected completion
   useEffect(() => {
     const handleAutoStep = (e) => {
       const { type, data } = e.detail || {};
@@ -289,7 +279,7 @@ export default function ProcessPanel({
   const intentCfg = INTENT_CONFIG[intentKey] ?? INTENT_CONFIG["general"];
   const langCode = activeSession?.customer_language_code ?? "hi";
 
-  // ── Knowledge data from bankingKnowledge.js ──────────────────────────────
+  // Knowledge data from bankingKnowledge.js
   const kbData = getIntentData(intentKey);
 
   // Steps: priority → dynamicProcess (intent_engine JSON) → WS DB steps → KB fallback
@@ -345,7 +335,7 @@ export default function ProcessPanel({
   const progressPct =
     totalCount > 0 ? Math.round((stepLabel / totalCount) * 100) : 0;
 
-  // ── Handlers ──────────────────────────────────────────────────────────────
+  // Handlers
   const handleComplete = useCallback(
     async (step, localIndex) => {
       const sessionId = activeSession?.id ?? activeSession?.session_id ?? null;
@@ -457,7 +447,7 @@ export default function ProcessPanel({
     ],
   );
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  // Render
   return (
     <div
       className="relative flex flex-col rounded-2xl overflow-hidden"
@@ -606,20 +596,8 @@ export default function ProcessPanel({
                   onSpeak={handleSpeak}
                 />
               )}
-              {activeTab === "docs" && (
-                <DocsTab
-                  docs={kbData.docs}
-                  intentKey={intentKey}
-                  docReadiness={docReadiness}
-                  isExploring={
-                    !infoBoard || infoBoard?.conversation_stage === "exploring"
-                  }
-                  sendStaffApproved={sendStaffApproved}
-                />
-              )}
-              {activeTab === "eligibility" && (
-                <EligibilityTab eligibility={kbData.eligibility} />
-              )}
+
+
               {activeTab === "info" && (
                 <InfoTab
                   info={[
@@ -645,9 +623,7 @@ export default function ProcessPanel({
                   sendUndoNext={sendUndoNext}
                 />
               )}
-              {activeTab === "numbers" && (
-                <NumbersTab numbers={kbData.numbers} />
-              )}
+
               {/* P2 F-HIGH-3: Lazy-loaded tabs wrapped in Suspense */}
               <Suspense fallback={<TabLoader />}>
                 {activeTab === "profile" && (
@@ -658,22 +634,8 @@ export default function ProcessPanel({
                     activeSession={activeSession}
                   />
                 )}
-                {activeTab === "rates" && (
-                  <RatesTab intentKey={intentKey} keyEntities={keyEntities} />
-                )}
-                {activeTab === "compliance" && (
-                  <ComplianceTab
-                    intentKey={intentKey}
-                    completedCount={completedCount}
-                    keyEntities={keyEntities}
-                  />
-                )}
-                {activeTab === "actions" && (
-                  <ActionsTab
-                    activeSession={activeSession}
-                    sendMessage={sendMessage}
-                  />
-                )}
+
+
                 {activeTab === "send" && (
                   <SendTab
                     activeSession={activeSession}

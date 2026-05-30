@@ -1,7 +1,7 @@
-/* ============================================
+/*
    VaaniBank AI — Badge Component
    Union Bank of India | Team Vectora
-   ============================================ */
+   */
 
 import { SENTIMENTS, INTENTS, SESSION_STATUS } from '../../constants';
 
