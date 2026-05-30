@@ -529,9 +529,8 @@ function IdleState({ analytics, onWalkIn }) {
 
   const sessions = analytics?.total_sessions ?? 0;
   const completed = analytics?.completed_sessions ?? 0;
-  const avgDuration = analytics?.avg_duration_seconds
-    ? fmtDuration(analytics.avg_duration_seconds)
-    : "—";
+  const rawDuration = fmtDuration(analytics?.avg_duration_seconds);
+  const avgDuration = rawDuration === "—" ? "0s" : rawDuration;
   const langs = analytics?.languages_used ?? {};
 
   const firstName = staff?.full_name?.split(" ")[0] || "there";

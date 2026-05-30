@@ -278,7 +278,8 @@ function AnalyticsSection({ branchId }) {
     })), [data]);
 
   const completionRate = data?.completion_rate ?? 0;
-  const avgDuration = data?.avg_duration_seconds ? fmtDuration(data.avg_duration_seconds) : '—';
+  const rawDuration = fmtDuration(data?.avg_duration_seconds);
+  const avgDuration = rawDuration === "—" ? "0s" : rawDuration;
 
   return (
     <div>

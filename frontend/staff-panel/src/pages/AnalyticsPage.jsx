@@ -116,6 +116,9 @@ export default function AnalyticsPage() {
     value
   }));
 
+  const rawDuration = fmtDuration(data?.avg_duration_seconds);
+  const avgDuration = rawDuration === "—" ? "0s" : rawDuration;
+
   return (
     <div className="flex h-screen w-screen overflow-hidden" style={{ backgroundColor: 'var(--body-bg)' }}>
       <Sidebar />
@@ -152,7 +155,7 @@ export default function AnalyticsPage() {
               <StatCard label="Abandoned" value={loading ? '—' : data?.abandoned_sessions ?? 0} />
               <StatCard
                 label="Avg duration"
-                value={loading ? '—' : (data?.avg_duration_seconds ? fmtDuration(data.avg_duration_seconds) : '0s')}
+                value={loading ? '—' : avgDuration}
               />
             </div>
 
