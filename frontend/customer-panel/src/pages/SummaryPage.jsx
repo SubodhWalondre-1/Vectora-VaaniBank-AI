@@ -104,6 +104,7 @@ export default function SummaryPage() {
   const [comment, setComment] = useState("");
   const [ratingSubmitted, setRatingSubmitted] = useState(false);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   const pollingRef = useRef(null);
   const retryTimerRef = useRef(null);
@@ -114,7 +115,7 @@ export default function SummaryPage() {
 
     let cancelled = false;
     let attempts = 0;
-    const MAX_ATTEMPTS = 30; // 30 × 2s = 60 seconds
+    const MAX_ATTEMPTS = 5; // 5 × 2s = 10 seconds
     const RETRY_DELAY = 2000;
 
     const tryFetch = async () => {
@@ -150,7 +151,7 @@ export default function SummaryPage() {
       cancelled = true;
       if (retryTimerRef.current) clearTimeout(retryTimerRef.current);
     };
-  }, [session_id]);
+  }, [session_id, retryCount]);
 
   // Poll for PDF readiness
   useEffect(() => {
@@ -365,7 +366,7 @@ export default function SummaryPage() {
           सारांश तैयार हो रहा है, कृपया प्रतीक्षा करें...
         </p>
         <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "0 0 8px 0" }}>
-          This may take up to 30 seconds
+          This may take up to 10 seconds
         </p>
 
 
@@ -386,21 +387,34 @@ export default function SummaryPage() {
           <FileText size={40} color={BRAND.red} strokeWidth={1.5} />
           <h3 style={styles.errorTitle}>Summary Not Ready</h3>
           <p style={styles.errorText}>{loadError}</p>
-          <motion.div
-            style={styles.retryBtn}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              const currentBranch = branchCode;
-              resetSession();
-              if (currentBranch) {
-                navigate(`/?branch=${currentBranch}`, { replace: true });
-              } else {
-                navigate("/", { replace: true });
-              }
-            }}
-          >
-            <span style={styles.retryBtnText}>Exit</span>
-          </motion.div>
+          
+          <div style={styles.buttonRow}>
+            <motion.div
+              style={styles.retryBtn}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                setRetryCount((prev) => prev + 1);
+              }}
+            >
+              <span style={styles.retryBtnText}>Retry</span>
+            </motion.div>
+            
+            <motion.div
+              style={styles.exitBtn}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                const currentBranch = branchCode;
+                resetSession();
+                if (currentBranch) {
+                  navigate(`/?branch=${currentBranch}`, { replace: true });
+                } else {
+                  navigate("/", { replace: true });
+                }
+              }}
+            >
+              <span style={styles.exitBtnText}>Exit</span>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     );
@@ -876,17 +890,45 @@ const styles = {
     margin: 0,
     lineHeight: 1.5,
   },
+  buttonRow: {
+    display: "flex",
+    gap: 12,
+    marginTop: 8,
+    width: "100%",
+    justifyContent: "center",
+  },
   retryBtn: {
-    padding: "10px 28px",
+    padding: "10px 24px",
     borderRadius: 10,
     backgroundColor: BRAND.blue,
     cursor: "pointer",
-    marginTop: 4,
+    flex: 1,
+    maxWidth: 120,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  exitBtn: {
+    padding: "10px 24px",
+    borderRadius: 10,
+    backgroundColor: "transparent",
+    border: "1px solid var(--card-border)",
+    cursor: "pointer",
+    flex: 1,
+    maxWidth: 120,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   retryBtnText: {
     fontSize: 14,
     fontWeight: 600,
     color: "#fff",
+  },
+  exitBtnText: {
+    fontSize: 14,
+    fontWeight: 600,
+    color: "var(--text-secondary)",
   },
 
   // Success Header

@@ -32,6 +32,8 @@ api.interceptors.request.use(
   }
 );
 
+import toast from 'react-hot-toast';
+
 // Response Interceptor
 api.interceptors.response.use(
   (response) => {
@@ -52,6 +54,36 @@ api.interceptors.response.use(
         error.response?.data || error.message
       );
     }
+
+    // Skip showing toast if the caller explicitly requested it
+    if (!error.config?.skipGlobalToast) {
+      const status = error.response?.status;
+      const data = error.response?.data;
+      const message = data?.message || data?.detail || error.message;
+
+      if (!status) {
+        toast.error("Network connection unstable or backend server offline. Please verify connectivity.", {
+          id: "network-offline-toast",
+          duration: 4000,
+        });
+      } else if (status === 404) {
+        // Suppress generic toast for 404s if it is a session lookup to let pages handle it
+        if (!error.config.url.includes("/sessions/")) {
+          toast.error(message || "Requested resource not found.");
+        }
+      } else if (status === 422) {
+        toast.error(message || "Input validation failed. Please check form entries.");
+      } else if (status >= 500) {
+        toast.error("VaaniBank systems are temporarily busy. Please try again shortly.", {
+          id: "server-5xx-toast",
+        });
+      } else if (status === 401 || status === 403) {
+        toast.error("Access denied or session expired. Please refresh.");
+      } else {
+        toast.error(message || "An unexpected system error occurred.");
+      }
+    }
+
     return Promise.reject(error);
   }
 );

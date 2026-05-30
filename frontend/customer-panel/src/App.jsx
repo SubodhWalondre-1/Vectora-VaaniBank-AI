@@ -103,11 +103,17 @@ function AppShell() {
   );
 }
 
+import ErrorBoundary from './components/ErrorBoundary';
+import NetworkStatusBanner from './components/NetworkStatusBanner';
+
 // App Component
 export default function App() {
   return (
-    <BrowserRouter>
-      <AppShell />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <NetworkStatusBanner />
+        <AppShell />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

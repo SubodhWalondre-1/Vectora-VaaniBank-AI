@@ -38,6 +38,8 @@ api.interceptors.request.use(
   },
 );
 
+import toast from "react-hot-toast";
+
 // Response Interceptor: Handle 401 / 403 unauthenticated
 // FastAPI's HTTPBearer(auto_error=True) returns 403 {"detail":"Not authenticated"}
 // when the Authorization header is completely absent (no token sent).
@@ -65,6 +67,8 @@ api.interceptors.response.use(
 
     const status = error.response?.status;
     const detail = error.response?.data?.detail;
+    const data = error.response?.data;
+    const message = data?.message || data?.detail || error.message;
 
     const isUnauthenticated =
       status === 401 || (status === 403 && detail === "Not authenticated");
@@ -75,6 +79,29 @@ api.interceptors.response.use(
 
       if (window.location.pathname !== "/login") {
         window.location.href = "/login";
+      }
+    }
+
+    // Skip showing toast if the caller explicitly requested it
+    if (!error.config?.skipGlobalToast && !isUnauthenticated) {
+      if (!status) {
+        toast.error("Network connection unstable or branch servers offline. Please check your connectivity.", {
+          id: "staff-network-offline-toast",
+          duration: 4000,
+        });
+      } else if (status === 404) {
+        // Only toast if not a session checker (which is queried frequently)
+        if (!error.config.url.includes("/sessions/")) {
+          toast.error(message || "Workplace resource not found.");
+        }
+      } else if (status === 422) {
+        toast.error(message || "Provided parameters could not be processed.");
+      } else if (status >= 500) {
+        toast.error("VaaniBank mainframes are temporarily busy. Retrying transaction shortly.", {
+          id: "staff-server-5xx-toast",
+        });
+      } else {
+        toast.error(message || "An error occurred during banking operations.");
       }
     }
 
