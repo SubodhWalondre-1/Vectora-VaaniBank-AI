@@ -89,6 +89,44 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+.btn-youtube {
+  background: #FF0000;
+  color: var(--white);
+  border: 2px solid #FF0000;
+  box-shadow: 0 8px 28px rgba(255, 0, 0, 0.2);
+}
+.btn-youtube:hover {
+  background: #E60000;
+  border-color: #E60000;
+  box-shadow: 0 14px 40px rgba(255, 0, 0, 0.35);
+}
+.btn-youtube img {
+  filter: brightness(0) invert(1);
+  transition: transform 0.2s var(--ease-spring);
+}
+.btn-youtube:hover img {
+  transform: scale(1.1);
+}
+
+.btn-github {
+  background: #24292F;
+  color: var(--white);
+  border: 2px solid #24292F;
+  box-shadow: 0 8px 28px rgba(36, 41, 47, 0.25);
+}
+.btn-github:hover {
+  background: #1B1F23;
+  border-color: #1B1F23;
+  box-shadow: 0 14px 40px rgba(36, 41, 47, 0.4);
+}
+.btn-github img {
+  filter: brightness(0) invert(1);
+  transition: transform 0.2s var(--ease-spring);
+}
+.btn-github:hover img {
+  transform: scale(1.1);
+}
+
 .btn-icon {
   display: inline-flex;
   align-items: center;
