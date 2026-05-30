@@ -9,6 +9,14 @@
   padding: 0;
 }
 
+/* Brand Text Selection Highlight - Invisible */
+::selection {
+  background: transparent;
+}
+::-moz-selection {
+  background: transparent;
+}
+
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
