@@ -90,8 +90,9 @@
 }
 
 .role-cards {
-  display: flex;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   justify-content: center;
 }
 
@@ -141,6 +142,16 @@
   box-shadow: 0 20px 40px -10px rgba(30, 58, 138, 0.4); /* Navy glow */
 }
 
+.youtube-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(255, 0, 0, 0.35); /* YouTube red glow */
+  border-color: rgba(255, 0, 0, 0.25);
+}
+
+.github-card:hover {
+  box-shadow: 0 20px 40px -10px rgba(255, 255, 255, 0.15); /* Silver glow */
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
 .role-card-icon {
   font-size: 56px;
   margin-bottom: 24px;
@@ -167,9 +178,15 @@
 
 @media (max-width: 768px) {
   .role-cards {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
   .role-modal-content {
     padding: 32px 24px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .role-cards {
+    grid-template-columns: 1fr 1fr;
   }
 }
