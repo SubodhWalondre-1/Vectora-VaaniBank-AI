@@ -28,23 +28,25 @@ export default function RatesTab({ intentKey, keyEntities }) {
 
   // FD rates table
   const FD_RATES = [
-    { tenure: "7–14 days",          general: "3.00%",  senior: "3.50%" },
-    { tenure: "46–90 days",         general: "4.50%",  senior: "5.00%" },
-    { tenure: "91–179 days",        general: "5.50%",  senior: "6.00%" },
-    { tenure: "180–364 days",       general: "6.50%",  senior: "7.00%" },
-    { tenure: "1 year",             general: "6.80%",  senior: "7.30%" },
-    { tenure: "2–3 years",          general: "7.00%",  senior: "7.50%" },
-    { tenure: "5yr Tax Saver (80C)",general: "6.70%",  senior: "7.20%" },
-    { tenure: "Samridhi (400 days)",general: "7.40%",  senior: "7.90%" },
-    { tenure: "Dhan Vriddhi (333d)",general: "7.25%",  senior: "7.75%" },
+    { tenure: "7–14 days",          general: "2.70%",  senior: "3.20%" },
+    { tenure: "46–90 days",         general: "4.00%",  senior: "4.50%" },
+    { tenure: "91–120 days",        general: "4.50%",  senior: "5.00%" },
+    { tenure: "121–180 days",       general: "5.00%",  senior: "5.50%" },
+    { tenure: "181–270 days",       general: "5.60%",  senior: "6.10%" },
+    { tenure: "271–364 days",       general: "5.90%",  senior: "6.50%" },
+    { tenure: "1 year",             general: "6.25%",  senior: "6.75%" },
+    { tenure: "400 days",           general: "6.35%",  senior: "6.85%" },
+    { tenure: "444 days (Highest)",  general: "6.60%",  senior: "7.10%" },
+    { tenure: "5–10yr Tax Saver",   general: "6.00%",  senior: "6.50%" },
   ];
 
   // Loan interest rates
   const LOAN_RATES = [
-    { type: "Home Loan",        rate: "8.35%–9.85%" },
-    { type: "Personal Loan",    rate: "10.50%–14.75%" },
-    { type: "Car Loan",         rate: "8.80%–10.25%" },
-    { type: "Education Loan",   rate: "8.15%–11.15%" },
+    { type: "Home Loan",        rate: "7.15%–9.35%" },
+    { type: "Personal Loan",    rate: "Starts at 8.75%" },
+    { type: "Car Loan (New)",   rate: "7.40%–7.50%" },
+    { type: "Car Loan (Used)",  rate: "10.40%–10.50%" },
+    { type: "Education Loan",   rate: "6.95%–8.85%" },
     { type: "Gold Loan",        rate: "8.75%–10.50%" },
     { type: "Mudra (Tarun)",    rate: "10%–12% (up to ₹10L)" },
     { type: "Kisan Credit Card",rate: "7% (subsidised)" },
@@ -67,10 +69,11 @@ export default function RatesTab({ intentKey, keyEntities }) {
     if (isNaN(months)) return false;
     if (months <= 14/30  && rowTenure.includes("7–14"))   return true;
     if (months >= 1.5 && months <= 3   && rowTenure.includes("46–90")) return true;
-    if (months >= 3   && months <= 6   && rowTenure.includes("91–"))   return true;
-    if (months >= 6   && months < 12   && rowTenure.includes("180–"))  return true;
-    if (months >= 12  && months < 24   && rowTenure.includes("1 year"))return true;
-    if (months >= 24  && months <= 36  && rowTenure.includes("2–3"))   return true;
+    if (months >= 3   && months <= 4   && rowTenure.includes("91–120")) return true;
+    if (months > 4    && months <= 6   && rowTenure.includes("121–180")) return true;
+    if (months > 6    && months <= 9   && rowTenure.includes("181–270")) return true;
+    if (months > 9    && months < 12   && rowTenure.includes("271–364")) return true;
+    if (months >= 12  && months < 24   && rowTenure.includes("1 year")) return true;
     return false;
   };
 
